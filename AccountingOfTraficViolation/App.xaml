@@ -1,0 +1,21 @@
+﻿<Application x:Class="AccountingOfTraficViolation.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:AccountingOfTraficViolation"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <Style x:Key="TextBlockTemplateStyle">
+            <Setter Property="TextBlock.FontSize" Value="15"/>
+            <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+            <Setter Property="TextBlock.FontFamily" Value="Arial"/>
+        </Style>
+        <Style x:Key="ButtonTemplateStyle">
+            <Setter Property="Button.FontSize" Value="15"/>
+            <Setter Property="Button.Padding" Value="3"/>
+        </Style>
+        <Style x:Key="StackPanelTemplateStyle">
+            <Setter Property="StackPanel.HorizontalAlignment" Value="Center"/>
+            <Setter Property="StackPanel.VerticalAlignment" Value="Center"/>
+        </Style>
+    </Application.Resources>
+</Application>
