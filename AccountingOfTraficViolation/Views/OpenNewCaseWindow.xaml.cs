@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using AccountingOfTraficViolation.Views.AddInfoWindows;
+using AccountingOfTraficViolation.Models;
 
 namespace AccountingOfTraficViolation.Views
 {
@@ -19,6 +21,7 @@ namespace AccountingOfTraficViolation.Views
     /// </summary>
     public partial class OpenNewCaseWindow : Window
     {
+        private GeneralInfo generalInfo;
         public OpenNewCaseWindow()
         {
             InitializeComponent();
@@ -26,13 +29,13 @@ namespace AccountingOfTraficViolation.Views
 
         private void GeneralInfoClick(object sender, RoutedEventArgs e)
         {
-            //GeneralInfoAddWindow generalInfoAddWindow = new GeneralInfoAddWindow(generalInfo);
+            AddGeneralInfoWindow generalInfoAddWindow = new AddGeneralInfoWindow(generalInfo);
 
-            //if (generalInfoAddWindow.ShowDialog() == true)
-            //{
-            //    generalInfo = generalInfoAddWindow.GeneralInfo;
-            //    GeneralInfoProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
-            //}
+            if (generalInfoAddWindow.ShowDialog() == true)
+            {
+                generalInfo = generalInfoAddWindow.GeneralInfo;
+                GeneralInfoProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+            }
         }
         private void AccidentPlaceClick(object sender, RoutedEventArgs e)
         {
