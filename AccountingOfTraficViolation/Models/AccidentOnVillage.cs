@@ -188,7 +188,7 @@ namespace AccountingOfTraficViolation.Models
 
         [Required]
         [StringLength(47)]
-        public string Binding
+        public string VillageBinding
         {
             get { return binding; }
             set
@@ -210,7 +210,7 @@ namespace AccountingOfTraficViolation.Models
                     OnErrorInput("Количество символов в привязке не может быть больше 47");
                 }
 
-                OnPropertyChanged("Binding");
+                OnPropertyChanged("VillageBinding");
             }
         }
 

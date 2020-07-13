@@ -62,13 +62,11 @@ namespace AccountingOfTraficViolation.Models
                 if (value <= 10)
                 {
                     сardType = value;
-
                     OnPropertyChanged("CardType");
                 }
                 else
                 {
-                    OnErrorInput("Не правильный ввод типа карты");
-
+                    OnErrorInput("Не правильный ввод типа карты. Значение должно находиться в пределах от 0 до 10.");
                 }
             }
         }
@@ -110,7 +108,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    OnErrorInput("Не правильный ввод дня недели. Введите номер от 1 до 7 (1 - Понедельник, 7 - Воскресенье)");
+                    OnErrorInput("Не правильный ввод дня недели. Значение должно находиться в пределах от 1 до 7 (1 - Понедельник, 7 - Воскресенье).");
                 }
             }
         }
@@ -139,8 +137,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    OnErrorInput("Не правильный ввод типа проишествия");
-
+                    OnErrorInput("Не правильный ввод типа проишествия. Значение должно находиться в пределах от 0 до 100.");
                 }
             }
         }

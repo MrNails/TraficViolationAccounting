@@ -6,11 +6,20 @@
         xmlns:extensions="using:Microsoft.ToolKit"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
         mc:Ignorable="d"
-        Title="Основная информация" Height="450" Width="800">
+        Title="Основная информация" Height="450" Width="800" Closing="Window_Closing">
     <Window.Resources>
         <Style TargetType="TextBox">
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="CaretBrush" Value="Red" />
+            <Style.Setters>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Padding" Value="2"/>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" 
+                            Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                    <Setter Property="Foreground" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
     <Grid>
@@ -25,41 +34,89 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <WrapPanel Grid.Row="0" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="145">
-            <TextBlock Text="Номер карточки" Style="{StaticResource TextBlockTemplateStyle}" Width="145" TextAlignment="Center" Margin="0 0 0 10"/>
-            <TextBox x:Name="CardNumberTextBox1" Text="" TextChanged="CardNumberTextBox_TextChanged"
-                    MaxLength="12" Width="145" TextAlignment="Center" Padding="2"/>
-            <!--<TextBlock Text="-" Style="{StaticResource TextBlockTemplateStyle}" FontWeight="Bold" FontSize="20"/>
-            <TextBox x:Name="CardNumberTextBox2" Text="" 
-                     MaxLength="7" Width="70" TextAlignment="Center" Padding="2"/>
-            <TextBlock Text="-" Style="{StaticResource TextBlockTemplateStyle}" FontWeight="Bold" FontSize="20"/>
-            <TextBox x:Name="CardNumberTextBox3" Text="" 
-                     MaxLength="1" Width="30" TextAlignment="Center" Padding="2"/>-->
-        </WrapPanel>
+        <StackPanel Grid.Row="0" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="145">
+            <TextBlock Text="Номер карточки" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" Margin="0 0 0 10"/>
+            <Border x:Name="CardNumberBorder" BorderThickness="1">
+                <TextBox x:Name="CardNumberTextBox" TextChanged="CardNumberTextBox_TextChanged"
+                    MaxLength="12" TextAlignment="Center" Padding="2"/>
+            </Border>
+        </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="200">
-            <TextBlock Text="Дата заполнения" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
-            <DatePicker x:Name="FillDateCalendar" Style="{StaticResource TextBlockTemplateStyle}"/>
+            <TextBlock Text="Дата заполнения" Style="{StaticResource TextBlockTemplateStyle}" 
+                       TextAlignment="Center" Margin="0 0 0 10"/>
+            <DatePicker x:Name="FillDateCalendar" Style="{StaticResource TextBlockTemplateStyle}">
+                <DatePicker.SelectedDate>
+                    <Binding Path="FillDate" NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </DatePicker.SelectedDate>
+            </DatePicker>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
-            <TextBlock Text="День недели
-                       (от 0 до 6)" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
-            <TextBox x:Name="DayOfWeekTextBox" Text="{Binding DayOfWeek}" Style="{StaticResource TextBlockTemplateStyle}"/>
+            <TextBlock Text="День недели" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" Margin="0 0 0 10"/>
+            <ComboBox x:Name="DayOfWeekComboBox" FontSize="15">
+                <ComboBoxItem Content="1. Понедельник" IsSelected="True"/>
+                <ComboBoxItem Content="2. Вторник" />
+                <ComboBoxItem Content="3. Среда"/>
+                <ComboBoxItem Content="4. Четверг"/>
+                <ComboBoxItem Content="5. Пятница"/>
+                <ComboBoxItem Content="6. Суббота"/>
+                <ComboBoxItem Content="7. Воскресенье"/>
+            </ComboBox>
         </StackPanel>
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
-            <TextBlock Text="Тип проишествия" Style="{StaticResource TextBlockTemplateStyle}"/>
-            <TextBox x:Name="IncidentTypeTextBox" Text="{Binding IncidentType}" Style="{StaticResource TextBlockTemplateStyle}"/>
-        </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
-            <TextBlock Text="Тип карточки" Style="{StaticResource TextBlockTemplateStyle}"/>
-            <TextBox x:Name="CarTypeTextBox" Text="{Binding CardType}" Style="{StaticResource TextBlockTemplateStyle}"/>
-        </StackPanel>
+        <WrapPanel Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource StackPanelTemplateStyle}" Width="175">
+            <TextBlock Text="Тип проишествия" Style="{StaticResource TextBlockTemplateStyle}" Padding="0 0 10 0" Height="17"/>
+            <TextBox x:Name="IncidentTypeTextBox"
+                     Width="40">
+                <TextBox.Text>
+                    <Binding Path="IncidentType">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </WrapPanel>
+        <WrapPanel Grid.Row="0" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
+            <TextBlock Text="Тип карточки" Style="{StaticResource TextBlockTemplateStyle}" Padding="0 0 10 0" Height="17"/>
+            <TextBox x:Name="CardTypeTextBox"
+                     Width="40" >
+                <TextBox.Text>
+                    <Binding Path="CardType">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </WrapPanel>
         <StackPanel Grid.Row="1" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="200">
-            <TextBlock Text="Дата проишествия" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
-            <DatePicker x:Name="IncidentDateCalendar" Style="{StaticResource TextBlockTemplateStyle}"/>
+            <TextBlock Text="Дата проишествия" Style="{StaticResource TextBlockTemplateStyle}"
+                       TextAlignment="Center" Margin="0 0 0 10"/>
+            <DatePicker x:Name="IncidentDateCalendar" Style="{StaticResource TextBlockTemplateStyle}">
+                <DatePicker.SelectedDate>
+                    <Binding Path="IncidentDate" NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </DatePicker.SelectedDate>
+            </DatePicker>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
-            <TextBlock Text="Время заполнения (чч:мм:сс)" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
-            <TextBox x:Name="FillTimeTextBox" Text="{Binding FillTime}" Style="{StaticResource TextBlockTemplateStyle}"/>
+            <TextBlock Text="Время заполнения (чч:мм:сс)" Style="{StaticResource TextBlockTemplateStyle}" 
+                       TextAlignment="Center" Margin="0 0 0 10"/>
+            <TextBox x:Name="FillTimeTextBox">
+                <TextBox.Text>
+                    <Binding Path="FillTime">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </StackPanel>
         <Button Grid.Row="4" Grid.Column="0" Content="Применить" Width="100" Margin="0 0 30 0" Click="AcceptClick"
                 Style="{StaticResource ButtonTemplateStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" />

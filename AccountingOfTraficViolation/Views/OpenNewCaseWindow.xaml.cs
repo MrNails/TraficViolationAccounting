@@ -22,6 +22,8 @@ namespace AccountingOfTraficViolation.Views
     public partial class OpenNewCaseWindow : Window
     {
         private GeneralInfo generalInfo;
+        private AccidentOnHighway accidentOnHighway;
+        private AccidentOnVillage accidentOnVillage;
         public OpenNewCaseWindow()
         {
             InitializeComponent();
@@ -39,11 +41,13 @@ namespace AccountingOfTraficViolation.Views
         }
         private void AccidentPlaceClick(object sender, RoutedEventArgs e)
         {
-            //AccidentPlaceWinow accidentPlaceWinow = new AccidentPlaceWinow();
-            //if (accidentPlaceWinow.ShowDialog() == true)
-            //{
-            //    AccidentPlaceProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
-            //}
+            AddAccidentPlaceWindow accidentPlaceWinow = new AddAccidentPlaceWindow(accidentOnHighway, accidentOnVillage);
+            if (accidentPlaceWinow.ShowDialog() == true)
+            {
+                AccidentPlaceProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                accidentOnHighway = accidentPlaceWinow.AccidentOnHighway;
+                accidentOnVillage = accidentPlaceWinow.AccidentOnVillage;
+            }
         }
         private void RoadConditionClick(object sender, RoutedEventArgs e)
         {

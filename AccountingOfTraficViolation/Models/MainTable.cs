@@ -23,12 +23,5 @@ namespace AccountingOfTraficViolation
         {
             ErrorInput?.Invoke(errorMessage);
         }
-
-        public object Clone()
-        {
-            var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
-
-            return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(this), deserializeSettings);
-        }
     }
 }

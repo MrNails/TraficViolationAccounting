@@ -25,14 +25,14 @@ namespace AccountingOfTraficViolation
         public MainWindow()
         {
             InitializeComponent();
-            //if (!string.IsNullOrEmpty(user.Name) && !string.IsNullOrEmpty(user.Surname))
-            //{
-            //    WelcomeTextBlock.Text = $"Добро пожаловать, {user.Name} {user.Surname}";
-            //} 
-            //else
-            //{
-            //    WelcomeTextBlock.Text = "Добро пожаловать";
-            //}
+            if (!string.IsNullOrEmpty(user.Name) && !string.IsNullOrEmpty(user.Surname))
+            {
+                WelcomeTextBlock.Text = $"Добро пожаловать, {user.Name} {user.Surname}";
+            }
+            else
+            {
+                WelcomeTextBlock.Text = "Добро пожаловать";
+            }
         }
 
         private void Window_Initialized(object sender, EventArgs e)

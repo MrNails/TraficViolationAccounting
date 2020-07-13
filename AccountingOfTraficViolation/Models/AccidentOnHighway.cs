@@ -32,7 +32,6 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     OnErrorInput("Индекс и номер дороги не могут отсутствовать.");
-
                     return;
                 }
 
