@@ -74,14 +74,18 @@
     <Compile Include="Models\CaseAccidentPlace.cs" />
     <Compile Include="Models\GeneralInfo.cs" />
     <Compile Include="Models\MainTable.cs" />
-    <Compile Include="Services\MyExtensions.cs" />
+    <Compile Include="Services\SimpleExtensions.cs" />
     <Compile Include="Services\RelayCommand.cs" />
+    <Compile Include="Services\VisualObjectExtension.cs" />
     <Compile Include="ViewModels\CaseVM.cs" />
     <Compile Include="Views\AddInfoWindows\AddAccidentPlaceWindow.xaml.cs">
       <DependentUpon>AddAccidentPlaceWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AddInfoWindows\AddGeneralInfoWindow.xaml.cs">
       <DependentUpon>AddGeneralInfoWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddInfoWindows\AddRoadConditionWindow.xaml.cs">
+      <DependentUpon>AddRoadConditionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AuthorizationWindow.xaml.cs">
       <DependentUpon>AuthorizationWindow.xaml</DependentUpon>
@@ -106,6 +110,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AddInfoWindows\AddGeneralInfoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AddInfoWindows\AddRoadConditionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

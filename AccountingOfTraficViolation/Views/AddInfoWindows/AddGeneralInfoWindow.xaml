@@ -6,7 +6,7 @@
         xmlns:extensions="using:Microsoft.ToolKit"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
         mc:Ignorable="d"
-        Title="Основная информация" Height="450" Width="800" Closing="Window_Closing">
+        Title="Основная информация" Height="450" Width="800">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Style.Setters>

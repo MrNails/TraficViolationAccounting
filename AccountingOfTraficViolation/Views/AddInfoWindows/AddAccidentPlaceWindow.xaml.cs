@@ -23,9 +23,10 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
     public partial class AddAccidentPlaceWindow : Window
     {
         private bool isRoadIndexAndNumberValid;
+        private string roadIndexAndNumber;
 
-        public AccidentOnHighway AccidentOnHighway { get; set; }
-        public AccidentOnVillage AccidentOnVillage { get; set; }
+        public AccidentOnHighway AccidentOnHighway { get; private set; }
+        public AccidentOnVillage AccidentOnVillage { get; private set; }
 
         public AddAccidentPlaceWindow() : this(null, null)
         { }
@@ -75,6 +76,9 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 DataContext = AccidentOnVillage;
             }
 
+            AccidentOnHighway.ErrorInput += ShowErrorMessage;
+            AccidentOnVillage.ErrorInput += ShowErrorMessage;
+
             isRoadIndexAndNumberValid = false;
         }
 
@@ -120,24 +124,14 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 int caretIndex = textBox.CaretIndex;
                 int oldLength = textBox.Text.Length;
 
+                tempStr = tempStr.GetStrWithoutSeparator('-');
 
-                //delete all '-'
-                for (int i = 0; i < tempStr.Length; i++)
-                {
-                    if (tempStr[i] == '-')
-                    {
-                        tempStr = tempStr.Remove(i, 1);
-                        i--;
-                    }
-                }
-
-                if (regex.IsMatch(tempStr))
+                if (regex.IsMatch(tempStr) || !textBox.IsEnabled)
                 {
                     AccidentOnHighway.HighwayIndexAndNumber = tempStr;
 
                     if (RoadIndexAndNumberBorder.ToolTip != null)
                     {
-                        ((ToolTip)RoadIndexAndNumberBorder.ToolTip).IsOpen = false;
                         textBox.Foreground = new SolidColorBrush(Colors.Black);
                     }
 
@@ -150,59 +144,34 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     if (RoadIndexAndNumberBorder.BorderBrush == null)
                     {
                         RoadIndexAndNumberBorder.BorderBrush = new SolidColorBrush(Colors.Red);
-                        RoadIndexAndNumberBorder.ToolTip = new ToolTip
-                        {
-                            Content = "Строка не соответствует шаблону:\n\t0-00-00-0*\n\n* - не обязательный элемент",
-                            FontSize = 13,
-                            PlacementTarget = RoadIndexAndNumberBorder,
-                            Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom
-                        };
-
-                        ((ToolTip)RoadIndexAndNumberBorder.ToolTip).IsOpen = true;
+                        RoadIndexAndNumberBorder.ToolTip = "Строка не соответствует шаблону:\n\t0-00-00-0*\n\n* - не обязательный элемент.";
 
                         textBox.Foreground = new SolidColorBrush(Colors.Red);
 
                         isRoadIndexAndNumberValid = false;
                     }
+
+                    roadIndexAndNumber = tempStr;
                 }
 
-
-                //check string length to input '-' on index=2 and, if last symbol exist, on index=10 
-                if (tempStr.Length > 1)
-                {
-                    tempStr = tempStr.Insert(1, "-");
-                }
-                if (tempStr.Length > 4)
-                {
-                    tempStr = tempStr.Insert(4, "-");
-                }
-                if (tempStr.Length > 7)
-                {
-                    tempStr = tempStr.Insert(7, "-");
-                }
+                tempStr = tempStr.AddSeparator('-', 1, 4, 7);
 
                 textBox.Text = tempStr;
+                textBox.CaretIndex = caretIndex;
+
+
+                Dictionary<int, int> caretIndexes = new Dictionary<int, int>();
+                caretIndexes.Add(2, 3);
+                caretIndexes.Add(5, 6);
+                caretIndexes.Add(8, 9);
 
                 //set caret after string change
-                if (caretIndex == 2)
+                if (!textBox.TrySetCaretOnIndexes(caretIndexes))
                 {
-                    textBox.CaretIndex = 3;
-                }
-                else if (caretIndex == 5)
-                {
-                    textBox.CaretIndex = 6;
-                }
-                else if (caretIndex == 8)
-                {
-                    textBox.CaretIndex = 9;
-                }
-                else if (tempStr.Length < oldLength)
-                {
-                    textBox.CaretIndex = caretIndex - 1;
-                }
-                else
-                {
-                    textBox.CaretIndex = caretIndex;
+                    if (tempStr.Length < oldLength && caretIndex - 1 >= 0)
+                    {
+                        textBox.CaretIndex = caretIndex - 1;
+                    }
                 }
             }
         }
@@ -213,6 +182,9 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             {
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = true;
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
+                RoadIndexAndBorderTextBox.Text = "";
+
+                RoadIndexAndNumberBorder.BorderBrush = null;
 
                 DataContext = AccidentOnVillage;
             }
@@ -224,8 +196,15 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = false;
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = true;
 
+                RoadIndexAndBorderTextBox.Text = roadIndexAndNumber;
+
                 DataContext = AccidentOnHighway;
             }
+        }
+
+        private void ShowErrorMessage(string msg)
+        {
+            MessageBox.Show(msg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

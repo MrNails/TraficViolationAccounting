@@ -24,6 +24,7 @@ namespace AccountingOfTraficViolation.Views
         private GeneralInfo generalInfo;
         private AccidentOnHighway accidentOnHighway;
         private AccidentOnVillage accidentOnVillage;
+        private RoadCondition roadCondition;
         public OpenNewCaseWindow()
         {
             InitializeComponent();
@@ -51,7 +52,11 @@ namespace AccountingOfTraficViolation.Views
         }
         private void RoadConditionClick(object sender, RoutedEventArgs e)
         {
-            RoadConditionProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+            AddRoadConditionWindow roadConditionWindow = new AddRoadConditionWindow();
+            if (roadConditionWindow.ShowDialog() == true)
+            {
+                RoadConditionProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+            }
         }
         private void ParticipanInfoClick(object sender, RoutedEventArgs e)
         {

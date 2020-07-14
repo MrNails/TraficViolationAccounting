@@ -66,7 +66,7 @@
                 <TextBox Grid.Column="1" Grid.Row="4" x:Name="VillageStreetTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
                          Padding="2" VerticalAlignment="Center" MaxLength="22" Text="{Binding Street}"/>
                 <TextBox Grid.Column="1" Grid.Row="5" x:Name="VillageBindingTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                         Padding="2" VerticalAlignment="Center" MaxLength="47" Height="50" Text="{Binding VillageBinding}"/>
+                         Padding="2" VerticalAlignment="Center" MaxLength="47" Text="{Binding VillageBinding}"/>
 
                 <TextBox Grid.Column="2" Grid.Row="2" x:Name="NameRegionalCodeTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
                          Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding ReginalCodeOfName}"/>
@@ -94,7 +94,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="0" Text="Индекс и № дороги" Style="{StaticResource TextBlockTemplateStyle}" 
                            VerticalAlignment="Center" TextAlignment="Center"/>
-                <Border Grid.Column="1" Grid.Row="0" x:Name="RoadIndexAndNumberBorder" BorderThickness="1">
+                <Border Grid.Column="1" Grid.Row="0" x:Name="RoadIndexAndNumberBorder" BorderThickness="1" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <TextBox Style="{StaticResource TextBlockTemplateStyle}" Name="RoadIndexAndBorderTextBox" MaxLength="9"
                          Padding="2" VerticalAlignment="Center" Width="150" HorizontalAlignment="Left"
                          TextChanged="RoadIndexAndNumberTextBox_TextChanged"/>

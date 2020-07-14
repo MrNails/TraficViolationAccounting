@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +16,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
     {
         private bool isCardNumberValid;
 
-        public GeneralInfo GeneralInfo { get; set; }
+        public GeneralInfo GeneralInfo { get; private set; }
 
         public AddGeneralInfoWindow(GeneralInfo generalInfo)
         {
@@ -72,16 +73,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 int caretIndex = textBox.CaretIndex;
                 int oldLength = textBox.Text.Length;
 
-
-                //delete all '-'
-                for (int i = 0; i < tempStr.Length; i++)
-                {
-                    if (tempStr[i] == '-')
-                    {
-                        tempStr = tempStr.Remove(i, 1);
-                        i--;
-                    }
-                }
+                tempStr = tempStr.GetStrWithoutSeparator('-');
 
                 if (regex.IsMatch(tempStr))
                 {
@@ -89,7 +81,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
                     if (CardNumberBorder.ToolTip != null)
                     {
-                        ((ToolTip)CardNumberBorder.ToolTip).IsOpen = false;
                         textBox.Foreground = new SolidColorBrush(Colors.Black);
                     }
 
@@ -102,15 +93,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     if (CardNumberBorder.BorderBrush == null)
                     {
                         CardNumberBorder.BorderBrush = new SolidColorBrush(Colors.Red);
-                        CardNumberBorder.ToolTip = new ToolTip
-                        {
-                            Content = "Строка не соответствует шаблону:\n\t00-0000000-0*\n\n* - не обязательный элемент",
-                            FontSize = 13,
-                            PlacementTarget = CardNumberBorder,
-                            Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom
-                        };
-
-                        ((ToolTip)CardNumberBorder.ToolTip).IsOpen = true;
+                        CardNumberBorder.ToolTip = "Строка не соответствует шаблону:\n\t00-0000000-0*\n\n* - не обязательный элемент.";
 
                         textBox.Foreground = new SolidColorBrush(Colors.Red);
 
@@ -118,47 +101,24 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     }
                 }
 
+                tempStr = tempStr.AddSeparator('-', 2, 10);
 
-                //check string length to input '-' on index=2 and, if last symbol exist, on index=10 
-                if (tempStr.Length > 2)
-                {
-                    tempStr = tempStr.Insert(2, "-");
+                textBox.Text = tempStr;
+                textBox.CaretIndex = caretIndex;
 
 
-                    if (tempStr.Length > 10)
-                    {
-                        tempStr = tempStr.Insert(10, "-");
-
-                    }
-                }
-
-                textBox.Text = tempStr; 
+                Dictionary<int, int> caretIndexes = new Dictionary<int, int>();
+                caretIndexes.Add(3, 4);
+                caretIndexes.Add(11, 12);
 
                 //set caret after string change
-                if (caretIndex == 3)
+                if (!textBox.TrySetCaretOnIndexes(caretIndexes))
                 {
-                    textBox.CaretIndex = 4;
+                    if (tempStr.Length < oldLength && caretIndex - 1 >= 0)
+                    {
+                        textBox.CaretIndex = caretIndex - 1;
+                    }
                 }
-                else if (caretIndex == 11)
-                {
-                    textBox.CaretIndex = 12;
-                }
-                else if (tempStr.Length < oldLength)
-                {
-                    textBox.CaretIndex = caretIndex - 1;
-                }
-                else
-                {
-                    textBox.CaretIndex = caretIndex;
-                }
-            }
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-           if (CardNumberBorder.ToolTip != null)
-            {
-                ((ToolTip)CardNumberBorder.ToolTip).IsOpen = false;
             }
         }
     }
