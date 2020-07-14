@@ -52,9 +52,10 @@ namespace AccountingOfTraficViolation.Views
         }
         private void RoadConditionClick(object sender, RoutedEventArgs e)
         {
-            AddRoadConditionWindow roadConditionWindow = new AddRoadConditionWindow();
+            AddRoadConditionWindow roadConditionWindow = new AddRoadConditionWindow(roadCondition);
             if (roadConditionWindow.ShowDialog() == true)
             {
+                roadCondition = roadConditionWindow.RoadCondition;
                 RoadConditionProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
             }
         }
