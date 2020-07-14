@@ -76,7 +76,6 @@
     <Compile Include="Models\MainTable.cs" />
     <Compile Include="Services\SimpleExtensions.cs" />
     <Compile Include="Services\RelayCommand.cs" />
-    <Compile Include="Services\VisualObjectExtension.cs" />
     <Compile Include="ViewModels\CaseVM.cs" />
     <Compile Include="Views\AddInfoWindows\AddAccidentPlaceWindow.xaml.cs">
       <DependentUpon>AddAccidentPlaceWindow.xaml</DependentUpon>
