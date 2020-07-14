@@ -106,18 +106,10 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 textBox.Text = tempStr;
                 textBox.CaretIndex = caretIndex;
 
-
-                Dictionary<int, int> caretIndexes = new Dictionary<int, int>();
-                caretIndexes.Add(3, 4);
-                caretIndexes.Add(11, 12);
-
                 //set caret after string change
-                if (!textBox.TrySetCaretOnIndexes(caretIndexes))
+                if (caretIndex + (tempStr.Length - oldLength) >= 0)
                 {
-                    if (tempStr.Length < oldLength && caretIndex - 1 >= 0)
-                    {
-                        textBox.CaretIndex = caretIndex - 1;
-                    }
+                    textBox.CaretIndex = caretIndex + (tempStr.Length - oldLength);
                 }
             }
         }

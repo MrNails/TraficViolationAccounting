@@ -102,6 +102,12 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     return;
                 }
 
+                if (Validation.GetHasError(NameRegionalCodeTextBox) || Validation.GetHasError(DistrictRegionalCodeTextBox)
+                    || Validation.GetHasError(StreetRegionalCodeTextBox) || Validation.GetHasError(BindingRegionalCodeTextBox))
+                {
+                    return;
+                }
+
                 AccidentOnHighway = null;
             }
 
@@ -166,12 +172,9 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 caretIndexes.Add(8, 9);
 
                 //set caret after string change
-                if (!textBox.TrySetCaretOnIndexes(caretIndexes))
+                if (caretIndex + (tempStr.Length - oldLength) >= 0)
                 {
-                    if (tempStr.Length < oldLength && caretIndex - 1 >= 0)
-                    {
-                        textBox.CaretIndex = caretIndex - 1;
-                    }
+                    textBox.CaretIndex = caretIndex + (tempStr.Length - oldLength);
                 }
             }
         }
