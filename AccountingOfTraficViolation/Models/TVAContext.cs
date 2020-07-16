@@ -11,7 +11,16 @@ namespace AccountingOfTraficViolation.Models
         public TVAContext()
             : base("name=TraficViolationAccounting")
         {
-            Database.CreateIfNotExists();
+            if (Database.CreateIfNotExists())
+            {
+                Users.Add(new User 
+                { 
+                    Login = "admin", 
+                    Password = "12345", 
+                    Role = 0 
+                });
+                this.SaveChanges();
+            }
         }
 
         public virtual DbSet<AccidentOnHighway> AccidentOnHighways { get; set; }

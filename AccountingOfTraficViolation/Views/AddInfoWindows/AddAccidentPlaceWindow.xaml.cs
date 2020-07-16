@@ -30,7 +30,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
         public AddAccidentPlaceWindow() : this(null, null)
         { }
-
         public AddAccidentPlaceWindow(AccidentOnHighway accidentOnHighway, AccidentOnVillage accidentOnVillage)
         {
             InitializeComponent();
@@ -47,6 +46,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 }
 
                 AccidentOnHighway = new AccidentOnHighway();
+                isRoadIndexAndNumberValid = false;
             }
             else if (accidentOnHighway != null)
             {
@@ -57,9 +57,11 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     ((Grid)AccidentOnVillageGroup.Content).IsEnabled = false;
                 }
 
-                RoadIndexAndBorderTextBox.Text = AccidentOnHighway.HighwayIndexAndNumber;
+                RoadIndexAndNumberTextBox.Text = AccidentOnHighway.HighwayIndexAndNumber;
 
                 DataContext = AccidentOnHighway;
+
+                isRoadIndexAndNumberValid = true;
 
                 AccidentOnVillage = new AccidentOnVillage();
             }
@@ -74,32 +76,130 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 }
 
                 DataContext = AccidentOnVillage;
+                isRoadIndexAndNumberValid = false;
             }
 
             AccidentOnHighway.ErrorInput += ShowErrorMessage;
             AccidentOnVillage.ErrorInput += ShowErrorMessage;
 
-            isRoadIndexAndNumberValid = false;
+
         }
 
         private void AcceptClick(object sender, RoutedEventArgs e)
         {
+            bool isValid = true;
+
             if (((Grid)AccidentOnHighwayGroup.Content).IsEnabled)
             {
-                if (!isRoadIndexAndNumberValid || !int.TryParse(KilometerTextBox.Text, out int km) 
-                    || !int.TryParse(MeterTextBox.Text, out int m) || string.IsNullOrEmpty(RoadBindingTextBox.Text))
+                if (!isRoadIndexAndNumberValid)
                 {
-                    return;
+                    RoadIndexAndNumberBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                    RoadIndexAndNumberBorder.ToolTip = "Строка не соответствует шаблону:\n\t0-00-00-0*\n\n* - не обязательный элемент.";
+                    isValid = false;
                 }
 
-                AccidentOnVillage = null;
-            } 
+                if (!int.TryParse(KilometerTextBox.Text, out int km))
+                {
+                    if (string.IsNullOrEmpty(KilometerTextBox.Text))
+                    {
+                        KilometerBorder.ToolTip = "Поле 'км' не может быть пустым.";
+                    }
+                    else
+                    {
+                        KilometerBorder.ToolTip = $"Не удалось преобразовать значение '{KilometerTextBox.Text}'.";
+                    }
+                    KilometerBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                    isValid = false;
+                }
+                else
+                {
+                    KilometerBorder.BorderBrush = null;
+                    KilometerBorder.ToolTip = null;
+                }
+
+                if (!int.TryParse(MeterTextBox.Text, out int m))
+                {
+                    if (string.IsNullOrEmpty(MeterTextBox.Text))
+                    {
+                        MeterBorder.ToolTip = "Поле 'м' не может быть пустым.";
+                    }
+                    else
+                    {
+                        MeterBorder.ToolTip = $"Не удалось преобразовать значение '{MeterTextBox.Text}'.";
+                    }
+                    MeterBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                    isValid = false;
+                }
+                else
+                {
+                    MeterBorder.ToolTip = null;
+                    MeterBorder.BorderBrush = null;
+                }
+
+                if (string.IsNullOrEmpty(RoadBindingTextBox.Text))
+                {
+                    RoadBindingBorder.ToolTip = "Поле 'Привязка' не может быть пустым.";
+                    RoadBindingBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                    isValid = false;
+                }
+                else
+                {
+                    RoadBindingBorder.ToolTip = null;
+                    RoadBindingBorder.BorderBrush = null;
+                }
+
+                if (isValid) {
+                    AccidentOnVillage = null;
+                }
+            }
             else
             {
-                if (string.IsNullOrEmpty(VillageNameTextBox.Text) || string.IsNullOrEmpty(VillageDistrictTextBox.Text)
-                    || string.IsNullOrEmpty(VillageStreetTextBox.Text) || string.IsNullOrEmpty(VillageBindingTextBox.Text))
+                if (string.IsNullOrEmpty(VillageNameTextBox.Text))
                 {
-                    return;
+                    VillageNameBorder.ToolTip = "Поле 'Название' не может быть пустым.";
+                    VillageNameBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                    isValid = false;
+                }
+                else
+                {
+                    VillageNameBorder.BorderBrush = null;
+                    VillageNameBorder.ToolTip = null;
+                }
+
+                if (string.IsNullOrEmpty(VillageDistrictTextBox.Text))
+                {
+                    VillageDistrictBorder.ToolTip = "Поле 'Район' не может быть пустым.";
+                    VillageDistrictBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                    isValid = false;
+                }
+                else
+                {
+                    VillageDistrictBorder.BorderBrush = null;
+                    VillageDistrictBorder.ToolTip = null;
+                }
+
+                if (string.IsNullOrEmpty(VillageStreetTextBox.Text))
+                {
+                    VillageStreetBorder.ToolTip = "Поле 'Улица' не может быть пустым.";
+                    VillageStreetBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                    isValid = false;
+                }
+                else
+                {
+                    VillageStreetBorder.BorderBrush = null;
+                    VillageStreetBorder.ToolTip = null;
+                }
+
+                if (string.IsNullOrEmpty(VillageBindingTextBox.Text))
+                {
+                    VillageBindingBorder.ToolTip = "Поле 'Привязка' не может быть пустым.";
+                    VillageBindingBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                    isValid = false;
+                }
+                else
+                {
+                    VillageBindingBorder.BorderBrush = null;
+                    VillageBindingBorder.ToolTip = null;
                 }
 
                 if (Validation.GetHasError(NameRegionalCodeTextBox) || Validation.GetHasError(DistrictRegionalCodeTextBox)
@@ -108,10 +208,17 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     return;
                 }
 
-                AccidentOnHighway = null;
+                if (isValid)
+                {
+                    AccidentOnHighway = null;
+                }
             }
 
-            DialogResult = true;
+            if (isValid)
+            {
+                DialogResult = true;
+            }
+
         }
         private void RejectClick(object sender, RoutedEventArgs e)
         {
@@ -132,14 +239,11 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
                 tempStr = tempStr.GetStrWithoutSeparator('-');
 
-                if (regex.IsMatch(tempStr) || !textBox.IsEnabled)
+                if (regex.IsMatch(tempStr))
                 {
                     AccidentOnHighway.HighwayIndexAndNumber = tempStr;
-
-                    if (RoadIndexAndNumberBorder.ToolTip != null)
-                    {
-                        textBox.Foreground = new SolidColorBrush(Colors.Black);
-                    }
+                    
+                    textBox.Foreground = new SolidColorBrush(Colors.Black);
 
                     RoadIndexAndNumberBorder.BorderBrush = null;
                     RoadIndexAndNumberBorder.ToolTip = null;
@@ -156,20 +260,18 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
                         isRoadIndexAndNumberValid = false;
                     }
+                }
 
+                if (!string.IsNullOrEmpty(tempStr))
+                {
                     roadIndexAndNumber = tempStr;
                 }
 
                 tempStr = tempStr.AddSeparator('-', 1, 4, 7);
 
                 textBox.Text = tempStr;
+
                 textBox.CaretIndex = caretIndex;
-
-
-                Dictionary<int, int> caretIndexes = new Dictionary<int, int>();
-                caretIndexes.Add(2, 3);
-                caretIndexes.Add(5, 6);
-                caretIndexes.Add(8, 9);
 
                 //set caret after string change
                 if (caretIndex + (tempStr.Length - oldLength) >= 0)
@@ -185,9 +287,10 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             {
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = true;
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
-                RoadIndexAndBorderTextBox.Text = "";
+                RoadIndexAndNumberTextBox.Text = "";
 
                 RoadIndexAndNumberBorder.BorderBrush = null;
+                DisableAllBorder(AccidentOnHighwayGroup);
 
                 DataContext = AccidentOnVillage;
             }
@@ -199,7 +302,12 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = false;
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = true;
 
-                RoadIndexAndBorderTextBox.Text = roadIndexAndNumber;
+                if (roadIndexAndNumber != null)
+                {
+                    RoadIndexAndNumberTextBox.Text = roadIndexAndNumber;
+                }
+
+                DisableAllBorder(AccidentOnVillageGroup);
 
                 DataContext = AccidentOnHighway;
             }
@@ -208,6 +316,45 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
         private void ShowErrorMessage(string msg)
         {
             MessageBox.Show(msg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void DisableAllBorder(UIElement elem)
+        {
+            Panel panel = null;
+
+            if (elem is ContentControl)
+            {
+                if (((ContentControl)elem).Content is Panel)
+                {
+                    panel = (Panel)((ContentControl)elem).Content;
+                }
+                else
+                {
+                    throw new InvalidCastException("Elem.Content is not Panel.");
+                }
+            }
+            else if (elem is Panel)
+            {
+                panel = (Panel)elem;
+            }
+            else
+            {
+                throw new InvalidCastException("Elem.Content is not Panel or ContentControl.");
+            }
+
+            foreach (var child in panel.Children)
+            {
+                if (child is Border)
+                {
+                    ((Border)child).BorderBrush = null;
+                    ((Border)child).ToolTip = null;
+                }
+
+                if (child is Panel)
+                {
+                    DisableAllBorder((Panel)child);
+                }
+            }
         }
     }
 }

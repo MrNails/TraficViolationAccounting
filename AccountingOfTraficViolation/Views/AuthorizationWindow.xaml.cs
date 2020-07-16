@@ -23,28 +23,23 @@ namespace AccountingOfTraficViolation.Views
     /// </summary>
     public partial class AuthorizationWindow : Window
     {
-        //private TVAContext context;
-        //private object locker;
-
         public User User { get; set; }
 
         public AuthorizationWindow()
         {
             InitializeComponent();
             User = new User();
-            //locker = new object();
-            //context = new TVAContext();
         }
 
         private async void AcceptClick(object sender, RoutedEventArgs e)
         {
             MainGrid.IsEnabled = false;
 
-            User findUser = await CheckCerdentialsAsync();
+            User = await CheckCerdentialsAsync();
 
             MainGrid.IsEnabled = true;
 
-            if (findUser == null)
+            if (User == null)
             {
                 MessageBox.Show("Пользователь не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -55,11 +50,6 @@ namespace AccountingOfTraficViolation.Views
         private void RefuseClick(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            //context.Dispose();
         }
 
         private async Task<User> CheckCerdentialsAsync()

@@ -25,11 +25,13 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             if (generalInfo != null)
             {
                 GeneralInfo = generalInfo.Clone();
+                isCardNumberValid = true;
             }
             else
             {
                 GeneralInfo = new GeneralInfo();
                 GeneralInfo.DayOfWeek = 1;
+                isCardNumberValid = false;
             }
 
             GeneralInfo.ErrorInput += msg =>
@@ -41,13 +43,19 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             CardNumberTextBox.Text = GeneralInfo.CardNumber;
 
             DataContext = GeneralInfo;
-            isCardNumberValid = false;
         }
 
         private void AcceptClick(object sender, RoutedEventArgs e)
         {
+            if (!isCardNumberValid)
+            {
+                CardNumberBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                CardNumberBorder.ToolTip = "Строка не соответствует шаблону:\n\t00-0000000-0*\n\n* - не обязательный элемент.";
+                return;
+            }
+
             if (Validation.GetHasError(IncidentTypeTextBox) || Validation.GetHasError(CardTypeTextBox)
-                || Validation.GetHasError(FillTimeTextBox) || !isCardNumberValid)
+                || Validation.GetHasError(FillTimeTextBox))
             {
                 return;
             }

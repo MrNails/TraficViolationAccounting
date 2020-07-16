@@ -76,7 +76,6 @@
     <Compile Include="Models\MainTable.cs" />
     <Compile Include="Services\SimpleExtensions.cs" />
     <Compile Include="Services\RelayCommand.cs" />
-    <Compile Include="ViewModels\CaseVM.cs" />
     <Compile Include="Views\AddInfoWindows\AddAccidentPlaceWindow.xaml.cs">
       <DependentUpon>AddAccidentPlaceWindow.xaml</DependentUpon>
     </Compile>
@@ -165,6 +164,9 @@
     <Resource Include="Images\RejectIcon.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

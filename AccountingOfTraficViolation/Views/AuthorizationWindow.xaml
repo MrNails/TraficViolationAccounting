@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views"
         mc:Ignorable="d"
-        Title="Вход в аккаунт" Height="300" Width="420" ResizeMode="NoResize" Closing="Window_Closing">
+        Title="Вход в аккаунт" Height="300" Width="420" ResizeMode="NoResize">
     <Window.Resources>
         <Style TargetType="StackPanel">
             <Setter Property="VerticalAlignment" Value="Center"/>

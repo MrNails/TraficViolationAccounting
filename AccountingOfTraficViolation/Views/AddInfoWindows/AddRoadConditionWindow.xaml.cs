@@ -43,18 +43,22 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 TechnicalToolTextBox.Text = RoadCondition.TechnicalTool;
                 PlaceElementTextBox.Text = RoadCondition.PlaceElement;
                 SurfaceStateTextBox.Text = RoadCondition.SurfaceState;
+
+                isTechnicalToolValid = true;
+                isRoadDisadvantagesValid = true;
+                isPlaceElementValid = true;
+                isSurfaceStateValid = true;
             } 
             else
             {
                 RoadCondition = new RoadCondition();
+                isTechnicalToolValid = false;
+                isRoadDisadvantagesValid = false;
+                isPlaceElementValid = false;
+                isSurfaceStateValid = false;
             }
 
             DataContext = RoadCondition;
-
-            isTechnicalToolValid = false;
-            isRoadDisadvantagesValid = false;
-            isPlaceElementValid = false;
-            isSurfaceStateValid = false;
         }
         private void AcceptClick(object sender, RoutedEventArgs e)
         {
@@ -65,12 +69,40 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 return;
             }
 
-            if (!isTechnicalToolValid || !isRoadDisadvantagesValid|| !isPlaceElementValid || !isSurfaceStateValid)
+            bool isValid = true;
+
+            if (!isTechnicalToolValid)
             {
-                return;
+                TechnicalToolBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                TechnicalToolBorder.ToolTip = "Строка не соответствует шаблону:\n\t00-0000000-0*\n\n* - не обязательный элемент.";
+                isValid = false;
             }
 
-            DialogResult = true;
+            if (!isRoadDisadvantagesValid)
+            {
+                RoadDisadvantagesBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                RoadDisadvantagesBorder.ToolTip = "Строка не соответствует шаблону:\n\t00-0000000-0*\n\n* - не обязательный элемент.";
+                isValid = false;
+            }
+
+            if (!isPlaceElementValid)
+            {
+                PlaceElementBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                PlaceElementBorder.ToolTip = "Строка не соответствует шаблону:\n\t00-0000000-0*\n\n* - не обязательный элемент.";
+                isValid = false;
+            }
+
+            if (!isSurfaceStateValid)
+            {
+                SurfaceStateBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                SurfaceStateBorder.ToolTip = "Строка не соответствует шаблону:\n\t00-0000000-0*\n\n* - не обязательный элемент.";
+                isValid = false;
+            }
+
+            if (isValid)
+            {
+                DialogResult = true;
+            }
         }
         private void RejectClick(object sender, RoutedEventArgs e)
         {
@@ -80,7 +112,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
         private void TemplateTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             Regex regex = null;
-            Dictionary<int, int> caretIndexes = null;
             Action<string, bool> setRoadCondProp = null;
 
             TextBox textBox = (TextBox)sender;
@@ -97,12 +128,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 case "TechnicalToolTextBox":
                     border = TechnicalToolBorder;
                     indexes = new int[] { 2, 5, 8, 11 };
-
-                    caretIndexes = new Dictionary<int, int>();
-                    caretIndexes.Add(3, 4);
-                    caretIndexes.Add(6, 7);
-                    caretIndexes.Add(9, 10);
-                    caretIndexes.Add(12, 13);
 
                     toolTipText = "Строка не соответствует шаблону:\n\t00,00,00,00,00";
 
@@ -121,12 +146,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     border = RoadDisadvantagesBorder;
                     indexes = new int[] { 2, 5, 8, 11 };
 
-                    caretIndexes = new Dictionary<int, int>();
-                    caretIndexes.Add(3, 4);
-                    caretIndexes.Add(6, 7);
-                    caretIndexes.Add(9, 10);
-                    caretIndexes.Add(12, 13);
-
                     toolTipText = "Строка не соответствует шаблону:\n\t00,00,00,00,00";
 
                     regex = new Regex(@"\d{10}");
@@ -143,10 +162,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 case "PlaceElementTextBox":
                     border = PlaceElementBorder;
                     indexes = new int[] { 2, 5 };
-
-                    caretIndexes = new Dictionary<int, int>();
-                    caretIndexes.Add(3, 4);
-                    caretIndexes.Add(6, 7);
 
                     toolTipText = "Строка не соответствует шаблону:\n\t00,00,00";
 
@@ -165,9 +180,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     border = SurfaceStateBorder;
                     indexes = new int[] { 1 };
 
-                    caretIndexes = new Dictionary<int, int>();
-                    caretIndexes.Add(2, 3);
-
                     toolTipText = "Строка не соответствует шаблону:\n\t0,0";
 
                     regex = new Regex(@"\d{2}");
@@ -184,7 +196,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 default:
                     return;
             }
-
+             
             tempStr = tempStr.GetStrWithoutSeparator(',');
 
             if (regex.IsMatch(tempStr))
