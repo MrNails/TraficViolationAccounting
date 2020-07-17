@@ -6,6 +6,17 @@
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
         mc:Ignorable="d"
         Title="AddAccidentPlaceWindow" Height="450" Width="800"  ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxTemplateStyle}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="TextBox.ToolTip" 
+                            Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                    <Setter Property="TextBox.Foreground" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -36,16 +47,7 @@
                 </Grid.RowDefinitions>
                 <WrapPanel Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock  Text="Статус (код):" Style="{StaticResource TextBlockTemplateStyle}" Height="17"/>
-                    <TextBox Style="{StaticResource TextBlockTemplateStyle}" 
-                             Padding="2" VerticalAlignment="Center" Width="50" Margin="10 0 0 0">
-                        <TextBox.Text>
-                            <Binding Path="Status">
-                                <Binding.ValidationRules>
-                                    <ExceptionValidationRule />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
+                    <TextBox Padding="2" VerticalAlignment="Center" Width="50" Margin="10 0 0 0" Text="{Binding AccidentOnVillage.Status}"/>
                 </WrapPanel>
 
 
@@ -59,31 +61,27 @@
                 <TextBlock Grid.Column="0" Grid.Row="4" Text="Улица" Style="{StaticResource TextBlockTemplateStyle}" VerticalAlignment="Center"/>
                 <TextBlock Grid.Column="0" Grid.Row="5" Text="Привязка" Style="{StaticResource TextBlockTemplateStyle}" VerticalAlignment="Center"/>
 
-                <Border Grid.Column="1" Grid.Row="2" x:Name="VillageNameBorder" VerticalAlignment="Center" BorderThickness="1">
-                    <TextBox x:Name="VillageNameTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                         Padding="2" MaxLength="22" Text="{Binding Name}"/>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="3" x:Name="VillageDistrictBorder" VerticalAlignment="Center" BorderThickness="1">
-                    <TextBox x:Name="VillageDistrictTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                         Padding="2" MaxLength="22" Text="{Binding District}"/>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="4" x:Name="VillageStreetBorder" VerticalAlignment="Center" BorderThickness="1">
-                    <TextBox x:Name="VillageStreetTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                         Padding="2" MaxLength="22" Text="{Binding Street}"/>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="5" x:Name="VillageBindingBorder" VerticalAlignment="Center" BorderThickness="1">
-                    <TextBox x:Name="VillageBindingTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                         Padding="2" MaxLength="47" Text="{Binding VillageBinding}"/>
-                </Border>
+                <TextBox x:Name="VillageNameTextBox" Grid.Column="1" Grid.Row="2"
+                         VerticalAlignment="Center" Padding="2" MaxLength="22" 
+                         Text="{Binding Path=VillageName, ValidatesOnDataErrors=True}"/>
+                <TextBox x:Name="VillageDistrictTextBox" Grid.Column="1" Grid.Row="3"
+                         VerticalAlignment="Center" Padding="2" MaxLength="22" 
+                         Text="{Binding Path=VillageDistrict, ValidatesOnDataErrors=True}"/>
+                <TextBox x:Name="VillageStreetTextBox" Grid.Column="1" Grid.Row="4" 
+                         VerticalAlignment="Center" Padding="2" MaxLength="22" 
+                         Text="{Binding Path=VillageStreet, ValidatesOnDataErrors=True}"/>
+                <TextBox x:Name="VillageBindingTextBox" Grid.Column="1" Grid.Row="5" 
+                         VerticalAlignment="Center" Padding="2" MaxLength="47" 
+                         Text="{Binding Path=VillageBinding, ValidatesOnDataErrors=True}"/>
 
                 <TextBox Grid.Column="2" Grid.Row="2" x:Name="NameRegionalCodeTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding ReginalCodeOfName}"/>
+                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding AccidentOnVillage.ReginalCodeOfName}"/>
                 <TextBox Grid.Column="2" Grid.Row="3" x:Name="DistrictRegionalCodeTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding ReginalCodeOfDistrict}"/>
+                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding AccidentOnVillage.ReginalCodeOfDistrict}"/>
                 <TextBox Grid.Column="2" Grid.Row="4" x:Name="StreetRegionalCodeTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding ReginalCodeOfStreet}"/>
+                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding AccidentOnVillage.ReginalCodeOfStreet}"/>
                 <TextBox Grid.Column="2" Grid.Row="5" x:Name="BindingRegionalCodeTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding ReginalCodeOfBinding}"/>
+                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding AccidentOnVillage.ReginalCodeOfBinding}"/>
             </Grid>
 
         </GroupBox>
@@ -102,37 +100,31 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="0" Text="Индекс и № дороги" Style="{StaticResource TextBlockTemplateStyle}" 
                            VerticalAlignment="Center" TextAlignment="Center"/>
-                <Border Grid.Column="1" Grid.Row="0" x:Name="RoadIndexAndNumberBorder" BorderThickness="1" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <TextBox Style="{StaticResource TextBlockTemplateStyle}" Name="RoadIndexAndNumberTextBox" MaxLength="9"
-                         Padding="2" VerticalAlignment="Center" Width="150" HorizontalAlignment="Left"
-                         TextChanged="RoadIndexAndNumberTextBox_TextChanged"/>
-                </Border>
 
+                <TextBox Grid.Column="1" Grid.Row="0"  Name="RoadIndexAndNumberTextBox" MaxLength="9" 
+                         Padding="2" VerticalAlignment="Center" Width="150" HorizontalAlignment="Left"
+                         TextChanged="RoadIndexAndNumberTextBox_TextChanged" Text="{Binding Path=RoadIndexAndNumber, ValidatesOnDataErrors=True}"/>
                 <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
-                    <TextBox Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 7" Text="{Binding AdditionalInfo}"
+                    <TextBox Margin="0 0 0 7" Text="{Binding Path=AccidentOnHighway.AdditionalInfo}"
                          Padding="2" VerticalAlignment="Center" VerticalContentAlignment="Center" MaxLength="20"/>
-                    <TextBlock  Text="Дополнительная текстовая информация" Style="{StaticResource TextBlockTemplateStyle}" FontSize="13"
+                    <TextBlock  Text="Дополнительная текстовая информация" FontSize="13"
                            VerticalAlignment="Center" TextAlignment="Center"/>
                 </StackPanel>
 
                 <WrapPanel Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="194">
-                    <Border x:Name="KilometerBorder" BorderThickness="1">
-                        <TextBox Width="100" x:Name="KilometerTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                             Text="{Binding Kilometer}" MaxLength="4"/>
-                    </Border>
+                    <TextBox Width="100" x:Name="KilometerTextBox" MaxLength="4"
+                             Text="{Binding Path=Kilometer, ValidatesOnDataErrors=True}"/>
                     <TextBlock Text="+" FontSize="15" FontWeight="Bold" Margin="4 0 4 0"/>
-                    <Border x:Name="MeterBorder" BorderThickness="1">
-                        <TextBox Width="70" x:Name="MeterTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                             Text="{Binding Meter}" MaxLength="3"/>
-                    </Border>
+                    <TextBox Width="70" x:Name="MeterTextBox" MaxLength="3"
+                             Text="{Binding Path=Meter, ValidatesOnDataErrors=True}"/>
                     <TextBlock Text="км" Style="{StaticResource TextBlockTemplateStyle}" Margin="45 0 0 0"/>
                     <TextBlock Text="м" Style="{StaticResource TextBlockTemplateStyle}" Margin="90 0 0 0"/>
                 </WrapPanel>
 
                 <TextBlock Grid.Column="0" Grid.Row="3" Text="Привязка" Style="{StaticResource TextBlockTemplateStyle}" VerticalAlignment="Center"/>
                 <Border Grid.Column="1" Grid.Row="3" x:Name="RoadBindingBorder" BorderThickness="1"  VerticalAlignment="Center">
-                    <TextBox  x:Name="RoadBindingTextBox" Style="{StaticResource TextBlockTemplateStyle}" 
-                         Padding="2" Height="50" MaxLength="47" Text="{Binding Path=Binding}"/>
+                    <TextBox  x:Name="RoadBindingTextBox" Padding="2" Height="50" MaxLength="47" 
+                              Text="{Binding Path=RoadBinding, ValidatesOnDataErrors=True}"/>
                 </Border>
             </Grid>
         </GroupBox>
