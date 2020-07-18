@@ -23,7 +23,8 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
     /// </summary>
     public partial class AddAccidentPlaceWindow : Window
     {
-        private AccidentPlaceVM AccidentPlaceVM;
+        private AccidentOnHighwayVM AccidentOnHighwayVM;
+        private AccidentOnVillageVM AccidentOnVillageVM;
 
         public AccidentOnHighway AccidentOnHighway { get; private set; }
         public AccidentOnVillage AccidentOnVillage { get; private set; }
@@ -33,6 +34,9 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
         public AddAccidentPlaceWindow(AccidentOnHighway accidentOnHighway, AccidentOnVillage accidentOnVillage)
         {
             InitializeComponent();
+
+            AccidentOnVillageVM = new AccidentOnVillageVM(accidentOnVillage);
+            AccidentOnHighwayVM = new AccidentOnHighwayVM(accidentOnHighway);
 
             if (accidentOnVillage != null)
             {
@@ -44,6 +48,8 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 }
 
                 AccidentOnHighway = new AccidentOnHighway();
+
+                DataContext = AccidentOnVillageVM;
             }
             else if (accidentOnHighway != null)
             {
@@ -55,6 +61,8 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 }
 
                 AccidentOnVillage = new AccidentOnVillage();
+
+                DataContext = AccidentOnHighwayVM;
             }
             else
             {
@@ -65,14 +73,12 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 {
                     ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
                 }
+
+                DataContext = AccidentOnVillageVM;
             }
 
             AccidentOnHighway.ErrorInput += ShowErrorMessage;
             AccidentOnVillage.ErrorInput += ShowErrorMessage;
-
-            AccidentPlaceVM = new AccidentPlaceVM(accidentOnHighway, accidentOnVillage);
-
-            DataContext = AccidentPlaceVM;
         }
 
         private void AcceptClick(object sender, RoutedEventArgs e)
@@ -84,7 +90,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     return;
                 }
 
-                AccidentOnHighway = AccidentPlaceVM.AccidentOnHighway;
+                AccidentOnHighway = AccidentOnHighwayVM.AccidentOnHighway;
 
                 AccidentOnVillage = null;
             }
@@ -95,7 +101,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     return;
                 }
 
-                AccidentOnVillage = AccidentPlaceVM.AccidentOnVillage;
+                AccidentOnVillage = AccidentOnVillageVM.AccidentOnVillage;
 
                 AccidentOnHighway = null;
             }
@@ -137,6 +143,8 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             {
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = true;
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
+
+                DataContext = AccidentOnVillageVM;
             }
         }
         private void AccidentOnHighwayGroup_MouseUp(object sender, MouseButtonEventArgs e)
@@ -145,6 +153,8 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             {
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = false;
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = true;
+
+                DataContext = AccidentOnHighwayVM;
             }
         }
 

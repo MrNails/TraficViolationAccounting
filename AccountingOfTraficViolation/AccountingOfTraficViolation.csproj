@@ -74,16 +74,21 @@
     <Compile Include="Models\CaseAccidentPlace.cs" />
     <Compile Include="Models\GeneralInfo.cs" />
     <Compile Include="Models\MainTable.cs" />
+    <Compile Include="ViewModels\AccidentOnHighwayVM.cs" />
+    <Compile Include="ViewModels\AccidentOnVillageVM.cs" />
     <Compile Include="Services\SimpleExtensions.cs" />
     <Compile Include="Services\RelayCommand.cs" />
     <Compile Include="Services\VisualObjectExtensions.cs" />
-    <Compile Include="ViewModels\AccidentPlaceVM.cs" />
+    <Compile Include="ViewModels\ParticipantInfoVM.cs" />
     <Compile Include="ViewModels\RoadConditionVM.cs" />
     <Compile Include="Views\AddInfoWindows\AddAccidentPlaceWindow.xaml.cs">
       <DependentUpon>AddAccidentPlaceWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AddInfoWindows\AddGeneralInfoWindow.xaml.cs">
       <DependentUpon>AddGeneralInfoWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddInfoWindows\AddParticipantInfoWindow.xaml.cs">
+      <DependentUpon>AddParticipantInfoWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AddInfoWindows\AddRoadConditionWindow.xaml.cs">
       <DependentUpon>AddRoadConditionWindow.xaml</DependentUpon>
@@ -111,6 +116,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AddInfoWindows\AddGeneralInfoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AddInfoWindows\AddParticipantInfoWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
