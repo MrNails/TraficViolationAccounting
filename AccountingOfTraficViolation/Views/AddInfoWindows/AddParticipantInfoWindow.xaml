@@ -1,0 +1,54 @@
+﻿<Window x:Class="AccountingOfTraficViolation.Views.AddInfoWindows.AddParticipantInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
+        mc:Ignorable="d"
+        Title="Информация о пострадавших" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Имя" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <TextBox  Width="160" MaxLength="15" Style="{StaticResource TextBoxValidationTemplate}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Фамилия" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <TextBox  Width="160" MaxLength="15" Style="{StaticResource TextBoxValidationTemplate}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Отчество" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <TextBox  Width="160" MaxLength="15" Style="{StaticResource TextBoxValidationTemplate}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Адрес" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <TextBox  Width="510" MaxLength="50" Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <DockPanel Grid.Column="1">
+            <ListBox x:Name="ParticipantsListBox" DockPanel.Dock="Top" />
+            <WrapPanel Height="29" DockPanel.Dock="Bottom">
+                <Button Content="Добавить" Width="90" Style="{StaticResource ButtonTemplateStyle}" Margin="25 0 20 0"/>
+                <Button Content="Удалить " Width="90" Style="{StaticResource ButtonTemplateStyle}" Margin="20 0 0 0"/>
+            </WrapPanel>
+        </DockPanel>
+    </Grid>
+</Window>
