@@ -1,53 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using AccountingOfTraficViolation.Models;
 using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.ViewModels
 {
-    public class AccidentPlaceVM : IDataErrorInfo
+    public class AccidentOnHighwayVM : IDataErrorInfo
     {
         private string error;
 
-        public AccidentPlaceVM() : this(null, null)
-        {}
-        public AccidentPlaceVM(AccidentOnHighway accidentOnHighway, AccidentOnVillage accidentOnVillage)
+        public AccidentOnHighwayVM() : this(null)
+        { }
+        public AccidentOnHighwayVM(AccidentOnHighway accidentOnHighway)
         {
-            if (accidentOnVillage != null)
-            {
-                AccidentOnVillage = accidentOnVillage.Clone();
-
-                AccidentOnHighway = new AccidentOnHighway();
-            }
-            else if (accidentOnHighway != null)
+            if (accidentOnHighway != null)
             {
                 AccidentOnHighway = accidentOnHighway.Clone();
-
-                AccidentOnVillage = new AccidentOnVillage();
             }
             else
             {
-                AccidentOnVillage = new AccidentOnVillage();
                 AccidentOnHighway = new AccidentOnHighway();
             }
 
             AccidentOnHighway.ErrorInput += ShowErrorMessage;
-            AccidentOnVillage.ErrorInput += ShowErrorMessage;
 
             RoadIndexAndNumber = AccidentOnHighway.HighwayIndexAndNumber;
             RoadBinding = AccidentOnHighway.Binding;
             Kilometer = AccidentOnHighway.Kilometer;
             Meter = AccidentOnHighway.Meter;
-            VillageName = AccidentOnVillage.Name;
-            VillageStreet = AccidentOnVillage.Street;
-            VillageDistrict = AccidentOnVillage.District;
-            VillageBinding = AccidentOnVillage.VillageBinding;
         }
 
         public string this[string columnName]
@@ -88,46 +70,6 @@ namespace AccountingOfTraficViolation.ViewModels
                             AccidentOnHighway.Binding = RoadBinding;
                         }
                         break;
-                    case "VillageName":
-                        if (string.IsNullOrEmpty(VillageName))
-                        {
-                            _error = "Поле 'Название' не может быть пустым.";
-                        }
-                        else
-                        {
-                            AccidentOnVillage.Name = VillageName;
-                        }
-                        break;
-                    case "VillageStreet":
-                        if (string.IsNullOrEmpty(VillageStreet))
-                        {
-                            _error = "Поле 'Улица' не может быть пустым.";
-                        }
-                        else
-                        {
-                            AccidentOnVillage.Street = VillageStreet;
-                        }
-                        break;
-                    case "VillageDistrict":
-                        if (string.IsNullOrEmpty(VillageDistrict))
-                        {
-                            _error = "Поле 'Район' не может быть пустым.";
-                        }
-                        else
-                        {
-                            AccidentOnVillage.District = VillageDistrict;
-                        }
-                        break;
-                    case "VillageBinding":
-                        if (string.IsNullOrEmpty(VillageBinding))
-                        {
-                            _error = "Поле 'Привязка' не может быть пустым.";
-                        }
-                        else
-                        {
-                            AccidentOnVillage.VillageBinding = VillageBinding;
-                        }
-                        break;
                     case "Kilometer":
                         if (string.IsNullOrEmpty(Kilometer))
                         {
@@ -164,14 +106,9 @@ namespace AccountingOfTraficViolation.ViewModels
             }
         }
 
-        public AccidentOnVillage AccidentOnVillage { get; set; }
         public AccidentOnHighway AccidentOnHighway { get; set; }
         public string RoadIndexAndNumber { get; set; }
         public string RoadBinding { get; set; }
-        public string VillageName { get; set; }
-        public string VillageStreet { get; set; }
-        public string VillageDistrict { get; set; }
-        public string VillageBinding { get; set; }
         public string Kilometer { get; set; }
         public string Meter { get; set; }
 
