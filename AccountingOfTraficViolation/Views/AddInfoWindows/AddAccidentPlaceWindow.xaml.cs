@@ -23,9 +23,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
     /// </summary>
     public partial class AddAccidentPlaceWindow : Window
     {
-        private AccidentOnHighwayVM AccidentOnHighwayVM;
-        private AccidentOnVillageVM AccidentOnVillageVM;
-
         public AccidentOnHighway AccidentOnHighway { get; private set; }
         public AccidentOnVillage AccidentOnVillage { get; private set; }
 
@@ -35,50 +32,34 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
         {
             InitializeComponent();
 
-            AccidentOnVillageVM = new AccidentOnVillageVM(accidentOnVillage);
-            AccidentOnHighwayVM = new AccidentOnHighwayVM(accidentOnHighway);
-
-            if (accidentOnVillage != null)
-            {
-                AccidentOnVillage = accidentOnVillage.Clone();
-
-                if (AccidentOnHighwayGroup.Content is Grid)
-                {
-                    ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
-                }
-
-                AccidentOnHighway = new AccidentOnHighway();
-
-                DataContext = AccidentOnVillageVM;
-            }
-            else if (accidentOnHighway != null)
+            if (accidentOnHighway != null)
             {
                 AccidentOnHighway = accidentOnHighway.Clone();
-
-                if (AccidentOnVillageGroup.Content is Grid)
-                {
-                    ((Grid)AccidentOnVillageGroup.Content).IsEnabled = false;
-                }
-
                 AccidentOnVillage = new AccidentOnVillage();
 
-                DataContext = AccidentOnHighwayVM;
+                ((Grid)AccidentOnVillageGroup.Content).IsEnabled = false;
+
+                DataContext = AccidentOnHighway;
+            }
+            else if (accidentOnVillage != null)
+            {
+                AccidentOnVillage = accidentOnVillage.Clone();
+                AccidentOnHighway = new AccidentOnHighway();
+
+                ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
+
+                DataContext = AccidentOnVillage;
             }
             else
             {
                 AccidentOnVillage = new AccidentOnVillage();
                 AccidentOnHighway = new AccidentOnHighway();
 
-                if (AccidentOnHighwayGroup.Content is Grid)
-                {
-                    ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
-                }
+                ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
 
-                DataContext = AccidentOnVillageVM;
+                DataContext = AccidentOnVillage;
             }
 
-            AccidentOnHighway.ErrorInput += ShowErrorMessage;
-            AccidentOnVillage.ErrorInput += ShowErrorMessage;
         }
 
         private void AcceptClick(object sender, RoutedEventArgs e)
@@ -90,8 +71,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     return;
                 }
 
-                AccidentOnHighway = AccidentOnHighwayVM.AccidentOnHighway;
-
                 AccidentOnVillage = null;
             }
             else
@@ -100,8 +79,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 {
                     return;
                 }
-
-                AccidentOnVillage = AccidentOnVillageVM.AccidentOnVillage;
 
                 AccidentOnHighway = null;
             }
@@ -144,7 +121,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = true;
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
 
-                DataContext = AccidentOnVillageVM;
+                DataContext = AccidentOnVillage;
             }
         }
         private void AccidentOnHighwayGroup_MouseUp(object sender, MouseButtonEventArgs e)
@@ -154,13 +131,8 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = false;
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = true;
 
-                DataContext = AccidentOnHighwayVM;
+                DataContext = AccidentOnHighway;
             }
-        }
-
-        private void ShowErrorMessage(string msg)
-        {
-            MessageBox.Show(msg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

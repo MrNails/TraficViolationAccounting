@@ -23,8 +23,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
     /// </summary>
     public partial class AddRoadConditionWindow : Window
     {
-        private RoadConditionVM RoadConditionVM;
-
         public RoadCondition RoadCondition { get; private set; }
 
         public AddRoadConditionWindow() : this(null)
@@ -32,8 +30,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
         public AddRoadConditionWindow(RoadCondition roadCondition)
         {
             InitializeComponent();
-
-            RoadConditionVM = new RoadConditionVM(roadCondition);
 
             if (roadCondition != null)
             {
@@ -44,7 +40,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 RoadCondition = new RoadCondition();
             }
 
-            DataContext = RoadConditionVM;
+            DataContext = RoadCondition;
         }
         private void AcceptClick(object sender, RoutedEventArgs e)
         {
@@ -57,8 +53,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             {
                 return;
             }
-
-            RoadCondition = RoadConditionVM.RoadCondition;
 
             DialogResult = true;
         }

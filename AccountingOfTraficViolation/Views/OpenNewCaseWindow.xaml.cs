@@ -61,7 +61,12 @@ namespace AccountingOfTraficViolation.Views
         }
         private void ParticipanInfoClick(object sender, RoutedEventArgs e)
         {
-            ParticipanInfoProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+            AddParticipantInfoWindow participantInfoWindow = new AddParticipantInfoWindow();
+            if (participantInfoWindow.ShowDialog() == true)
+            {
+
+                ParticipanInfoProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+            }
         }
         private void VehicleClick(object sender, RoutedEventArgs e)
         {

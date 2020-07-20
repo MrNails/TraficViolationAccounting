@@ -21,34 +21,34 @@
         </Grid.RowDefinitions>
         <WrapPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
             <TextBlock Text="Освещённость: " Style="{StaticResource TextBlockTemplateStyle}" Height="17"/>
-            <TextBox x:Name="IlluminationTextBox" Text="{Binding Path=RoadCondition.Illumination}" 
+            <TextBox x:Name="IlluminationTextBox" Text="{Binding Path=Illumination, ValidatesOnDataErrors=True}" 
                      Width="30" MaxLength="1" Margin="86 0 0 0" Style="{StaticResource TextBoxValidationTemplate}"/>
         </WrapPanel>
         <WrapPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
             <TextBlock Text="Погодные условия: " Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" Height="17"/>
-            <TextBox x:Name="WeatherConditionTextBox" Text="{Binding Path=RoadCondition.WeatherCondition}" 
+            <TextBox x:Name="WeatherConditionTextBox" Text="{Binding Path=WeatherCondition, ValidatesOnDataErrors=True}" 
                      MaxLength="1" Width="30" Margin="59 0 0 0" Style="{StaticResource TextBoxValidationTemplate}"/>
         </WrapPanel>
         <WrapPanel Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
             <TextBlock Text="Инженерно-транспортное оборудование: " Style="{StaticResource TextBlockTemplateStyle}" Height="17"/>
-            <TextBox x:Name="EngineeringTranpsortEquipmentTextBox" Text="{Binding Path=RoadCondition.EngineeringTranpsortEquipment}" 
+            <TextBox x:Name="EngineeringTranpsortEquipmentTextBox" Text="{Binding Path=EngineeringTranpsortEquipment, ValidatesOnDataErrors=True}" 
                      Width="30" MaxLength="1" Margin="18 0 0 0" Style="{StaticResource TextBoxValidationTemplate}"/>
         </WrapPanel>
         <WrapPanel Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
             <TextBlock Text="Место концентрации ДТП: " Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" Height="17"/>
-            <TextBox x:Name="IncidentPlaceTextBox" Text="{Binding Path=RoadCondition.IncidentPlace}" 
+            <TextBox x:Name="IncidentPlaceTextBox" Text="{Binding Path=IncidentPlace, ValidatesOnDataErrors=True}" 
                      MaxLength="1" Width="30" Margin="10 0 0 0" Style="{StaticResource TextBoxValidationTemplate}"/>
         </WrapPanel>
         <WrapPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
             <TextBlock Text="Тип покрытия: " Style="{StaticResource TextBlockTemplateStyle}" Height="17"/>
-            <TextBox x:Name="SurfaceTypeTextBox" Text="{Binding Path=RoadCondition.SurfaceType}" 
+            <TextBox x:Name="SurfaceTypeTextBox" Text="{Binding Path=SurfaceType, ValidatesOnDataErrors=True}" 
                      Width="30" MaxLength="1" Margin="98 0 0 0" Style="{StaticResource TextBoxValidationTemplate}"/>
         </WrapPanel>
         <WrapPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
             <TextBlock Text="Исскуственные сооружения: " Style="{StaticResource TextBlockTemplateStyle}" Height="17"/>
-            <TextBox x:Name="ArtificialConstructionsTextBox" Text="{Binding Path=RoadCondition.ArtificialConstructions}" 
+            <TextBox x:Name="ArtificialConstructionsTextBox" Text="{Binding Path=ArtificialConstructions, ValidatesOnDataErrors=True}" 
                      Width="30" MaxLength="1" Style="{StaticResource TextBoxValidationTemplate}"/>
         </WrapPanel>
         <WrapPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
