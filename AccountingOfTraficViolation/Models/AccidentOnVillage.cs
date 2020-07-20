@@ -22,6 +22,11 @@ namespace AccountingOfTraficViolation.Models
         public AccidentOnVillage()
         {
             CaseAccidentPlaces = new HashSet<CaseAccidentPlace>();
+
+            Name = "";
+            District = "";
+            Street = "";
+            VillageBinding = "";
         }
 
         public int Id { get; set; }
@@ -34,13 +39,12 @@ namespace AccountingOfTraficViolation.Models
                 if (value <= 10)
                 {
                     status = value;
-
                     OnPropertyChanged("Status");
+                    errors["Status"] = null;
                 }
                 else
                 {
-                    OnErrorInput("Ошибка ввода статуса");
-
+                    errors["Status"] = "Ошибка ввода статуса";
                 }
             }
         }
@@ -54,22 +58,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Название населённого пункта не может быть пустым");
-
+                    errors["Name"] = "Название населённого пункта не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 22)
                 {
                     name = value;
+                    errors["Name"] = null;
+                    OnPropertyChanged("Name");
                 }
                 else
                 {
-                    name = value.Remove(22);
-                    OnErrorInput("Количество символов в названии населённого пункта не может быть больше 22");
+                    errors["Name"] = "Количество символов в названии населённого пункта не может быть больше 22.";
                 }
-
-                OnPropertyChanged("Name");
             }
         }
 
@@ -81,13 +83,13 @@ namespace AccountingOfTraficViolation.Models
                 if (value >= 0 && value <= 10000)
                 {
                     reginalCodeOfName = value;
-
+                    errors["ReginalCodeOfName"] = null;
                     OnPropertyChanged("ReginalCodeOfName");
                 }
                 else
                 {
 
-                    OnErrorInput("Ошибка ввода региоанального кода");
+                    errors["ReginalCodeOfName"] = "Ошибка ввода региоанального кода.";
                 }
             }
         }
@@ -101,22 +103,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Название района не может быть пустым");
-
+                    errors["District"] = "Название района не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 22)
                 {
                     district = value;
+                    OnPropertyChanged("District");
+                    errors["District"] = null;
                 }
                 else
                 {
-                    district = value.Remove(22);
-                    OnErrorInput("Количество символов в названии района не может быть больше 22");
+                    errors["District"] = "Количество символов в названии района не может быть больше 22.";
                 }
-
-                OnPropertyChanged("District");
             }
         }
 
@@ -128,13 +128,12 @@ namespace AccountingOfTraficViolation.Models
                 if (value >= 0 && value <= 10000)
                 {
                     reginalCodeOfDistrict = value;
-
+                    errors["ReginalCodeOfDistrict"] = null;
                     OnPropertyChanged("ReginalCodeOfDistrict");
                 }
                 else
                 {
-
-                    OnErrorInput("Ошибка ввода региоанального кода");
+                    errors["ReginalCodeOfDistrict"] = "Ошибка ввода региоанального кода.";
                 }
             }
         }
@@ -148,22 +147,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Название улицы не может быть пустым");
-
+                    errors["Street"] = "Название улицы не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 22)
                 {
                     street = value;
+                    OnPropertyChanged("Street");
+                    errors["Street"] = null;
                 }
                 else
                 {
-                    street = value.Remove(22);
-                    OnErrorInput("Количество символов в названии улицы не может быть больше 22");
+                    errors["Street"] = "Количество символов в названии улицы не может быть больше 22.";
                 }
-
-                OnPropertyChanged("Street");
             }
         }
 
@@ -175,13 +172,12 @@ namespace AccountingOfTraficViolation.Models
                 if (value >= 0 && value <= 10000)
                 {
                     reginalCodeOfStreet = value;
-
+                    errors["ReginalCodeOfStreet"] = null;
                     OnPropertyChanged("ReginalCodeOfStreet");
                 }
                 else
                 {
-
-                    OnErrorInput("Ошибка ввода региоанального кода");
+                    errors["ReginalCodeOfStreet"] = "Ошибка ввода региоанального кода.";
                 }
             }
         }
@@ -195,22 +191,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Привязка не может быть пустой");
-
+                    errors["VillageBinding"] = "Привязка не может быть пустой.";
                     return;
                 }
 
                 if (value.Length <= 47)
                 {
                     binding = value;
+                    OnPropertyChanged("VillageBinding");
+                    errors["VillageBinding"] = null;
                 }
                 else
                 {
-                    binding = value.Remove(47);
-                    OnErrorInput("Количество символов в привязке не может быть больше 47");
+                    errors["VillageBinding"] = "Количество символов в привязке не может быть больше 47.";
                 }
-
-                OnPropertyChanged("VillageBinding");
             }
         }
 
@@ -222,13 +216,12 @@ namespace AccountingOfTraficViolation.Models
                 if (value >= 0 && value <= 10000)
                 {
                     reginalCodeOfBinding = value;
-
+                    errors["ReginalCodeOfBinding"] = null;
                     OnPropertyChanged("ReginalCodeOfBinding");
                 }
                 else
                 {
-
-                    OnErrorInput("Ошибка ввода региоанального кода");
+                    errors["ReginalCodeOfBinding"] = "Ошибка ввода региоанального кода.";
                 }
             }
         }

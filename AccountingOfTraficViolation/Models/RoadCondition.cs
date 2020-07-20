@@ -1,8 +1,10 @@
+using AccountingOfTraficViolation.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
+using System.Text.RegularExpressions;
 
 namespace AccountingOfTraficViolation.Models
 {
@@ -18,11 +20,25 @@ namespace AccountingOfTraficViolation.Models
         private string placeElement;
         private string technicalTool;
         private string roadDisadvantages;
+        private Regex surfaceStateRegex;
+        private Regex placeElementRegex;
+        private Regex roadDisadvantagesRegex;
+        private Regex technicalToolRegex;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RoadCondition()
         {
             Cases = new HashSet<Case>();
+
+            surfaceStateRegex = new Regex(@"\d{1},\d{1}$");
+            placeElementRegex = new Regex(@"\d{2},\d{2},\d{2}$");
+            roadDisadvantagesRegex = new Regex(@"\d{2},\d{2},\d{2},\d{2},\d{2}$");
+            technicalToolRegex = new Regex(@"\d{2},\d{2},\d{2},\d{2},\d{2}$");
+
+            SurfaceState = "";
+            PlaceElement = "";
+            TechnicalTool = "";
+            RoadDisadvantages = "";
         }
 
         public int Id { get; set; }
@@ -36,10 +52,11 @@ namespace AccountingOfTraficViolation.Models
                 {
                     surfaceType = value;
                     OnPropertyChanged("SurfaceType");
+                    errors["SurfaceType"] = null;
                 }
                 else
                 {
-                    OnErrorInput("Не правилный ввод типа покрытия.");
+                    errors["SurfaceType"] = "Не правилный ввод типа покрытия.";
                 }
             }
         }
@@ -53,22 +70,22 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Состояние дороги не может быть пустым");
-
+                    errors["SurfaceState"] = "Состояние дороги не может быть пустым.";
                     return;
                 }
 
-                if (value.Length <= 2)
+                if (surfaceStateRegex.IsMatch(value) || int.TryParse(value, out int st))
                 {
-                    surfaceState = value;
+                    surfaceState = value.GetStrWithoutSeparator(',');
+                    OnPropertyChanged("SurfaceState");
+                    errors["SurfaceState"] = null;
                 }
                 else
                 {
-                    surfaceState = value.Remove(2);
-                    OnErrorInput("Количество символов в состоянии дороги не может быть больше 2");
+                    errors["SurfaceState"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                             "\t- 0,0\n" +
+                                             "\t- 00";
                 }
-
-                OnPropertyChanged("SurfaceState");
             }
         }
 
@@ -81,10 +98,11 @@ namespace AccountingOfTraficViolation.Models
                 {
                     illumination = value;
                     OnPropertyChanged("Illumination");
+                    errors["Illumination"] = null;
                 }
                 else
                 {
-                    OnErrorInput("Не правилный ввод освещённости.");
+                    errors["Illumination"] = "Не правилный ввод освещённости.";
                 }
             }
         }
@@ -98,10 +116,11 @@ namespace AccountingOfTraficViolation.Models
                 {
                     artificialConstructions = value;
                     OnPropertyChanged("ArtificialConstructions");
+                    errors["ArtificialConstructions"] = null;
                 }
                 else
                 {
-                    OnErrorInput("Не правилный ввод кода исскуственных сооружений.");
+                    errors["ArtificialConstructions"] = "Не правилный ввод кода исскуственных сооружений.";
                 }
             }
         }
@@ -115,22 +134,22 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Элемент не может быть пустым");
-
+                    errors["PlaceElement"] = "Элемент не может быть пустым.";
                     return;
                 }
 
-                if (value.Length <= 6)
+                else if (placeElementRegex.IsMatch(value) || int.TryParse(value, out int pl))
                 {
-                    placeElement = value;
+                    placeElement = value.GetStrWithoutSeparator(',');
+                    OnPropertyChanged("PlaceElement");
+                    errors["PlaceElement"] = null;
                 }
                 else
                 {
-                    placeElement = value.Remove(6);
-                    OnErrorInput("Количество символов в элементе дороги не может быть больше 6");
+                    errors["PlaceElement"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                             "\t- 00,00,00\n" +
+                                             "\t- 000000";
                 }
-
-                OnPropertyChanged("PlaceElement");
             }
         }
 
@@ -143,10 +162,11 @@ namespace AccountingOfTraficViolation.Models
                 {
                     engineeringTranpsortEquipment = value;
                     OnPropertyChanged("EngineeringTranpsortEquipment");
+                    errors["EngineeringTranpsortEquipment"] = null;
                 }
                 else
                 {
-                    OnErrorInput("Не правилный ввод кода инженерно-транспортного оборудования.");
+                    errors["EngineeringTranpsortEquipment"] = "Не правилный ввод кода инженерно-транспортного оборудования.";
                 }
             }
         }
@@ -160,22 +180,22 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Поле с техническими приспособлениями не может быть пустым");
-
+                    errors["TechnicalTool"] = "Поле с техническими приспособлениями не может быть пустым.";
                     return;
                 }
 
-                if (value.Length <= 10)
+                if (technicalToolRegex.IsMatch(value) || int.TryParse(value, out int tt))
                 {
-                    technicalTool = value;
+                    technicalTool = value.GetStrWithoutSeparator(',');
+                    OnPropertyChanged("TechnicalTool");
+                    errors["TechnicalTool"] = null;
                 }
                 else
                 {
-                    technicalTool = value.Remove(10);
-                    OnErrorInput("Количество символов в поле с техническими приспособлениями не может быть больше 10");
+                    errors["TechnicalTool"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                             "\t- 00,00,00,00,00\n" +
+                                             "\t- 0000000000";
                 }
-
-                OnPropertyChanged("TechnicalTool");
             }
         }
 
@@ -188,10 +208,11 @@ namespace AccountingOfTraficViolation.Models
                 {
                     weatherCondition = value;
                     OnPropertyChanged("WeatherCondition");
+                    errors["WeatherCondition"] = null;
                 }
                 else
                 {
-                    OnErrorInput("Не правилный ввод кода погодных условий.");
+                    errors["WeatherCondition"] = "Не правилный ввод кода погодных условий.";
                 }
             }
         }
@@ -205,22 +226,22 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Поле с неисправностями дороги не может быть пустым");
-
+                    errors["RoadDisadvantages"] = "Поле с неисправностями дороги не может быть пустым.";
                     return;
                 }
 
-                if (value.Length <= 10)
+                if (roadDisadvantagesRegex.IsMatch(value) || int.TryParse(value, out int rd))
                 {
-                    roadDisadvantages = value;
+                    roadDisadvantages = value.GetStrWithoutSeparator(',');
+                    OnPropertyChanged("RoadDisadvantages");
+                    errors["RoadDisadvantages"] = null;
                 }
                 else
                 {
-                    roadDisadvantages = value.Remove(10);
-                    OnErrorInput("Количество символов в поле с неисправностями дороги не может быть больше 10");
+                    errors["RoadDisadvantages"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                             "\t- 00,00,00,00,00\n" +
+                                             "\t- 0000000000";
                 }
-
-                OnPropertyChanged("RoadDisadvantages");
             }
         }
 
@@ -236,7 +257,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    OnErrorInput("Не правилный ввод кода места концентрации ДТП.");
+                    errors["IncidentPlace"] = "Не правилный ввод кода места концентрации ДТП.";
                 }
             }
         }

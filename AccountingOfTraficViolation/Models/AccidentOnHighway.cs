@@ -1,8 +1,10 @@
+using AccountingOfTraficViolation.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
+using System.Text.RegularExpressions;
 
 namespace AccountingOfTraficViolation.Models
 {
@@ -13,11 +15,20 @@ namespace AccountingOfTraficViolation.Models
         private string kilometer;
         private string binding;
         private string meter;
+        private Regex regex;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AccidentOnHighway()
         {
             CaseAccidentPlaces = new HashSet<CaseAccidentPlace>();
+
+            regex = new Regex(@"[a-zA-Z]-\d{2}-\d{2}(-[0-9])?$");
+
+            HighwayIndexAndNumber = "";
+            AdditionalInfo = "";
+            Kilometer = "";
+            Binding = "";
+            Meter = "";
         }
 
         public int Id { get; set; }
@@ -31,21 +42,23 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Индекс и номер дороги не могут отсутствовать.");
+                    errors["HighwayIndexAndNumber"] = "Индекс и номер дороги не могут отсутствовать.";
                     return;
                 }
 
-                if (value.Length <= 6)
+                if (regex.IsMatch(value) || int.TryParse(value, out int h))
                 {
-                    highwayIndexAndNumber = value;
+                    highwayIndexAndNumber = value.GetStrWithoutSeparator('-');
+                    OnPropertyChanged("HighwayIndexAndNumber");
+                    errors["HighwayIndexAndNumber"] = null;
                 }
                 else
                 {
-                    highwayIndexAndNumber = value.Remove(6);
-                    OnErrorInput("Количество символов индексе и номере дороги не может быть больше 6.");
+                    errors["HighwayIndexAndNumber"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                             "\t- 0-00-00-0*\n" +
+                                             "\t- 000000*\n" +
+                                             "* - не обязательный элемент";
                 }
-
-                OnPropertyChanged("HighwayIndexAndNumber");
             }
         }
 
@@ -55,17 +68,22 @@ namespace AccountingOfTraficViolation.Models
             get { return additionalInfo; }
             set
             {
+                if (string.IsNullOrEmpty(value))
+                {
+                    additionalInfo = null;
+                    return;
+                }
+
                 if (value.Length <= 20)
                 {
                     additionalInfo = value;
+                    OnPropertyChanged("AdditionalInfo");
+                    errors["AdditionalInfo"] = null;
                 }
                 else
                 {
-                    additionalInfo = value.Remove(20);
-                    OnErrorInput("Количество символов в поле с километрами не может быть больше 20.");
+                    errors["AdditionalInfo"] = "Количество символов в поле с километрами не может быть больше 20.";
                 }
-
-                OnPropertyChanged("AdditionalInfo");
             }
         }
 
@@ -78,22 +96,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Поле с количеством километров не может быть пустым.");
-
+                    errors["Kilometer"] = "Поле с количеством километров не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 4)
                 {
                     kilometer = value;
+                    OnPropertyChanged("Kilometer");
+                    errors["Kilometer"] = null;
                 }
                 else
                 {
-                    kilometer = value.Remove(4);
-                    OnErrorInput("Количество символов в поле с километрами не может быть больше 4.");
+                    errors["Kilometer"] = "Количество символов в поле с километрами не может быть больше 4.";
                 }
-
-                OnPropertyChanged("Kilometer");
             }
         }
 
@@ -106,22 +122,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Поле с количеством метров не может быть пустым.");
-
+                    errors["Meter"] = "Поле с количеством метров не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 3)
                 {
                     meter = value;
+                    OnPropertyChanged("Meter");
+                    errors["Meter"] = null;
                 }
                 else
                 {
-                    meter = value.Remove(3);
-                    OnErrorInput("Количество символов в поле с метрами не может быть больше 3.");
+                    errors["Meter"] = "Количество символов в поле с метрами не может быть больше 3.";
                 }
-
-                OnPropertyChanged("Meter");
             }
         }
 
@@ -134,22 +148,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Привязка не может быть пустой");
-
+                    errors["Binding"] = "Поле 'Привязка' не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 47)
                 {
                     binding = value;
+                    OnPropertyChanged("Binding");
+                    errors["Binding"] = null;
                 }
                 else
                 {
-                    binding = value.Remove(47);
-                    OnErrorInput("Количество символов в привязке не может быть больше 47");
+                    errors["Binding"] = "Количество символов в поле 'Привязка' не может быть больше 47.";
                 }
-
-                OnPropertyChanged("Binding");
             }
         }
 

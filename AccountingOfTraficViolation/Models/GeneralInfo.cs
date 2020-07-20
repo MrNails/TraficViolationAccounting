@@ -1,8 +1,11 @@
+using AccountingOfTraficViolation.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
+using System.Text.RegularExpressions;
 
 namespace AccountingOfTraficViolation.Models
 {
@@ -16,11 +19,16 @@ namespace AccountingOfTraficViolation.Models
         private DateTime fillDate;
         private DateTime incidentDate;
         private TimeSpan fillTime;
+        private Regex cardNumberRegex;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public GeneralInfo()
         {
             Cases = new HashSet<Case>();
+
+            cardNumberRegex = new Regex(@"\d{2}-\d{7}(-[0-9])?$");
+
+            CardNumber = "";
         }
 
         public int Id { get; set; }
@@ -34,23 +42,23 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Номер карты не может быть пустым");
-
+                    errors["CardNumber"] = "Номер карты не может быть пустым.";
                     return;
                 }
 
-                if (value.Length <= 10)
+                if (cardNumberRegex.IsMatch(value) || int.TryParse(value, out int cn))
                 {
-                    cardNumber = value;
+                    cardNumber = value.GetStrWithoutSeparator('-');
+                    OnPropertyChanged("CardNumber");
+                    errors["CardNumber"] = null;
                 }
                 else
                 {
-                    cardNumber = value.Remove(10);
-                    OnErrorInput("Количество символов в номере карты не может быть больше 10");
+                    errors["CardNumber"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                             "- 00-0000000-0*\n" +
+                                             "- 0000000000*\n" +
+                                             "* - не обязательный элемент";
                 }
-
-
-                OnPropertyChanged("CardNumber");
             }
         }
 
@@ -63,10 +71,11 @@ namespace AccountingOfTraficViolation.Models
                 {
                     сardType = value;
                     OnPropertyChanged("CardType");
+                    errors["CardType"] = null;
                 }
                 else
                 {
-                    OnErrorInput("Не правильный ввод типа карты. Значение должно находиться в пределах от 0 до 10.");
+                    errors["CardType"] = "Не правильный ввод типа карты. Значение должно находиться в пределах от 0 до 10.";
                 }
             }
         }
@@ -78,7 +87,6 @@ namespace AccountingOfTraficViolation.Models
             set
             {
                 fillDate = value;
-
                 OnPropertyChanged("FillDate");
             }
         }
@@ -103,12 +111,12 @@ namespace AccountingOfTraficViolation.Models
                 if (value > 0 && value < 8 )
                 {
                     dayOfWeek = value;
-
+                    errors["DayOfWeek"] = null;
                     OnPropertyChanged("DayOfWeek");
                 }
                 else
                 {
-                    OnErrorInput("Не правильный ввод дня недели. Значение должно находиться в пределах от 1 до 7 (1 - Понедельник, 7 - Воскресенье).");
+                    errors["DayOfWeek"] = "Не правильный ввод дня недели. Значение должно находиться в пределах от 1 до 7 (1 - Понедельник, 7 - Воскресенье).";
                 }
             }
         }
@@ -132,12 +140,12 @@ namespace AccountingOfTraficViolation.Models
                 if (value < 100)
                 {
                     incidentType = value;
-
+                    errors["IncidentType"] = null;
                     OnPropertyChanged("IncidentType");
                 }
                 else
                 {
-                    OnErrorInput("Не правильный ввод типа проишествия. Значение должно находиться в пределах от 0 до 100.");
+                    errors["IncidentType"] = "Не правильный ввод типа проишествия. Значение должно находиться в пределах от 0 до 100.";
                 }
             }
         }

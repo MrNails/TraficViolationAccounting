@@ -1,8 +1,10 @@
+using AccountingOfTraficViolation.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
+using System.Text.RegularExpressions;
 
 namespace AccountingOfTraficViolation.Models
 {
@@ -19,6 +21,19 @@ namespace AccountingOfTraficViolation.Models
         private string patronymic;
         private string citizenship;
         private string _PDDViolation;
+        private Regex pddViolationRegex;
+
+        public ParticipantsInformation()
+        {
+            Name = "";
+            Surname = "";
+            Address = "";
+            Patronymic = "";
+            Citizenship = "";
+            PDDViolation = "";
+
+            pddViolationRegex = new Regex(@"\d{2},\d{2}$");
+        }
 
         public int Id { get; set; }
 
@@ -31,22 +46,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Имя не может быть пустым");
-
+                    errors["Name"] = "Имя не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 15)
                 {
                     name = value;
+                    OnPropertyChanged("Name");
+                    errors["Name"] = null;
                 }
                 else
                 {
-                    name = value.Remove(15);
-                    OnErrorInput("Количество символов в имени не может быть больше 15");
+                    errors["Name"] = "Количество символов в имени не может быть больше 15.";
                 }
-
-                OnPropertyChanged("Name");
             }
         }
 
@@ -59,22 +72,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Фамилия не может быть пустой");
-
+                    errors["Surname"] = "Фамилия не может быть пустой.";
                     return;
                 }
 
                 if (value.Length <= 15)
                 {
                     surname = value;
+                    OnPropertyChanged("Surname");
+                    errors["Surname"] = null;
                 }
                 else
                 {
-                    surname = value.Remove(15);
-                    OnErrorInput("Количество символов в фамилии не может быть больше 15");
+                    errors["Surname"] = "Количество символов в фамилии не может быть больше 15.";
                 }
-
-                OnPropertyChanged("Surname");
             }
         }
 
@@ -87,22 +98,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Отчество не может быть пустым");
-
+                    errors["Patronymic"] = "Отчество не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 15)
                 {
                     patronymic = value;
+                    OnPropertyChanged("Patronymic");
+                    errors["Patronymic"] = null; 
                 }
                 else
                 {
-                    patronymic = value.Remove(15);
-                    OnErrorInput("Количество символов в отчестве не может быть больше 15");
+                    errors["Patronymic"] = "Количество символов в отчестве не может быть больше 15.";
                 }
-
-                OnPropertyChanged("Patronymic");
             }
         }
 
@@ -115,22 +124,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Адрес не может быть пустым");
-
+                    errors["Address"] = "Адрес не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 50)
                 {
                     address = value;
+                    OnPropertyChanged("Address");
+                    errors["Address"] = null;
                 }
                 else
                 {
-                    address = value.Remove(50);
-                    OnErrorInput("Количество символов в адресе не может быть больше 50");
+                    errors["Address"] = "Количество символов в адресе не может быть больше 50.";
                 }
-
-                OnPropertyChanged("Address");
             }
         }
 
@@ -140,7 +147,6 @@ namespace AccountingOfTraficViolation.Models
             set
             {
                 qualification = value;
-
                 OnPropertyChanged("Qualification");
             }
         }
@@ -154,10 +160,11 @@ namespace AccountingOfTraficViolation.Models
                 {
                     age = value;
                     OnPropertyChanged("Age");
+                    errors["Age"] = null;
                 }
                 else
                 {
-                    OnErrorInput("Возраст не может превышать 100 лет");
+                    errors["Age"] = "Возраст не может превышать 100 лет.";
                 }
             }
         }
@@ -181,22 +188,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Гражданство не может быть пустым");
-
+                    errors["Citizenship"] = "Гражданство не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 3)
                 {
                     citizenship = value;
+                    OnPropertyChanged("Citizenship");
+                    errors["Citizenship"] = null;
                 }
                 else
                 {
-                    citizenship = value.Remove(3);
-                    OnErrorInput("Количество символов в гражданстве не может быть больше 3");
+                    errors["Citizenship"] = "Количество символов в гражданстве не может быть больше 3.";
                 }
-
-                OnPropertyChanged("Citizenship");
             }
         }
 
@@ -229,27 +234,38 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Нарушение ПДР не может быть пустым");
-
+                    errors["PDDViolation"] = "Нарушение ПДР не может быть пустым.";
                     return;
                 }
 
-                if (value.Length <= 4)
+                if (pddViolationRegex.IsMatch(value) || int.TryParse(value, out int pdd))
                 {
-                    _PDDViolation = value;
+                    _PDDViolation = value.GetStrWithoutSeparator(',');
+                    OnPropertyChanged("PDDViolation");
+                    errors["PDDViolation"] = null;
                 }
                 else
                 {
-                    _PDDViolation = value.Remove(4);
-                    OnErrorInput("Количество символов в нарушении ПДР не может быть больше 4");
+                    errors["PDDViolation"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                         "- 00,00\n" +
+                         "- 0000\n";
                 }
-
-                OnPropertyChanged("PDDViolation");
             }
         }
 
         public int CaseId { get; set; }
 
         public virtual Case Case { get; set; }
+
+        public override string ToString()
+        {
+            string str = "";
+
+            str += "Имя: " + Name + Environment.NewLine;
+            str += "Фамилия: " + Surname + Environment.NewLine;
+            str += "Отчество: " + Patronymic;
+
+            return str;
+        }
     }
 }

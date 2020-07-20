@@ -25,8 +25,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value < 0)
                 {
-                    OnErrorInput("Не правильно установлен ид дела");
-
+                    errors["CaseId"] = "Не правильно установлен ид дела.";
                     return;
                 }
 
@@ -36,8 +35,8 @@ namespace AccountingOfTraficViolation.Models
                 }
 
                 caseId = value;
-
                 OnPropertyChanged("CaseId");
+                errors["CaseId"] = null;
             }
         }
 
@@ -48,8 +47,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value < 0)
                 {
-                    OnErrorInput("Не правильно установлен ид ДТП на автодороге");
-
+                    errors["AccidentOnHighwayId"] = "Не правильно установлен ид ДТП на автодороге.";
                     return;
                 }
 
@@ -57,10 +55,9 @@ namespace AccountingOfTraficViolation.Models
                 {
                     AccidentOnVillageId = null;
                 }
-                else if (AccidentOnHighwayId == null && value == null)
+                else if (AccidentOnVillageId == null && value == null)
                 {
-                    OnErrorInput("Вы не можете сделать ИД места ДТП в населённом пункте пустым, пока пустой ИД места ДТП на автодороге");
-
+                    errors["AccidentOnHighwayId"] = "Вы не можете сделать ИД места ДТП в населённом пункте пустым, пока пустой ИД места ДТП на автодороге.";
                     return;
                 }
 
@@ -71,14 +68,13 @@ namespace AccountingOfTraficViolation.Models
 
                 if (value >= 0)
                 {
-
                     accidentOnHighwayId = value;
                     OnPropertyChanged("AccidentOnHighwayId");
+                    errors["AccidentOnHighwayId"] = null;
                 }
                 else
                 {
-
-                    OnErrorInput("Ид проишествия на автодороге не может быть меньше 0");
+                    errors["AccidentOnHighwayId"] = "Ид проишествия на автодороге не может быть меньше 0.";
                 }
             }
         }
@@ -89,8 +85,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value < 0)
                 {
-                    OnErrorInput("Не правильно установлен ид ДТП в населённом пункте");
-
+                    errors["AccidentOnVillageId"] = "Не правильно установлен ид ДТП в населённом пункте.";
                     return;
                 }
 
@@ -100,8 +95,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else if (AccidentOnHighwayId == null && value == null)
                 {
-                    OnErrorInput("Вы не можете сделать ИД места ДТП на автодороге пустым, пока пустой ИД места ДТП в населённом пункте");
-
+                    errors["AccidentOnVillageId"] = "Вы не можете сделать ИД места ДТП на автодороге пустым, пока пустой ИД места ДТП в населённом пункте.";
                     return;
                 }
 
@@ -113,14 +107,13 @@ namespace AccountingOfTraficViolation.Models
 
                 if (value.Value >= 0)
                 {
-
                     accidentOnVillageId = value;
                     OnPropertyChanged("AccidentOnVillageId");
+                    errors["AccidentOnVillageId"] = null;
                 }
                 else
                 {
-
-                    OnErrorInput("Ид проишествия в населённом пункте не может быть меньше 0");
+                    errors["AccidentOnVillageId"] = "Ид проишествия в населённом пункте не может быть меньше 0.";
                 }
             }
         }
@@ -136,8 +129,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else if (AccidentOnVillage == null && value == null)
                 {
-                    OnErrorInput("Вы не можете сделать место ДТП на автодороге пустым, пока пустое место ДТП в населённом пункте");
-
+                    errors["AccidentOnHighway"] = "Вы не можете сделать место ДТП на автодороге пустым, пока пустое место ДТП в населённом пункте.";
                     return;
                 }
 
@@ -150,9 +142,9 @@ namespace AccountingOfTraficViolation.Models
                     AccidentOnHighwayId = value.Id;
                 }
 
-
                 accidentOnHighway = value;
                 OnPropertyChanged("AccidentOnHighway");
+                errors["AccidentOnHighway"] = null;
             }
         }
         public virtual AccidentOnVillage AccidentOnVillage
@@ -166,8 +158,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else if (AccidentOnHighway == null && value == null)
                 {
-                    OnErrorInput("Вы не можете сделать место ДТП в населённом пункте пустым, пока пустое место ДТП на автодороге");
-
+                    errors["AccidentOnVillage"] = "Вы не можете сделать место ДТП в населённом пункте пустым, пока пустое место ДТП на автодороге.";
                     return;
                 }
 
@@ -183,6 +174,7 @@ namespace AccountingOfTraficViolation.Models
 
                 accidentOnVillage = value;
                 OnPropertyChanged("AccidentOnVillage");
+                errors["AccidentOnVillage"] = null;
             }
         }
 
@@ -193,8 +185,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value == null)
                 {
-                    OnErrorInput("Дело не может отсутствовать");
-
+                    errors["Case"] = "Дело не может отсутствовать.";
                     return;
                 }
                 else
@@ -202,9 +193,9 @@ namespace AccountingOfTraficViolation.Models
                     CaseId = value.Id;
                 }
 
-
                 _case = value;
                 OnPropertyChanged("Case");
+                errors["Case"] = null;
             }
         }
     }

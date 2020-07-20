@@ -30,6 +30,26 @@ namespace AccountingOfTraficViolation.Models
         private string seriesOfRegistrationSertificate;
         private DateTime policyEndDate;
 
+        public Vehicle()
+        {
+            Make = "";
+            Model = "";
+            Owner = "";
+            Surname = "";
+            PlateNumber = "";
+            FrameNumber = "";
+            ChasisNumber = "";
+            PolicySeries = "";
+            PolicyNumber = "";
+            EDRPOU_Code = "";
+            LicenceNumber = "";
+            LicenceSeries = "";
+            CorruptionCode = "";
+            TechnicalFaults = "";
+            ActivityLicensingInfo = "";
+            RegistrationSertificate = "";
+            SeriesOfRegistrationSertificate = "";
+        }
 
         public int Id { get; set; }
 
@@ -42,22 +62,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Номерной знак машины не может быть пустым");
-
+                    errors["PlateNumber"] = "Номерной знак машины не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 8)
                 {
                     plateNumber = value;
+                    OnPropertyChanged("PlateNumber");
+                    errors["PlateNumber"] = null;
                 }
                 else
                 {
-                    plateNumber = value.Remove(8);
-                    OnErrorInput("Количество символов в номерном знаке не может быть больше 8");
+                    errors["PlateNumber"] = "Количество символов в номерном знаке не может быть больше 8.";
                 }
-
-                OnPropertyChanged("PlateNumber");
             }
         }
 
@@ -70,22 +88,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Номер рамы не может быть пустым");
-
+                    errors["FrameNumber"] = "Номер рамы не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 8)
                 {
                     frameNumber = value;
+                    OnPropertyChanged("FrameNumber");
+                    errors["FrameNumber"] = null;
                 }
                 else
                 {
-                    frameNumber = value.Remove(8);
-                    OnErrorInput("Количество символов в номере рамы не может быть больше 8");
+                    errors["FrameNumber"] = "Количество символов в номере рамы не может быть больше 8.";
                 }
-
-                OnPropertyChanged("FrameNumber");
             }
         }
 
@@ -98,22 +114,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Номер шасси не может быть пустым");
-
+                    errors["ChasisNumber"] = "Номер шасси не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 9)
                 {
                     chasisNumber = value;
+                    OnPropertyChanged("ChasisNumber");
+                    errors["ChasisNumber"] = null;
                 }
                 else
                 {
-                    chasisNumber = value.Remove(9);
-                    OnErrorInput("Количество символов в номере шасси не может быть больше 9");
+                    errors["ChasisNumber"] = "Количество символов в номере шасси не может быть больше 9.";
                 }
-
-                OnPropertyChanged("ChasisNumber");
             }
         }
 
@@ -126,22 +140,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Марка машини не может быть пустой");
-
+                    errors["Make"] = "Марка машини не может быть пустой.";
                     return;
                 }
 
                 if (value.Length <= 10)
                 {
                     make = value;
+                    OnPropertyChanged("Make");
+                    errors["Make"] = null;
                 }
                 else
                 {
-                    make = value.Remove(10);
-                    OnErrorInput("Количество символов в марке машины не может быть больше 10");
+                    errors["Make"] = "Количество символов в марке машины не может быть больше 10.";
                 }
-
-                OnPropertyChanged("Make");
             }
         }
 
@@ -154,22 +166,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Модель машины не может быть пустой");
-
+                    errors["Model"] = "Модель машины не может быть пустой.";
                     return;
                 }
 
                 if (value.Length <= 10)
                 {
                     model = value;
+                    OnPropertyChanged("Model");
+                    errors["Model"] = null;
                 }
                 else
                 {
-                    model = value.Remove(10);
-                    OnErrorInput("Количество символов в моделе машины не может быть больше 10");
+                    errors["Model"] = "Количество символов в моделе машины не может быть больше 10.";
                 }
-
-                OnPropertyChanged("Model");
             }
         }
 
@@ -182,14 +192,14 @@ namespace AccountingOfTraficViolation.Models
                 {
                     type = value;
                     OnPropertyChanged("Type");
+                    errors["Type"] = null;
                 }
                 else
                 {
-                    OnErrorInput("Не правилный ввод типа.");
+                    errors["Type"] = "Не правилный ввод типа.";
                 }
             }
         }
-
 
         [Required]
         [StringLength(3)]
@@ -200,21 +210,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Cерия свидетельства о регистрации не может быть пустой.");
+                    errors["SeriesOfRegistrationSertificate"] = "Cерия свидетельства о регистрации не может быть пустой.";
                     return;
                 }
 
                 if (value.Length <= 3)
                 {
                     seriesOfRegistrationSertificate = value;
+                    OnPropertyChanged("SeriesOfRegistrationSertificate");
+                    errors["SeriesOfRegistrationSertificate"] = null;
                 }
                 else
                 {
-                    seriesOfRegistrationSertificate = value.Remove(3);
-                    OnErrorInput("Количество символов в серии свидетельства о регистрации не может быть больше 3");
+                    errors["SeriesOfRegistrationSertificate"] = "Количество символов в серии свидетельства о регистрации не может быть больше 3.";
                 }
-
-                OnPropertyChanged("SeriesOfRegistrationSertificate");
             }
         }
 
@@ -227,22 +236,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Cвидетельство о регистрации не может быть пустым");
-
+                    errors["RegistrationSertificate"] = "Cвидетельство о регистрации не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 6)
                 {
                     registrationSertificate = value;
+                    OnPropertyChanged("RegistrationSertificate");
+                    errors["RegistrationSertificate"] = null;
                 }
                 else
                 {
-                    registrationSertificate = value.Remove(6);
-                    OnErrorInput("Количество символов в свидетельстве о регистрации не может быть больше 6");
+                    errors["RegistrationSertificate"] = "Количество символов в свидетельстве о регистрации не может быть больше 6.";
                 }
-
-                OnPropertyChanged("RegistrationSertificate");
             }
         }
 
@@ -265,10 +272,11 @@ namespace AccountingOfTraficViolation.Models
                 {
                     insurerCode = value;
                     OnPropertyChanged("InsurerCode");
+                    errors["InsurerCode"] = null;
                 }
                 else
                 {
-                    OnErrorInput("Не правилный ввод кода страховки.");
+                    errors["InsurerCode"] = "Не правилный ввод кода страховки.";
                 }
             }
         }
@@ -282,22 +290,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Серия полиса не может быть пустым.");
-
+                    errors["PolicySeries"] = "Серия полиса не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 3)
                 {
                     policySeries = value;
+                    OnPropertyChanged("PolicySeries");
+                    errors["PolicySeries"] = null;
                 }
                 else
                 {
-                    policySeries = value.Remove(3);
-                    OnErrorInput("Количество символов в серии полиса не может быть больше 3.");
+                    errors["PolicySeries"] = "Количество символов в серии полиса не может быть больше 3.";
                 }
-
-                OnPropertyChanged("PolicySeries");
             }
         }
 
@@ -310,22 +316,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Полис не может быть пустым");
-
+                    errors["PolicyNumber"] = "Полис не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 10)
                 {
                     policyNumber = value;
+                    OnPropertyChanged("PolicyNumber");
+                    errors["PolicyNumber"] = null;
                 }
                 else
                 {
-                    policyNumber = value.Remove(10);
-                    OnErrorInput("Количество символов в полисе не может быть больше 10");
+                    errors["PolicyNumber"] = "Количество символов в полисе не может быть больше 10.d";
                 }
-
-                OnPropertyChanged("PolicyNumber");
             }
         }
 
@@ -349,22 +353,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Фамилия водителя не может быть пустой");
-
+                    errors["Surname"] = "Фамилия водителя не может быть пустой.";
                     return;
                 }
 
                 if (value.Length <= 15)
                 {
                     surname = value;
+                    OnPropertyChanged("Surname");
+                    errors["Surname"] = null;
                 }
                 else
                 {
-                    surname = value.Remove(15);
-                    OnErrorInput("Количество символов в фамилии водителя не может быть больше 15");
+                    errors["Surname"] = "Количество символов в фамилии водителя не может быть больше 15.";
                 }
-
-                OnPropertyChanged("Surname");
             }
         }
 
@@ -377,22 +379,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Серия удостоверения водителя не может быть пустой.");
-
+                    errors["LicenceSeries"] = "Серия удостоверения водителя не может быть пустой.";
                     return;
                 }
 
                 if (value.Length <= 3)
                 {
                     licenceSeries = value;
+                    OnPropertyChanged("LicenceSeries");
+                    errors["LicenceSeries"] = null;
                 }
                 else
                 {
-                    licenceSeries = value.Remove(3);
-                    OnErrorInput("Количество символов в серии удостовирении водителя не может быть больше 3.");
+                    errors["LicenceSeries"] = "Количество символов в серии удостовирении водителя не может быть больше 3.";
                 }
-
-                OnPropertyChanged("LicenceNumber");
             }
         }
 
@@ -405,22 +405,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Удостоверения водителя не может быть пустым.");
-
+                    errors["LicenceNumber"] = "Удостоверения водителя не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 6)
                 {
                     licenceNumber = value;
+                    OnPropertyChanged("LicenceNumber");
+                    errors["LicenceNumber"] = null;
                 }
                 else
                 {
-                    licenceNumber = value.Remove(6);
-                    OnErrorInput("Количество символов в удостовирении водителя не может быть больше 6");
+                    errors["LicenceNumber"] = "Количество символов в удостовирении водителя не может быть больше 6.";
                 }
-
-                OnPropertyChanged("LicenceNumber");
             }
         }
 
@@ -433,22 +431,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Владелец не может быть пустым");
-
+                    errors["Owner"] = "Владелец не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 20)
                 {
                     owner = value;
+                    OnPropertyChanged("Owner");
+                    errors["Owner"] = null;
                 }
                 else
                 {
-                    owner = value.Remove(20);
-                    OnErrorInput("Количество символов в владельце не может быть больше 20");
+                    errors["Owner"] = "Количество символов в владельце не может быть больше 20.";
                 }
-
-                OnPropertyChanged("Owner");
             }
         }
 
@@ -461,22 +457,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Поле технические неисправности не может быть пустым");
-
+                    errors["TechnicalFaults"] = "Поле технические неисправности не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 2)
                 {
                     technicalFaults = value;
+                    OnPropertyChanged("TechnicalFaults");
+                    errors["TechnicalFaults"] = null;
                 }
                 else
                 {
-                    technicalFaults = value.Remove(2);
-                    OnErrorInput("Количество символов в поле технические неисправности не может быть больше 2");
+                    errors["TechnicalFaults"] = "Количество символов в поле технические неисправности не может быть больше 2.";
                 }
-
-                OnPropertyChanged("TechnicalFaults");
             }
         }
 
@@ -489,22 +483,20 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    OnErrorInput("Код ЕДРПОУ не может быть пустым");
-
+                    errors["EDRPOU_Code"] = "Код ЕДРПОУ не может быть пустым.";
                     return;
                 }
 
                 if (value.Length <= 10)
                 {
                     _EDRPOU_Code = value;
+                    OnPropertyChanged("EDRPOU_Code");
+                    errors["EDRPOU_Code"] = null;
                 }
                 else
                 {
-                    _EDRPOU_Code = value.Remove(10);
-                    OnErrorInput("Количество символов в коде ЕДРПОУ не может быть больше 10");
+                    errors["EDRPOU_Code"] = "Количество символов в коде ЕДРПОУ не может быть больше 10.";
                 }
-
-                OnPropertyChanged("EDRPOU_Code");
             }
         }
 
@@ -523,14 +515,13 @@ namespace AccountingOfTraficViolation.Models
                 if (value.Length <= 10)
                 {
                     corruptionCode = value;
+                    OnPropertyChanged("CorruptionCode");
+                    errors["CorruptionCode"] = null;
                 }
                 else
                 {
-                    corruptionCode = value.Remove(10);
-                    OnErrorInput("Количество символов в коде повреждения ТЗ не может быть больше 10");
+                    errors["CorruptionCode"] = "Количество символов в коде повреждения ТЗ не может быть больше 10.";
                 }
-
-                OnPropertyChanged("CorruptionCode");
             }
         }
 
@@ -549,14 +540,13 @@ namespace AccountingOfTraficViolation.Models
                 if (value.Length <= 2)
                 {
                     activityLicensingInfo = value;
+                    OnPropertyChanged("ActivityLicensingInfo");
+                    errors["ActivityLicensingInfo"] = null;
                 }
                 else
                 {
-                    activityLicensingInfo = value.Remove(2);
-                    OnErrorInput("Количество символов в ведомости о лицензировании водителя не может быть больше 2");
+                    errors["ActivityLicensingInfo"] = "Количество символов в ведомости о лицензировании водителя не может быть больше 2.";
                 }
-
-                OnPropertyChanged("ActivityLicensingInfo");
             }
         }
 
