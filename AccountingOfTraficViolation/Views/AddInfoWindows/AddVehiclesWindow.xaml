@@ -1,0 +1,229 @@
+﻿<Window x:Class="AccountingOfTraficViolation.Views.AddInfoWindows.AddVehiclesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
+        mc:Ignorable="d"
+        Title="Транспорт и его пренадлежность" Height="600" Width="950" ResizeMode="NoResize">
+    <Window.Resources>
+        <DataTemplate x:Key="ListBoxDataTemplate">
+            <StackPanel Width="195">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.35*"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Марка: " Grid.Column="0"/>
+                    <TextBlock Text="{Binding Path=Make}" Grid.Column="1" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.4*"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Модель: " Grid.Column="0"/>
+                    <TextBlock Text="{Binding Path=Model}" Grid.Column="1" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.3*"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Номерной знак: " Grid.Column="0"/>
+                    <TextBlock Text="{Binding Path=PlateNumber}" Grid.Column="1" HorizontalAlignment="Right"/>
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="0.31*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="0.2*"/>
+        </Grid.RowDefinitions>
+        <GroupBox x:Name="VehicleGroupBox" BorderThickness="2" Header="Транспортное средство № 1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.7*"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="1.2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.9*"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="0.8*"/>
+                    <RowDefinition />
+                    <RowDefinition Height="0.45*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Номерной знак" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <TextBox MaxLength="8" Text="{Binding Path=CurrentAccidentObject.PlateNumber, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="100"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <WrapPanel>
+                        <TextBlock Text="№ Рамы: "  TextAlignment="Center" 
+                                   Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 13 10"/>
+                        <TextBox MaxLength="8" Text="{Binding Path=CurrentAccidentObject.FrameNumber, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="100" Margin="0 0 0 10"/>
+                        <TextBlock Text="№ Шасси:" TextAlignment="Center" 
+                                   Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 10 0"/>
+                        <TextBox MaxLength="9" Text="{Binding Path=CurrentAccidentObject.ChasisNumber, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="100"/>
+                    </WrapPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <WrapPanel  Margin="0 0 0 10">
+                        <TextBlock Text="Марка:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 14 0"/>
+                        <TextBox MaxLength="10" Text="{Binding Path=CurrentAccidentObject.Make, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="120"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Text="Модель:" TextAlignment="Center" 
+                                   Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 5 0"/>
+                        <TextBox MaxLength="10" Text="{Binding Path=CurrentAccidentObject.Model, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="120"/>
+                    </WrapPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Серия, № свидетельства про регистрацию" TextAlignment="Center" 
+                               Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <WrapPanel HorizontalAlignment="Center">
+                        <TextBox MaxLength="3" Text="{Binding Path=CurrentAccidentObject.SeriesOfRegistrationSertificate, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="40" Height="21"/>
+                        <TextBlock Text="," TextAlignment="Center" FontSize="20" Margin="2 0 2 0" FontFamily="Century"/>
+                        <TextBox MaxLength="6" Text="{Binding Path=CurrentAccidentObject.RegistrationSertificate, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="70" Height="21"/>
+                    </WrapPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <WrapPanel Margin="0 0 0 10" HorizontalAlignment="Center">
+                        <TextBlock Text="Тип: " TextAlignment="Center" Height="17"
+                               Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 10 0"/>
+                        <TextBox MaxLength="3" Text="{Binding Path=CurrentAccidentObject.Type, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="49"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Text="Код страховщика:" TextAlignment="Center" Height="17"
+                               Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 10 0"/>
+                        <TextBox MaxLength="3" Text="{Binding Path=CurrentAccidentObject.InsurerCode, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="49"/>
+                    </WrapPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Серия, № полиса (иностранной зеленой карты), срок действия до какой даты" 
+                               TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 5"/>
+                    <WrapPanel HorizontalAlignment="Center">
+                        <TextBox MaxLength="3" Text="{Binding Path=CurrentAccidentObject.PolicySeries, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="35" Height="22"/>
+                        <TextBlock Text="," TextAlignment="Center" FontSize="20" Margin="2 0 2 0" FontFamily="Century"/>
+                        <TextBox MaxLength="10" Text="{Binding Path=CurrentAccidentObject.PolicyNumber, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="95" Height="22"/>
+                        <DatePicker x:Name="PolicyEndDateDatePicker" Style="{StaticResource TextBoxTemplateStyle}" Margin="10 0 0 0"
+                                SelectedDate="{Binding Path=CurrentAccidentObject.PolicyEndDate}" Width="110" Height="22"/>
+                    </WrapPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Фамилия водителя" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <TextBox MaxLength="10" Text="{Binding Path=CurrentAccidentObject.Surname, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="100"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Серия, № удостоверения" TextAlignment="Center" 
+                               Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <WrapPanel HorizontalAlignment="Center">
+                        <TextBox MaxLength="3" Text="{Binding Path=CurrentAccidentObject.LicenceSeries, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="40" Height="21"/>
+                        <TextBlock Text="," TextAlignment="Center" FontSize="20" Margin="2 0 2 0" FontFamily="Century"/>
+                        <TextBox MaxLength="6" Text="{Binding Path=CurrentAccidentObject.LicenceNumber, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="70" Height="21"/>
+                    </WrapPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Собственник ТС" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <TextBox MaxLength="20" Text="{Binding Path=CurrentAccidentObject.Owner, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="200"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <WrapPanel Margin="0 0 0 10">
+                        <TextBlock Text="Тех. неисправности ТС:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}"/>
+                        <TextBox MaxLength="3" Text="{Binding Path=CurrentAccidentObject.TechnicalFaults, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="40" Margin="7 0 0 0"
+                                 TextChanged="SeparatorTextBox_TextChanged" Tag="1"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Text="Код ЕГРПОУ:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 10 0"/>
+                        <TextBox MaxLength="11" Text="{Binding Path=CurrentAccidentObject.EDRPOU_Code, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="110"
+                                 TextChanged="SeparatorTextBox_TextChanged" Tag="3"/>
+                    </WrapPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Код повреждений ТС"  TextAlignment="Center" 
+                                   Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <TextBox MaxLength="11" Text="{Binding Path=CurrentAccidentObject.CorruptionCode, ValidatesOnDataErrors=True}"
+                             Style="{StaticResource TextBoxValidationTemplate}" Width="110" Margin="0 0 0 10"
+                             TextChanged="SeparatorTextBox_TextChanged" Tag="2"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Сведения о лицензирования деятельности" TextAlignment="Center" 
+                                   Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
+                    <TextBox MaxLength="9" Text="{Binding Path=CurrentAccidentObject.ActivityLicensingInfo, ValidatesOnDataErrors=True}"
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="100"/>
+                </StackPanel>
+
+                <CheckBox Grid.Row="4" Grid.ColumnSpan="3" x:Name="TrailerAvailabilityCheckBox" 
+                          HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Path=CurrentAccidentObject.TrailerAvailability}">
+                    <CheckBox.Content>
+                        <TextBlock Text="Наличие прицепа (полуприцепа)" TextWrapping="Wrap" TextAlignment="Center"
+                                   Style="{StaticResource TextBlockTemplateStyle}"/>
+                    </CheckBox.Content>
+                </CheckBox>
+                
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Column="1" BorderThickness="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="0.15*"/>
+                </Grid.RowDefinitions>
+                <ListBox x:Name="VehiclesListBox" Grid.Row="0" Grid.ColumnSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ItemTemplate="{StaticResource ListBoxDataTemplate}" SelectionChanged="VehiclesListBox_SelectionChanged"
+                         SelectedItem="{Binding CurrentAccidentObject}" Margin="0 6 0 0"/>
+                <Button Grid.Column="0" Grid.Row="1" Content="Добавить" Width="90" Style="{StaticResource ButtonTemplateStyle}" 
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding AddCommand}"
+                        CommandParameter="{Binding ElementName=VehiclesListBox, Path=SelectedItem}"/>
+                <Button Grid.Column="1" Grid.Row="1" Content="Удалить " Width="90" Style="{StaticResource ButtonTemplateStyle}"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RemoveCommand}"
+                        CommandParameter="{Binding ElementName=VehiclesListBox, Path=SelectedItem}"/>
+            </Grid>
+        </GroupBox>
+        <WrapPanel Grid.Row="1" Grid.ColumnSpan="2"  Height="29" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Content="Подтвердить" Width="100" Style="{StaticResource ButtonTemplateStyle}" 
+                    Margin="0 0 20 0" Click="AcceptClick"/>
+            <Button Content="Отмена " Width="100" Style="{StaticResource ButtonTemplateStyle}" 
+                    Margin="20 0 0 0" Click="RejectClick"/>
+        </WrapPanel>
+    </Grid>
+</Window>
