@@ -43,22 +43,25 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["CardNumber"] = "Ќомер карты не может быть пустым.";
+                    cardNumber = null;
                     return;
                 }
 
                 if (cardNumberRegex.IsMatch(value) || int.TryParse(value, out int cn))
                 {
                     cardNumber = value.GetStrWithoutSeparator('-');
-                    OnPropertyChanged("CardNumber");
                     errors["CardNumber"] = null;
                 }
                 else
                 {
+                    cardNumber = value;
                     errors["CardNumber"] = "—трока не соответствует ни одному из ниже перечисленных форматов:\n" +
                                              "- 00-0000000-0*\n" +
                                              "- 0000000000*\n" +
                                              "* - не об€зательный элемент";
                 }
+
+                OnPropertyChanged("CardNumber");
             }
         }
 

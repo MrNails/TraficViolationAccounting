@@ -31,5 +31,22 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="ListBoxItem">
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="ListBoxItem.IsSelected" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="ListBoxItem.FontSize" Value="14" />
+                        <Setter Property="ListBoxItem.FontWeight" Value="Bold" />
+                        <Setter Property="ListBoxItem.FontStyle" Value="Italic" />
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <ItemsPanelTemplate x:Key="ItemsTemplate">
+            <WrapPanel Margin="10 0 0 0" />
+        </ItemsPanelTemplate>
     </Application.Resources>
 </Application>

@@ -88,6 +88,9 @@
     <Compile Include="Views\AddInfoWindows\AddRoadConditionWindow.xaml.cs">
       <DependentUpon>AddRoadConditionWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\AddInfoWindows\AddVehiclesWindow.xaml.cs">
+      <DependentUpon>AddVehiclesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AuthorizationWindow.xaml.cs">
       <DependentUpon>AuthorizationWindow.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AddInfoWindows\AddRoadConditionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AddInfoWindows\AddVehiclesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

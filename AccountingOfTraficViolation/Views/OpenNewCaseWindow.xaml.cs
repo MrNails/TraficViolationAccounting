@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,9 @@ namespace AccountingOfTraficViolation.Views
         private AccidentOnHighway accidentOnHighway;
         private AccidentOnVillage accidentOnVillage;
         private RoadCondition roadCondition;
+        private ObservableCollection<ParticipantsInformation> participantsInformations;
+        private ObservableCollection<Vehicle> vehicles;
+
         public OpenNewCaseWindow()
         {
             InitializeComponent();
@@ -61,16 +65,21 @@ namespace AccountingOfTraficViolation.Views
         }
         private void ParticipanInfoClick(object sender, RoutedEventArgs e)
         {
-            AddParticipantInfoWindow participantInfoWindow = new AddParticipantInfoWindow();
+            AddParticipantInfoWindow participantInfoWindow = new AddParticipantInfoWindow(participantsInformations);
             if (participantInfoWindow.ShowDialog() == true)
             {
-
+                participantsInformations = participantInfoWindow.ParticipantsInformations;
                 ParticipanInfoProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
             }
         }
         private void VehicleClick(object sender, RoutedEventArgs e)
         {
-            VehicleProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+            AddVehiclesWindow vehiclesWindow = new AddVehiclesWindow(vehicles);
+            if (vehiclesWindow.ShowDialog() == true)
+            {
+                vehicles = vehiclesWindow.Vehicles;
+                VehicleProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+            }
         }
         private void VictimClick(object sender, RoutedEventArgs e)
         {

@@ -15,14 +15,17 @@ namespace AccountingOfTraficViolation.Models
         private string kilometer;
         private string binding;
         private string meter;
-        private Regex regex;
+        private Regex[] regexes;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AccidentOnHighway()
         {
             CaseAccidentPlaces = new HashSet<CaseAccidentPlace>();
-
-            regex = new Regex(@"[a-zA-Z]-\d{2}-\d{2}(-[0-9])?$");
+            regexes = new Regex[]
+            {
+                new Regex(@"[a-zA-Z]-\d{2}-\d{2}(-[0-9])?$"),
+                new Regex(@"[a-zA-Z]\d{4}[0-9]?$")
+            };
 
             HighwayIndexAndNumber = "";
             AdditionalInfo = "";
@@ -43,22 +46,29 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["HighwayIndexAndNumber"] = "»ндекс и номер дороги не могут отсутствовать.";
+                    highwayIndexAndNumber = null;
                     return;
                 }
 
-                if (regex.IsMatch(value) || int.TryParse(value, out int h))
+                foreach (var regex in regexes)
                 {
-                    highwayIndexAndNumber = value.GetStrWithoutSeparator('-');
-                    OnPropertyChanged("HighwayIndexAndNumber");
-                    errors["HighwayIndexAndNumber"] = null;
+                    if (regex.IsMatch(value))
+                    {
+                        errors["HighwayIndexAndNumber"] = null;
+                        highwayIndexAndNumber = value.GetStrWithoutSeparator('-');
+                        break;
+                    }
+                    else
+                    {
+                        highwayIndexAndNumber = value;
+                        errors["HighwayIndexAndNumber"] = "—трока не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                                 "\t- A-00-00-0*\n" +
+                                                 "\t- A00000*\n" +
+                                                 "* - не об€зательный элемент";
+                    }
                 }
-                else
-                {
-                    errors["HighwayIndexAndNumber"] = "—трока не соответствует ни одному из ниже перечисленных форматов:\n" +
-                                             "\t- 0-00-00-0*\n" +
-                                             "\t- 000000*\n" +
-                                             "* - не об€зательный элемент";
-                }
+
+                OnPropertyChanged("HighwayIndexAndNumber");
             }
         }
 
@@ -97,6 +107,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Kilometer"] = "ѕоле с количеством километров не может быть пустым.";
+                    kilometer = null;
                     return;
                 }
 
@@ -149,6 +160,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Binding"] = "ѕоле 'ѕрив€зка' не может быть пустым.";
+                    binding = null;
                     return;
                 }
 

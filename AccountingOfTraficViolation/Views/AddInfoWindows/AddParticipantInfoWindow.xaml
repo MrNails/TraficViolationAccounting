@@ -5,29 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
         mc:Ignorable="d"
-        Title="Информация о пострадавших" Height="450" Width="800">
+        Title="Информация о пострадавших" Height="450" Width="800" ResizeMode="NoResize">
     <Window.Resources>
-        <Style TargetType="ListBoxItem">
-            <Style.Triggers>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="ListBoxItem.IsSelected" Value="True" />
-                    </MultiTrigger.Conditions>
-                    <MultiTrigger.Setters>
-                        <Setter Property="ListBoxItem.FontSize" Value="14" />
-                        <Setter Property="ListBoxItem.FontWeight" Value="Bold" />
-                        <Setter Property="ListBoxItem.FontStyle" Value="Italic" />
-                    </MultiTrigger.Setters>
-                </MultiTrigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="SelectedTextBlock">
-            <Style.Triggers>
-                <Trigger Property="TextBlock.FontWeight" Value="Bold">
-                    <Setter Property="TextBlock.Margin" Value="10 0 0 0"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
         <DataTemplate x:Key="ListBoxDataTemplate">
             <StackPanel Width="205">
                 <Grid>
@@ -56,9 +35,6 @@
                 </Grid>
             </StackPanel>
         </DataTemplate>
-        <ItemsPanelTemplate x:Key="ItemsTemplate">
-            <WrapPanel Margin="10 0 0 0" />
-        </ItemsPanelTemplate>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -87,37 +63,37 @@
 
                 <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Имя" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentParticipantsInformation.Name, ValidatesOnDataErrors=True}"
+                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentAccidentObject.Name, ValidatesOnDataErrors=True}"
                               Style="{StaticResource TextBoxValidationTemplate}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Фамилия" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentParticipantsInformation.Surname, ValidatesOnDataErrors=True}"
+                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentAccidentObject.Surname, ValidatesOnDataErrors=True}"
                               Style="{StaticResource TextBoxValidationTemplate}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Отчество" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentParticipantsInformation.Patronymic, ValidatesOnDataErrors=True}"
+                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentAccidentObject.Patronymic, ValidatesOnDataErrors=True}"
                               Style="{StaticResource TextBoxValidationTemplate}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Адрес" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-                    <TextBox  Width="510" MaxLength="50" Text="{Binding Path=CurrentParticipantsInformation.Address, ValidatesOnDataErrors=True}"
+                    <TextBox  Width="510" MaxLength="50" Text="{Binding Path=CurrentAccidentObject.Address, ValidatesOnDataErrors=True}"
                               Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </StackPanel>
                 <WrapPanel Grid.Row="3" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Гражданство" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-                    <TextBox Width="50" MaxLength="2" Text="{Binding Path=CurrentParticipantsInformation.Citizenship, ValidatesOnDataErrors=True}"
+                    <TextBox Width="50" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Citizenship, ValidatesOnDataErrors=True}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Квалификация" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-                    <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentParticipantsInformation.Qualification}"
+                    <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Qualification}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Возраст" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-                    <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentParticipantsInformation.Qualification}"
+                    <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Qualification}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -129,17 +105,17 @@
                 </WrapPanel>
                 <StackPanel Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Водительский стаж" TextWrapping="Wrap" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 0 10"/>
-                    <TextBox Width="50" MaxLength="2" Text="{Binding Path=CurrentParticipantsInformation.DriveExpirience}"
+                    <TextBox Width="50" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.DriveExpirience}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Время за рулём до ДТП" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 0 10"/>
-                    <TextBox Width="50" MaxLength="2" Text="{Binding Path=CurrentParticipantsInformation.DrivingTimeBeforeAccident}"
+                    <TextBox Width="50" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.DrivingTimeBeforeAccident}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Нарушение ПДР" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 0 10"/>
-                    <TextBox x:Name="PDDViolationTextBox" Width="70" MaxLength="5" Text="{Binding Path=CurrentParticipantsInformation.PDDViolation, ValidatesOnDataErrors=True}"
+                    <TextBox x:Name="PDDViolationTextBox" Width="70" MaxLength="5" Text="{Binding Path=CurrentAccidentObject.PDDViolation, ValidatesOnDataErrors=True}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"
                              TextChanged="PDDViolationTextBox_TextChanged"/>
                 </StackPanel>
@@ -157,7 +133,7 @@
                 </Grid.RowDefinitions>
                 <ListBox x:Name="ParticipantsListBox" Grid.Row="0" Grid.ColumnSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          SelectionChanged="ParticipantsListBox_SelectionChanged" ItemTemplate="{StaticResource ListBoxDataTemplate}" 
-                         SelectedItem="{Binding CurrentParticipantsInformation}" Margin="0 6 0 0"/>
+                         SelectedItem="{Binding CurrentAccidentObject}" Margin="0 6 0 0"/>
                 <Button Grid.Column="0" Grid.Row="1" Content="Добавить" Width="90" Style="{StaticResource ButtonTemplateStyle}" 
                         HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding AddCommand}"
                         CommandParameter="{Binding ElementName=ParticipantsListBox, Path=SelectedItem}"/>
@@ -167,8 +143,10 @@
             </Grid>
         </GroupBox>
         <WrapPanel Grid.Row="1" Grid.ColumnSpan="2"  Height="29" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Button Content="Подтвердить" Width="100" Style="{StaticResource ButtonTemplateStyle}" Margin="0 0 20 0"/>
-            <Button Content="Отмена " Width="100" Style="{StaticResource ButtonTemplateStyle}" Margin="20 0 0 0"/>
+            <Button Content="Подтвердить" Width="100" Style="{StaticResource ButtonTemplateStyle}" 
+                    Margin="0 0 20 0" Click="AcceptClick"/>
+            <Button Content="Отмена " Width="100" Style="{StaticResource ButtonTemplateStyle}" 
+                    Margin="20 0 0 0" Click="RejectClick"/>
         </WrapPanel>
     </Grid>
 </Window>

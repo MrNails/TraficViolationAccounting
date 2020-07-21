@@ -52,5 +52,26 @@ namespace AccountingOfTraficViolation.Services
 
             return false;
         }
+
+    }
+
+    public static class TextBoxExtension
+    {
+        public static void SeparatorTemplate(this TextBox textBox, char separator, params int[] indexes)
+        {
+            string tempStr = textBox.Text;
+            int caretIndex = textBox.CaretIndex;
+            int oldLength = textBox.Text.Length;
+
+            tempStr = tempStr.GetStrWithoutSeparator(separator).AddSeparator(separator, indexes);
+
+            textBox.Text = tempStr;
+
+            //set caret after string change
+            if (caretIndex + (tempStr.Length - oldLength) >= 0)
+            {
+                textBox.CaretIndex = caretIndex + (tempStr.Length - oldLength);
+            }
+        }
     }
 }

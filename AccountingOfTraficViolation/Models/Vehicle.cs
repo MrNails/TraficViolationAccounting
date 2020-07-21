@@ -1,8 +1,10 @@
+using AccountingOfTraficViolation.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
+using System.Text.RegularExpressions;
 
 namespace AccountingOfTraficViolation.Models
 {
@@ -29,6 +31,9 @@ namespace AccountingOfTraficViolation.Models
         private string registrationSertificate;
         private string seriesOfRegistrationSertificate;
         private DateTime policyEndDate;
+        private Regex technicalFaultsRegex;
+        private Regex EDRPOU_CodeRegex;
+        private Regex corruptionCodeRegex;
 
         public Vehicle()
         {
@@ -49,6 +54,11 @@ namespace AccountingOfTraficViolation.Models
             ActivityLicensingInfo = "";
             RegistrationSertificate = "";
             SeriesOfRegistrationSertificate = "";
+
+
+            technicalFaultsRegex = new Regex(@"\d{1},\d{1}$");
+            EDRPOU_CodeRegex = new Regex(@"\d{7}-\d{3}$");
+            corruptionCodeRegex = new Regex(@"\d{2},\d{2},\d{2},\d{2}$");
         }
 
         public int Id { get; set; }
@@ -63,6 +73,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["PlateNumber"] = "Номерной знак машины не может быть пустым.";
+                    plateNumber = null;
                     return;
                 }
 
@@ -89,6 +100,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["FrameNumber"] = "Номер рамы не может быть пустым.";
+                    frameNumber = null;
                     return;
                 }
 
@@ -115,6 +127,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["ChasisNumber"] = "Номер шасси не может быть пустым.";
+                    chasisNumber = null;
                     return;
                 }
 
@@ -141,6 +154,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Make"] = "Марка машини не может быть пустой.";
+                    make = null;
                     return;
                 }
 
@@ -167,6 +181,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Model"] = "Модель машины не может быть пустой.";
+                    model = null;
                     return;
                 }
 
@@ -211,6 +226,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["SeriesOfRegistrationSertificate"] = "Cерия свидетельства о регистрации не может быть пустой.";
+                    seriesOfRegistrationSertificate = null;
                     return;
                 }
 
@@ -237,6 +253,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["RegistrationSertificate"] = "Cвидетельство о регистрации не может быть пустым.";
+                    registrationSertificate = null;
                     return;
                 }
 
@@ -291,6 +308,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["PolicySeries"] = "Серия полиса не может быть пустым.";
+                    policySeries = null;
                     return;
                 }
 
@@ -317,6 +335,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["PolicyNumber"] = "Полис не может быть пустым.";
+                    policyNumber = null;
                     return;
                 }
 
@@ -354,6 +373,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Surname"] = "Фамилия водителя не может быть пустой.";
+                    surname = null;
                     return;
                 }
 
@@ -380,6 +400,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["LicenceSeries"] = "Серия удостоверения водителя не может быть пустой.";
+                    licenceSeries = null;
                     return;
                 }
 
@@ -406,6 +427,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["LicenceNumber"] = "Удостоверения водителя не может быть пустым.";
+                    licenceNumber = null;
                     return;
                 }
 
@@ -432,6 +454,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Owner"] = "Владелец не может быть пустым.";
+                    owner = null;
                     return;
                 }
 
@@ -458,19 +481,22 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["TechnicalFaults"] = "Поле технические неисправности не может быть пустым.";
-                    return;
+                    technicalFaults = null;
                 }
-
-                if (value.Length <= 2)
+                else if (technicalFaultsRegex.IsMatch(value) || int.TryParse(value, out int tf))
                 {
-                    technicalFaults = value;
-                    OnPropertyChanged("TechnicalFaults");
+                    technicalFaults = value.GetStrWithoutSeparator(',');
                     errors["TechnicalFaults"] = null;
                 }
                 else
                 {
-                    errors["TechnicalFaults"] = "Количество символов в поле технические неисправности не может быть больше 2.";
+                    technicalFaults = value;
+                    errors["TechnicalFaults"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                             "\t- 0,0\n" +
+                                             "\t- 00";
                 }
+
+                OnPropertyChanged("TechnicalFaults");
             }
         }
 
@@ -484,23 +510,26 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["EDRPOU_Code"] = "Код ЕДРПОУ не может быть пустым.";
-                    return;
+                    _EDRPOU_Code = null;
                 }
-
-                if (value.Length <= 10)
+                else if (EDRPOU_CodeRegex.IsMatch(value) || int.TryParse(value, out int edrpou))
                 {
-                    _EDRPOU_Code = value;
-                    OnPropertyChanged("EDRPOU_Code");
+                    _EDRPOU_Code = value.GetStrWithoutSeparator('-');
                     errors["EDRPOU_Code"] = null;
                 }
                 else
                 {
-                    errors["EDRPOU_Code"] = "Количество символов в коде ЕДРПОУ не может быть больше 10.";
+                    _EDRPOU_Code = value;
+                    errors["EDRPOU_Code"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                             "\t- 0000000-000\n" +
+                                             "\t- 0000000000";
                 }
+
+                OnPropertyChanged("EDRPOU_Code");
             }
         }
 
-        [StringLength(10)]
+        [StringLength(8)]
         public string CorruptionCode
         {
             get { return corruptionCode; }
@@ -509,19 +538,21 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     corruptionCode = null;
-                    return;
                 }
-
-                if (value.Length <= 10)
+                else if (corruptionCodeRegex.IsMatch(value) || int.TryParse(value, out int cd))
                 {
-                    corruptionCode = value;
-                    OnPropertyChanged("CorruptionCode");
+                    corruptionCode = value.GetStrWithoutSeparator(',');
                     errors["CorruptionCode"] = null;
                 }
                 else
                 {
-                    errors["CorruptionCode"] = "Количество символов в коде повреждения ТЗ не может быть больше 10.";
+                    corruptionCode = value;
+                    errors["CorruptionCode"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                             "\t- 00,00,00,00\n" +
+                                             "\t- 00000000";
                 }
+
+                OnPropertyChanged("CorruptionCode");
             }
         }
 

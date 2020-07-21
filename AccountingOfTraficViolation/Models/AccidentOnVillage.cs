@@ -59,6 +59,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Name"] = "Название населённого пункта не может быть пустым.";
+                    name = null;
                     return;
                 }
 
@@ -104,6 +105,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["District"] = "Название района не может быть пустым.";
+                    district = null;
                     return;
                 }
 
@@ -148,6 +150,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Street"] = "Название улицы не может быть пустым.";
+                    street = null;
                     return;
                 }
 
@@ -192,6 +195,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["VillageBinding"] = "Привязка не может быть пустой.";
+                    binding = null;
                     return;
                 }
 

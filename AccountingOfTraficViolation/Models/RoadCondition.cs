@@ -71,21 +71,24 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["SurfaceState"] = "Состояние дороги не может быть пустым.";
+                    surfaceState = null;
                     return;
                 }
 
                 if (surfaceStateRegex.IsMatch(value) || int.TryParse(value, out int st))
                 {
                     surfaceState = value.GetStrWithoutSeparator(',');
-                    OnPropertyChanged("SurfaceState");
                     errors["SurfaceState"] = null;
                 }
                 else
                 {
+                    surfaceState = value;
                     errors["SurfaceState"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
                                              "\t- 0,0\n" +
                                              "\t- 00";
                 }
+
+                OnPropertyChanged("SurfaceState");
             }
         }
 
@@ -135,21 +138,22 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["PlaceElement"] = "Элемент не может быть пустым.";
-                    return;
+                    placeElement = null;
                 }
-
                 else if (placeElementRegex.IsMatch(value) || int.TryParse(value, out int pl))
                 {
                     placeElement = value.GetStrWithoutSeparator(',');
-                    OnPropertyChanged("PlaceElement");
                     errors["PlaceElement"] = null;
                 }
                 else
                 {
+                    placeElement = value;
                     errors["PlaceElement"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
                                              "\t- 00,00,00\n" +
                                              "\t- 000000";
                 }
+
+                OnPropertyChanged("PlaceElement");
             }
         }
 
@@ -181,21 +185,22 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["TechnicalTool"] = "Поле с техническими приспособлениями не может быть пустым.";
-                    return;
+                    technicalTool = null;
                 }
-
-                if (technicalToolRegex.IsMatch(value) || int.TryParse(value, out int tt))
+                else if (technicalToolRegex.IsMatch(value) || int.TryParse(value, out int tt))
                 {
                     technicalTool = value.GetStrWithoutSeparator(',');
-                    OnPropertyChanged("TechnicalTool");
                     errors["TechnicalTool"] = null;
                 }
                 else
                 {
+                    technicalTool = value;
                     errors["TechnicalTool"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
                                              "\t- 00,00,00,00,00\n" +
                                              "\t- 0000000000";
                 }
+
+                OnPropertyChanged("TechnicalTool");
             }
         }
 
@@ -227,21 +232,22 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["RoadDisadvantages"] = "Поле с неисправностями дороги не может быть пустым.";
-                    return;
+                    roadDisadvantages = null;
                 }
-
-                if (roadDisadvantagesRegex.IsMatch(value) || int.TryParse(value, out int rd))
+                else if (roadDisadvantagesRegex.IsMatch(value) || int.TryParse(value, out int rd))
                 {
                     roadDisadvantages = value.GetStrWithoutSeparator(',');
-                    OnPropertyChanged("RoadDisadvantages");
                     errors["RoadDisadvantages"] = null;
                 }
                 else
                 {
+                    roadDisadvantages = value;
                     errors["RoadDisadvantages"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
                                              "\t- 00,00,00,00,00\n" +
                                              "\t- 0000000000";
                 }
+
+                OnPropertyChanged("RoadDisadvantages");
             }
         }
 

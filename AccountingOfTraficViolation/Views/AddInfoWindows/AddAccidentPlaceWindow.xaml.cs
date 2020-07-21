@@ -96,21 +96,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             {
                 TextBox textBox = (TextBox)sender;
 
-                string tempStr = textBox.Text;
-                int caretIndex = textBox.CaretIndex;
-                int oldLength = textBox.Text.Length;
-
-                tempStr = textBox.Text.GetStrWithoutSeparator('-').AddSeparator('-', 1, 4, 7);
-
-                textBox.Text = tempStr;
-
-                textBox.CaretIndex = caretIndex;
-
-                //set caret after string change
-                if (caretIndex + (tempStr.Length - oldLength) >= 0)
-                {
-                    textBox.CaretIndex = caretIndex + (tempStr.Length - oldLength);
-                }
+                textBox.SeparatorTemplate('-', 1, 4, 7);
             }
         }
 

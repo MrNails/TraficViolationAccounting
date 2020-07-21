@@ -41,6 +41,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["IsDied"] = "Не правльный ввод поля погиб(травмироварн).";
+                    isDied = null;
                     return;
                 }
 
@@ -151,6 +152,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Name"] = "Имя не может отсутствовать.";
+                    name = null;
                     return;
                 }
 
@@ -177,6 +179,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Surname"] = "Фамилия не может отсутствовать.";
+                    surname = null;
                     return;
                 }
 
@@ -203,6 +206,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Patronymic"] = "Отчество не может отсутствовать.";
+                    patronymic = null;
                     return;
                 }
 
@@ -229,6 +233,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Citizenship"] = "Гражданство не может отсутствовать.";
+                    citizenship = null;
                     return;
                 }
 

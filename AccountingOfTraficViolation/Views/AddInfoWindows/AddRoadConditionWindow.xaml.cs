@@ -65,9 +65,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
         {
             TextBox textBox = (TextBox)sender;
 
-            string tempStr = textBox.Text;
-            int caretIndex = textBox.CaretIndex;
-            int oldLength = textBox.Text.Length;
             int[] indexes = null;
 
             switch (textBox.Name)
@@ -88,15 +85,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                     return;
             }
 
-            tempStr = tempStr.GetStrWithoutSeparator(',').AddSeparator(',', indexes);
-
-            textBox.Text = tempStr;
-
-            //set caret after string change
-            if (caretIndex + (tempStr.Length - oldLength) >= 0)
-            {
-                textBox.CaretIndex = caretIndex + (tempStr.Length - oldLength);
-            }
+            textBox.SeparatorTemplate(',', indexes);
         }
 
     }

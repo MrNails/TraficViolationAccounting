@@ -10,38 +10,39 @@ using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.ViewModels
 {
-    public class ParticipantInfoVM : INotifyPropertyChanged
+    public class AccidentObjectsVM<T> : INotifyPropertyChanged
+        where T : MainTable, new()
     {
         private int currentIndex;
-        private ParticipantsInformation currentParticipantsInformation;
+        private T currentAccidentObject;
         private RelayCommand addCommand;
         private RelayCommand removeCommand;
 
-        public ParticipantInfoVM() : this(null)
+        public AccidentObjectsVM() : this(null)
         { }
-        public ParticipantInfoVM(ObservableCollection<ParticipantsInformation> participantsInfo)
+        public AccidentObjectsVM(ObservableCollection<T> participantsInfo)
         {
             if (participantsInfo != null)
             {
-                ParticipantsInformations = participantsInfo;
-                CurrentParticipantsInformation = ParticipantsInformations.FirstOrDefault();
+                AccidentObjects = participantsInfo;
+                CurrentAccidentObject = AccidentObjects.FirstOrDefault();
             }
             else
             {
-                CurrentParticipantsInformation = new ParticipantsInformation();
-                ParticipantsInformations = new ObservableCollection<ParticipantsInformation>() { CurrentParticipantsInformation };
+                CurrentAccidentObject = new T();
+                AccidentObjects = new ObservableCollection<T>() { CurrentAccidentObject };
             }
 
-            addCommand = new RelayCommand(pInfo =>
+            addCommand = new RelayCommand(obj =>
             {
-                CurrentParticipantsInformation = new ParticipantsInformation();
-                ParticipantsInformations.Add(CurrentParticipantsInformation);
+                CurrentAccidentObject = new T();
+                AccidentObjects.Add(CurrentAccidentObject);
             });
-            removeCommand = new RelayCommand(pInfo =>
+            removeCommand = new RelayCommand(obj =>
             {
-                if (pInfo != null && pInfo is ParticipantsInformation)
+                if (obj != null && obj is T && AccidentObjects.Count > 1)
                 {
-                    ParticipantsInformations.Remove((ParticipantsInformation)pInfo);
+                    AccidentObjects.Remove((T)obj);
                 }
             });
         }
@@ -52,7 +53,7 @@ namespace AccountingOfTraficViolation.ViewModels
             get { return currentIndex; }
             set
             {
-                if (value >= 0 && value < ParticipantsInformations.Count)
+                if (value >= 0 && value < AccidentObjects.Count)
                 {
                     currentIndex = value;
                 }
@@ -60,24 +61,24 @@ namespace AccountingOfTraficViolation.ViewModels
                 {
                     currentIndex = 0;
                 }
-                CurrentParticipantsInformation = ParticipantsInformations[currentIndex];
+                CurrentAccidentObject = AccidentObjects[currentIndex];
             }
         }
 
-        public ParticipantsInformation CurrentParticipantsInformation
+        public T CurrentAccidentObject
         {
-            get { return currentParticipantsInformation; }
+            get { return currentAccidentObject; }
             set
             {
-                currentParticipantsInformation = value;
-                OnPropertyChanged("CurrentParticipantsInformation");
+                currentAccidentObject = value;
+                OnPropertyChanged("CurrentAccidentObject");
             }
         }
 
         public RelayCommand AddCommand => addCommand;
         public RelayCommand RemoveCommand => removeCommand;
 
-        public ObservableCollection<ParticipantsInformation> ParticipantsInformations { get; }
+        public ObservableCollection<T> AccidentObjects { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string prop)

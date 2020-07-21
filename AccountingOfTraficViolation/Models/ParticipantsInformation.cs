@@ -47,6 +47,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Name"] = "Имя не может быть пустым.";
+                    name = null;
                     return;
                 }
 
@@ -73,6 +74,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Surname"] = "Фамилия не может быть пустой.";
+                    surname = null;
                     return;
                 }
 
@@ -99,6 +101,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Patronymic"] = "Отчество не может быть пустым.";
+                    patronymic = null;
                     return;
                 }
 
@@ -125,6 +128,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Address"] = "Адрес не может быть пустым.";
+                    address = null;
                     return;
                 }
 
@@ -189,6 +193,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Citizenship"] = "Гражданство не может быть пустым.";
+                    citizenship = null;
                     return;
                 }
 
@@ -235,21 +240,24 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["PDDViolation"] = "Нарушение ПДР не может быть пустым.";
+                    _PDDViolation = null;
                     return;
                 }
 
                 if (pddViolationRegex.IsMatch(value) || int.TryParse(value, out int pdd))
                 {
                     _PDDViolation = value.GetStrWithoutSeparator(',');
-                    OnPropertyChanged("PDDViolation");
                     errors["PDDViolation"] = null;
                 }
                 else
                 {
+                    _PDDViolation = value;
                     errors["PDDViolation"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
                          "- 00,00\n" +
                          "- 0000\n";
                 }
+
+                OnPropertyChanged("PDDViolation");
             }
         }
 
