@@ -59,6 +59,8 @@ namespace AccountingOfTraficViolation.Models
             technicalFaultsRegex = new Regex(@"\d{1},\d{1}$");
             EDRPOU_CodeRegex = new Regex(@"\d{7}-\d{3}$");
             corruptionCodeRegex = new Regex(@"\d{2},\d{2},\d{2},\d{2}$");
+
+            policyEndDate = minimunDate;
         }
 
         public int Id { get; set; }
@@ -358,7 +360,14 @@ namespace AccountingOfTraficViolation.Models
             get { return policyEndDate; }
             set
             {
-                policyEndDate = value;
+                if (value < minimunDate)
+                {
+                    policyEndDate = minimunDate;
+                }
+                else
+                {
+                    policyEndDate = value;
+                }
                 OnPropertyChanged("PolicyEndDate");
             }
         }
@@ -512,7 +521,7 @@ namespace AccountingOfTraficViolation.Models
                     errors["EDRPOU_Code"] = "Код ЕДРПОУ не может быть пустым.";
                     _EDRPOU_Code = null;
                 }
-                else if (EDRPOU_CodeRegex.IsMatch(value) || int.TryParse(value, out int edrpou))
+                else if (EDRPOU_CodeRegex.IsMatch(value) || long.TryParse(value, out long edrpou))
                 {
                     _EDRPOU_Code = value.GetStrWithoutSeparator('-');
                     errors["EDRPOU_Code"] = null;

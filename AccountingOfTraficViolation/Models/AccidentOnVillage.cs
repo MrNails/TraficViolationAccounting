@@ -187,6 +187,7 @@ namespace AccountingOfTraficViolation.Models
 
         [Required]
         [StringLength(47)]
+        [Column(name:"Binding")]
         public string VillageBinding
         {
             get { return binding; }

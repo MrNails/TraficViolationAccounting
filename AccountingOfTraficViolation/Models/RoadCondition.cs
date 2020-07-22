@@ -187,7 +187,7 @@ namespace AccountingOfTraficViolation.Models
                     errors["TechnicalTool"] = "ѕоле с техническими приспособлени€ми не может быть пустым.";
                     technicalTool = null;
                 }
-                else if (technicalToolRegex.IsMatch(value) || int.TryParse(value, out int tt))
+                else if (technicalToolRegex.IsMatch(value) || long.TryParse(value, out long tt))
                 {
                     technicalTool = value.GetStrWithoutSeparator(',');
                     errors["TechnicalTool"] = null;
@@ -234,7 +234,7 @@ namespace AccountingOfTraficViolation.Models
                     errors["RoadDisadvantages"] = "ѕоле с неисправност€ми дороги не может быть пустым.";
                     roadDisadvantages = null;
                 }
-                else if (roadDisadvantagesRegex.IsMatch(value) || int.TryParse(value, out int rd))
+                else if (roadDisadvantagesRegex.IsMatch(value) || long.TryParse(value, out long rd))
                 {
                     roadDisadvantages = value.GetStrWithoutSeparator(',');
                     errors["RoadDisadvantages"] = null;

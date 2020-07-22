@@ -91,11 +91,17 @@
     <Compile Include="Views\AddInfoWindows\AddVehiclesWindow.xaml.cs">
       <DependentUpon>AddVehiclesWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\AddInfoWindows\AddVictimsWindow.xaml.cs">
+      <DependentUpon>AddVictimsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AuthorizationWindow.xaml.cs">
       <DependentUpon>AuthorizationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OpenNewCaseWindow.xaml.cs">
       <DependentUpon>OpenNewCaseWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShowCaseWindow.xaml.cs">
+      <DependentUpon>ShowCaseWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -129,11 +135,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\AddInfoWindows\AddVictimsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AuthorizationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OpenNewCaseWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShowCaseWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -29,6 +29,9 @@ namespace AccountingOfTraficViolation.Models
             cardNumberRegex = new Regex(@"\d{2}-\d{7}(-[0-9])?$");
 
             CardNumber = "";
+
+            fillDate = minimunDate;
+            incidentDate = minimunDate;
         }
 
         public int Id { get; set; }
@@ -47,7 +50,7 @@ namespace AccountingOfTraficViolation.Models
                     return;
                 }
 
-                if (cardNumberRegex.IsMatch(value) || int.TryParse(value, out int cn))
+                if (cardNumberRegex.IsMatch(value) || long.TryParse(value, out long cn))
                 {
                     cardNumber = value.GetStrWithoutSeparator('-');
                     errors["CardNumber"] = null;
@@ -89,7 +92,14 @@ namespace AccountingOfTraficViolation.Models
             get { return fillDate; }
             set
             {
-                fillDate = value;
+                if (value < minimunDate)
+                {
+                    fillDate = minimunDate;
+                } 
+                else
+                {
+                    fillDate = value;
+                }
                 OnPropertyChanged("FillDate");
             }
         }
@@ -100,8 +110,14 @@ namespace AccountingOfTraficViolation.Models
             get { return incidentDate; }
             set
             {
-                incidentDate = value;
-
+                if (value < minimunDate)
+                {
+                    incidentDate = minimunDate;
+                }
+                else
+                {
+                    incidentDate = value;
+                }
                 OnPropertyChanged("IncidentDate");
             }
         }

@@ -30,48 +30,50 @@
         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Для того, чтобы открыть дело, вам надо заполнить все ниже представленные данные." 
                    FontSize="30" TextAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <DockPanel Grid.Row="1" Grid.Column="0" Height="70" >
-            <Image x:Name="GeneralInfoProgresImage"  />
+            <Image x:Name="GeneralInfoProgresImage"/>
             <TextBlock Text="Общая информация" DockPanel.Dock="Top"  Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
             <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="GeneralInfoClick"/>
         </DockPanel>
         <DockPanel Grid.Row="2" Grid.Column="0"  Height="70">
-            <Image x:Name="RoadConditionProgresImage"  />
+            <Image x:Name="RoadConditionProgresImage"/>
             <TextBlock Text="Дорожные условия" DockPanel.Dock="Top"  Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" />
             <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="RoadConditionClick"/>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="0"  Height="70">
-            <Image x:Name="VehicleProgresImage"    />
+            <Image x:Name="VehicleProgresImage"  />
             <TextBlock Text="Информация про транспортные средства и их принадлежность" DockPanel.Dock="Top" 
                        Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
             <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="VehicleClick"/>
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="1" Height="70">
-            <Image x:Name="AccidentPlaceProgresImage"  />
+            <Image x:Name="AccidentPlaceProgresImage"/>
             <TextBlock Text="Место проишествия ДТП" DockPanel.Dock="Top"  
                        Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
             <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="AccidentPlaceClick"/>
         </DockPanel>
         <DockPanel Grid.Row="2" Grid.Column="1"  Height="70">
-            <Image x:Name="ParticipanInfoProgresImage"   />
+            <Image x:Name="ParticipanInfoProgresImage" />
             <TextBlock Text="Информация об участниках ДТП" DockPanel.Dock="Top"  
                        Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
             <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="ParticipanInfoClick"/>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="1"  Height="70">
-            <Image x:Name="VictimProgresImage"   />
+            <Image x:Name="VictimProgresImage" />
             <TextBlock Text="Информация про пострадавших" DockPanel.Dock="Top"  
                        Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
             <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="VictimClick"/>
         </DockPanel>
         <Button Grid.Row="4" Grid.Column="0" Content="Подтвердить" Style="{StaticResource ButtonTemplateStyle}"
-                VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 30 0" Width="100"/>
+                VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 30 0" Width="100"
+                Click="AcceptClick"/>
         <Button Grid.Row="4" Grid.Column="1" Content="Отменить" Style="{StaticResource ButtonTemplateStyle}"
-                VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30 0 0 0" Width="100"/>
+                VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30 0 0 0" Width="100"
+                Click="RejectClick"/>
     </Grid>
 </Window>

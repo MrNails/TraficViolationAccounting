@@ -22,16 +22,36 @@ namespace AccountingOfTraficViolation.Views
     /// </summary>
     public partial class OpenNewCaseWindow : Window
     {
+        private User user;
         private GeneralInfo generalInfo;
         private AccidentOnHighway accidentOnHighway;
         private AccidentOnVillage accidentOnVillage;
         private RoadCondition roadCondition;
         private ObservableCollection<ParticipantsInformation> participantsInformations;
         private ObservableCollection<Vehicle> vehicles;
+        private ObservableCollection<Victim> victims;
+        private Case _case;
+        private CaseAccidentPlace caseAccidentPlace;
 
-        public OpenNewCaseWindow()
+        public OpenNewCaseWindow(User user)
         {
             InitializeComponent();
+
+            if (user != null)
+            {
+                this.user = user;
+            }
+            else
+            {
+                MessageBox.Show("Вы не вошли в аккаунт и не можете открывать дело.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+            }
+
+            if (this.user.Role != 1)
+            {
+                MessageBox.Show("У вас не хватает привелегий на создание дела.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+            }
         }
 
         private void GeneralInfoClick(object sender, RoutedEventArgs e)
@@ -83,7 +103,81 @@ namespace AccountingOfTraficViolation.Views
         }
         private void VictimClick(object sender, RoutedEventArgs e)
         {
-            VictimProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+            AddVictimsWindow victimsWindow = new AddVictimsWindow(victims);
+            if (victimsWindow.ShowDialog() == true)
+            {
+                victims = victimsWindow.Victims;
+                VictimProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+            }
+        }
+
+        private void AcceptClick(object sender, RoutedEventArgs e)
+        {
+            if (generalInfo == null || (accidentOnHighway == null && accidentOnVillage == null) ||
+                roadCondition == null || participantsInformations == null ||
+                vehicles == null || victims == null)
+            {
+                return;
+            }
+
+            AddCaseToDB();
+
+            DialogResult = true;
+        }
+        private void RejectClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+        }
+
+        private async void AddCaseToDB()
+        {
+            using (TVAContext context = new TVAContext())
+            {
+                _case = new Case();
+                caseAccidentPlace = new CaseAccidentPlace();
+
+                context.GeneralInfos.Add(generalInfo);
+                context.RoadConditions.Add(roadCondition);
+
+                _case.GeneralInfo = generalInfo;
+                _case.RoadCondition = roadCondition;
+                _case.State = "PROCESSING";
+                _case.CaseAccidentPlace = caseAccidentPlace;
+                _case.CreaterLogin = user.Login;
+
+                caseAccidentPlace.AccidentOnHighway = accidentOnHighway;
+                caseAccidentPlace.AccidentOnVillage = accidentOnVillage;
+                caseAccidentPlace.Case = _case;
+
+                foreach (var participantsInformation in participantsInformations)
+                {
+                    participantsInformation.Case = _case;
+                }
+                foreach (var vehicle in vehicles)
+                {
+                    vehicle.Case = _case;
+                }
+                foreach (var victim in victims)
+                {
+                    victim.Case = _case;
+                }
+
+                context.ParticipantsInformations.AddRange(participantsInformations);
+                context.Vehicles.AddRange(vehicles);
+                context.Victims.AddRange(victims);
+
+                if (accidentOnHighway != null)
+                {
+                    context.AccidentOnHighways.Add(accidentOnHighway);
+                }
+                if (accidentOnVillage != null)
+                {
+                    context.AccidentOnVillages.Add(accidentOnVillage);
+                }
+
+                await context.SaveChangesAsync();
+            }
+            
         }
     }
 }

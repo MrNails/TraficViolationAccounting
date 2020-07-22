@@ -53,8 +53,8 @@ namespace AccountingOfTraficViolation
         }
         private void ShowCaseClick(object sender, RoutedEventArgs e)
         {
-            //ShowCaseWindow showCaseWindow = new ShowCaseWindow();
-            //showCaseWindow.ShowDialog();
+            ShowCaseWindow showCaseWindow = new ShowCaseWindow();
+            showCaseWindow.ShowDialog();
         }
     }
 }

@@ -190,10 +190,10 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
+                    _case = value;
                     CaseId = value.Id;
                 }
 
-                _case = value;
                 OnPropertyChanged("Case");
                 errors["Case"] = null;
             }

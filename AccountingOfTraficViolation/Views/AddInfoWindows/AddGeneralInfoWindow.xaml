@@ -21,15 +21,14 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="145">
             <TextBlock Text="Номер карточки" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" Margin="0 0 0 10"/>
-            <Border x:Name="CardNumberBorder" BorderThickness="1">
-                <TextBox x:Name="CardNumberTextBox" TextChanged="CardNumberTextBox_TextChanged" Text="{Binding Path=CardNumber, ValidatesOnDataErrors=True}"
+            <TextBox x:Name="CardNumberTextBox" TextChanged="CardNumberTextBox_TextChanged" Text="{Binding Path=CardNumber, ValidatesOnDataErrors=True}"
                     MaxLength="12" TextAlignment="Center" Padding="2" Style="{StaticResource TextBoxValidationTemplate}"/>
-            </Border>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="200">
             <TextBlock Text="Дата заполнения" Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" Margin="0 0 0 10"/>
-            <DatePicker x:Name="FillDateCalendar" Style="{StaticResource TextBoxTemplateStyle}" SelectedDate="{Binding FillDate}" />
+            <DatePicker x:Name="FillDateCalendar" Style="{StaticResource TextBoxTemplateStyle}" 
+                        SelectedDate="{Binding FillDate}" />
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
             <TextBlock Text="День недели" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" Margin="0 0 0 10"/>
@@ -56,7 +55,8 @@
         <StackPanel Grid.Row="1" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="200">
             <TextBlock Text="Дата проишествия" Style="{StaticResource TextBlockTemplateStyle}"
                        TextAlignment="Center" Margin="0 0 0 10"/>
-            <DatePicker x:Name="IncidentDateCalendar" Style="{StaticResource TextBoxTemplateStyle}" SelectedDate="{Binding IncidentDate}" />
+            <DatePicker x:Name="IncidentDateCalendar" Style="{StaticResource TextBoxTemplateStyle}" 
+                        SelectedDate="{Binding IncidentDate}"/>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
             <TextBlock Text="Время заполнения (чч:мм:сс)" Style="{StaticResource TextBlockTemplateStyle}" 

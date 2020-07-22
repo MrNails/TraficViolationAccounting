@@ -22,7 +22,7 @@ namespace AccountingOfTraficViolation.Services
                 }
                 else
                 {
-                    throw new InvalidCastException("Elem.Content is not Panel.");
+                    return false;
                 }
             }
             else if (elem is Panel)
@@ -41,13 +41,14 @@ namespace AccountingOfTraficViolation.Services
                     return true;
                 }
 
-                if (child is Panel)
+                if (child is Panel || child is ContentControl)
                 {
-                    if (((Panel)child).CheckIfExistValidationError())
+                    if (((UIElement)child).CheckIfExistValidationError())
                     {
                         return true;
                     }
                 }
+
             }
 
             return false;
