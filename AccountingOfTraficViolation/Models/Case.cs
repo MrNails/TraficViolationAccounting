@@ -15,7 +15,7 @@ namespace AccountingOfTraficViolation.Models
         private string createrLogin;
         private string state;
         private DateTime openAt;
-        private DateTime closeAt;
+        private DateTime? closeAt;
         private DateTime createdAt;
         private DateTime updatedAt;
         private GeneralInfo generalInfo;
@@ -27,6 +27,8 @@ namespace AccountingOfTraficViolation.Models
             ParticipantsInformations = new HashSet<ParticipantsInformation>();
             Vehicles = new HashSet<Vehicle>();
             Victims = new HashSet<Victim>();
+
+            OpenAt = minimunDate;
         }
 
         public int Id { get; set; }
@@ -40,12 +42,19 @@ namespace AccountingOfTraficViolation.Models
             get { return openAt; }
             set
             {
-                openAt = value;
+                if (value < minimunDate)
+                {
+                    openAt = minimunDate;
+                }
+                else
+                {
+                    openAt = value;
+                }
                 OnPropertyChanged("OpenAt");
             }
         }
 
-        public DateTime CloseAt
+        public DateTime? CloseAt
         {
             get { return closeAt; }
             set

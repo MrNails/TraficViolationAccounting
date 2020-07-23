@@ -2,6 +2,8 @@ using System;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Threading.Tasks;
+using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
 {
@@ -33,6 +35,18 @@ namespace AccountingOfTraficViolation.Models
         public virtual DbSet<Vehicle> Vehicles { get; set; }
         public virtual DbSet<Victim> Victims { get; set; }
         public virtual DbSet<CaseAccidentPlace> CaseAccidentPlaces { get; set; }
+
+        public override int SaveChanges()
+        {
+            SetDateTime();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync()
+        {
+            SetDateTime();
+            return base.SaveChangesAsync();
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -68,6 +82,24 @@ namespace AccountingOfTraficViolation.Models
                 .HasMany(e => e.Cases)
                 .WithRequired(e => e.RoadCondition)
                 .WillCascadeOnDelete(false);
+        }
+
+        protected void SetDateTime()
+        {
+            var entries = ChangeTracker.Entries().
+                                        Where(e => e.Entity is Case &&
+                                                   e.State == EntityState.Added ||
+                                                   e.State == EntityState.Modified);
+
+            foreach (var entry in entries)
+            {
+                ((Case)entry.Entity).UpdatedAt = DateTime.Now;
+
+                if (entry.State == EntityState.Added)
+                {
+                    ((Case)entry.Entity).CreatedAt = DateTime.Now;
+                }
+            }
         }
     }
 }

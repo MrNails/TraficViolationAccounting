@@ -150,6 +150,15 @@ namespace AccountingOfTraficViolation.Models
             get { return qualification; }
             set
             {
+                if (value < 1)
+                {
+                    errors["Qualification"] = "Квалификация не может быть 0.";
+                }
+                else
+                {
+                    errors["Qualification"] = null;
+                }
+
                 qualification = value;
                 OnPropertyChanged("Qualification");
             }
@@ -160,16 +169,17 @@ namespace AccountingOfTraficViolation.Models
             get { return age; }
             set
             {
-                if (value <= 100)
+                if (value > 0 && value <= 100)
                 {
-                    age = value;
-                    OnPropertyChanged("Age");
                     errors["Age"] = null;
                 }
                 else
                 {
-                    errors["Age"] = "Возраст не может превышать 100 лет.";
+                    errors["Age"] = "Возраст не может быть меньше 1 года и превышать 100 лет.";
                 }
+
+                age = value;
+                OnPropertyChanged("Age");
             }
         }
 

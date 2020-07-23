@@ -16,7 +16,10 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Menu VerticalAlignment="Top" Grid.ColumnSpan="2">
-            <MenuItem Header="Настройки аккаунта" />
+            <MenuItem Header="Меню">
+                <MenuItem Header="Настройки аккаунта"/>
+                <MenuItem Header="Выйти из аккаунта" Click="ExitAccountClick"/>
+            </MenuItem>
         </Menu>
         <TextBlock x:Name="WelcomeTextBlock" Grid.ColumnSpan="2" FontSize="30" TextAlignment="Center"
                    HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"/>
