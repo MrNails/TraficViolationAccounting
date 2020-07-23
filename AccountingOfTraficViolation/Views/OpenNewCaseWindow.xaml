@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views"
         mc:Ignorable="d"
-        Title="OpenNewCaseWindow" Height="450" Width="800" MinHeight="400" MinWidth="700">
+        Title="OpenNewCaseWindow" Height="500" Width="800" MinHeight="400" MinWidth="700">
     <Window.Resources>
         <Style TargetType="Image">
             <Setter Property="Height" Value="25" />
@@ -22,6 +22,7 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition Height="0.7*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -29,50 +30,68 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Для того, чтобы открыть дело, вам надо заполнить все ниже представленные данные." 
                    FontSize="30" TextAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <DockPanel Grid.Row="1" Grid.Column="0" Height="70" >
+        <WrapPanel  Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock  Text="Выберите дату открытия дела:" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
+            <DatePicker Style="{StaticResource TextBoxTemplateStyle}" SelectedDate="{Binding Path=OpenAt, Mode=TwoWay}"
+                        Text="{Binding SelectedDate, RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
+        </WrapPanel>
+
+        <DockPanel Grid.Row="2" Grid.Column="0" Height="70" >
             <Image x:Name="GeneralInfoProgresImage"/>
             <TextBlock Text="Общая информация" DockPanel.Dock="Top"  Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
-            <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
+            <Border x:Name="GeneralInfoBorder" Width="82" Height="32" DockPanel.Dock="Bottom" BorderThickness="1">
+                <Button Content="Открыть" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="GeneralInfoClick"/>
-        </DockPanel>
-        <DockPanel Grid.Row="2" Grid.Column="0"  Height="70">
-            <Image x:Name="RoadConditionProgresImage"/>
-            <TextBlock Text="Дорожные условия" DockPanel.Dock="Top"  Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" />
-            <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
-                    Width="80" Height="30" Click="RoadConditionClick"/>
+            </Border>
         </DockPanel>
         <DockPanel Grid.Row="3" Grid.Column="0"  Height="70">
+            <Image x:Name="RoadConditionProgresImage"/>
+            <TextBlock Text="Дорожные условия" DockPanel.Dock="Top"  Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" />
+            <Border x:Name="RoadConditionBorder" Width="82" Height="32" DockPanel.Dock="Bottom" BorderThickness="1">
+                <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
+                    Width="80" Height="30" Click="RoadConditionClick"/>
+            </Border>
+        </DockPanel>
+        <DockPanel Grid.Row="4" Grid.Column="0"  Height="70">
             <Image x:Name="VehicleProgresImage"  />
             <TextBlock Text="Информация про транспортные средства и их принадлежность" DockPanel.Dock="Top" 
                        Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
-            <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
+            <Border x:Name="VehicleBorder" Width="82" Height="32" DockPanel.Dock="Bottom" BorderThickness="1">
+                <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="VehicleClick"/>
+            </Border>
         </DockPanel>
-        <DockPanel Grid.Row="1" Grid.Column="1" Height="70">
+        <DockPanel Grid.Row="2" Grid.Column="1" Height="70">
             <Image x:Name="AccidentPlaceProgresImage"/>
             <TextBlock Text="Место проишествия ДТП" DockPanel.Dock="Top"  
                        Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
-            <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
+            <Border x:Name="AccidentPlaceBorder" Width="82" Height="32" DockPanel.Dock="Bottom" BorderThickness="1">
+                <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="AccidentPlaceClick"/>
+            </Border>
         </DockPanel>
-        <DockPanel Grid.Row="2" Grid.Column="1"  Height="70">
+        <DockPanel Grid.Row="3" Grid.Column="1"  Height="70">
             <Image x:Name="ParticipanInfoProgresImage" />
             <TextBlock Text="Информация об участниках ДТП" DockPanel.Dock="Top"  
                        Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
-            <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
+            <Border x:Name="ParticipanInfoBorder" Width="82" Height="32" DockPanel.Dock="Bottom" BorderThickness="1">
+                <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="ParticipanInfoClick"/>
+            </Border>
         </DockPanel>
-        <DockPanel Grid.Row="3" Grid.Column="1"  Height="70">
+        <DockPanel Grid.Row="4" Grid.Column="1"  Height="70">
             <Image x:Name="VictimProgresImage" />
             <TextBlock Text="Информация про пострадавших" DockPanel.Dock="Top"  
                        Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
-            <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
+            <Border x:Name="VictimBorder" Width="82" Height="32" DockPanel.Dock="Bottom" BorderThickness="1">
+                <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 
                     Width="80" Height="30" Click="VictimClick"/>
+            </Border>
         </DockPanel>
-        <Button Grid.Row="4" Grid.Column="0" Content="Подтвердить" Style="{StaticResource ButtonTemplateStyle}"
+        <Button Grid.Row="5" Grid.Column="0" Content="Подтвердить" Style="{StaticResource ButtonTemplateStyle}"
                 VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 30 0" Width="100"
                 Click="AcceptClick"/>
-        <Button Grid.Row="4" Grid.Column="1" Content="Отменить" Style="{StaticResource ButtonTemplateStyle}"
+        <Button Grid.Row="5" Grid.Column="1" Content="Отменить" Style="{StaticResource ButtonTemplateStyle}"
                 VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30 0 0 0" Width="100"
                 Click="RejectClick"/>
     </Grid>

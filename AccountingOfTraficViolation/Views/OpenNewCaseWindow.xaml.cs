@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AccountingOfTraficViolation.Views.AddInfoWindows;
 using AccountingOfTraficViolation.Models;
+using System.Windows.Media.Animation;
 
 namespace AccountingOfTraficViolation.Views
 {
@@ -37,21 +38,10 @@ namespace AccountingOfTraficViolation.Views
         {
             InitializeComponent();
 
-            if (user != null)
-            {
-                this.user = user;
-            }
-            else
-            {
-                MessageBox.Show("Вы не вошли в аккаунт и не можете открывать дело.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
-            }
+            this.user = user;
+            _case = new Case();
 
-            if (this.user.Role != 1)
-            {
-                MessageBox.Show("У вас не хватает привелегий на создание дела.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
-            }
+            DataContext = _case;
         }
 
         private void GeneralInfoClick(object sender, RoutedEventArgs e)
@@ -113,27 +103,143 @@ namespace AccountingOfTraficViolation.Views
 
         private void AcceptClick(object sender, RoutedEventArgs e)
         {
-            if (generalInfo == null || (accidentOnHighway == null && accidentOnVillage == null) ||
-                roadCondition == null || participantsInformations == null ||
-                vehicles == null || victims == null)
+            bool isValid = true;
+
+            if (generalInfo == null)
             {
-                return;
+                SetBorderAnimation(GeneralInfoBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(GeneralInfoBorder);
             }
 
-            AddCaseToDB();
+            if (accidentOnHighway == null && accidentOnVillage == null)
+            {
+                SetBorderAnimation(AccidentPlaceBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(AccidentPlaceBorder);
+            }
 
-            DialogResult = true;
+            if (roadCondition == null)
+            {
+                SetBorderAnimation(RoadConditionBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(RoadConditionBorder);
+            }
+
+            if (participantsInformations == null)
+            {
+                SetBorderAnimation(ParticipanInfoBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(ParticipanInfoBorder);
+            }
+
+            if (vehicles == null)
+            {
+                SetBorderAnimation(VehicleBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(VehicleBorder);
+            }
+
+            if (victims == null)
+            {
+                SetBorderAnimation(VictimBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(VictimBorder);
+            }
+
+            if (isValid)
+            {
+                AddCaseToDB();
+                DialogResult = true;
+            }
         }
         private void RejectClick(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
         }
 
+        private void SetBorderAnimation(Border border)
+        {
+            if (border.HasAnimatedProperties)
+            {
+                return;
+            }
+
+            border.BorderBrush = new SolidColorBrush(Colors.Red);
+            DoubleAnimation widthAnimation = new DoubleAnimation()
+            {
+                From = border.Width + 20,
+                To = border.Width + 4,
+                Duration = TimeSpan.FromSeconds(1.5)
+            };
+            widthAnimation.Completed += (obj, arg) =>
+            {
+                ColorAnimation borderBrush = new ColorAnimation()
+                {
+                    From = Colors.Red,
+                    To = Colors.Purple,
+                    Duration = TimeSpan.FromSeconds(1.5),
+                    AutoReverse = true,
+                    RepeatBehavior = new RepeatBehavior(4)
+                };
+
+                border.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, borderBrush);
+            };
+
+            DoubleAnimation heightAnimation = new DoubleAnimation()
+            {
+                From = border.Height + 10,
+                To = border.Height + 4,
+                Duration = TimeSpan.FromSeconds(1.5)
+            };
+
+            ThicknessAnimation borderThicknessAnimation = new ThicknessAnimation()
+            {
+                From = border.BorderThickness,
+                To = new Thickness(3),
+                Duration = TimeSpan.FromSeconds(1.5),
+            };
+
+            border.BeginAnimation(Border.WidthProperty, widthAnimation);
+            border.BeginAnimation(Border.HeightProperty, heightAnimation);
+            border.BeginAnimation(Border.BorderThicknessProperty, borderThicknessAnimation);
+        }
+        private void StopBorderAnimation(Border border)
+        {
+            border.BorderBrush = new SolidColorBrush(Colors.Transparent);
+
+            border.BeginAnimation(Border.WidthProperty, null);
+            border.BeginAnimation(Border.HeightProperty, null);
+            border.BeginAnimation(Border.BorderThicknessProperty, null);
+            border.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, null);
+
+            border.Width = (double)border.GetAnimationBaseValue(Border.WidthProperty);
+            border.Height = (double)border.GetAnimationBaseValue(Border.HeightProperty);
+            border.BorderThickness = (Thickness)border.GetAnimationBaseValue(Border.BorderThicknessProperty);
+        }
+
         private async void AddCaseToDB()
         {
             using (TVAContext context = new TVAContext())
             {
-                _case = new Case();
                 caseAccidentPlace = new CaseAccidentPlace();
 
                 context.GeneralInfos.Add(generalInfo);
