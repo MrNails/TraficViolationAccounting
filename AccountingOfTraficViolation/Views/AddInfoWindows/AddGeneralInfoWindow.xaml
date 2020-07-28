@@ -28,7 +28,7 @@
             <TextBlock Text="Дата заполнения" Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" Margin="0 0 0 10"/>
             <DatePicker x:Name="FillDateCalendar" Style="{StaticResource TextBoxTemplateStyle}" 
-                        SelectedDate="{Binding FillDate}" Text="{Binding SelectedDate, RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
+                        SelectedDate="{Binding FillDate}" DisplayDateStart="01-01-1990"/>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
             <TextBlock Text="День недели" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" Margin="0 0 0 10"/>
@@ -56,7 +56,7 @@
             <TextBlock Text="Дата проишествия" Style="{StaticResource TextBlockTemplateStyle}"
                        TextAlignment="Center" Margin="0 0 0 10"/>
             <DatePicker x:Name="IncidentDateCalendar" Style="{StaticResource TextBoxTemplateStyle}" 
-                        SelectedDate="{Binding IncidentDate}" Text="{Binding SelectedDate, RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
+                        SelectedDate="{Binding IncidentDate}" DisplayDateStart="01-01-1990"/>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
             <TextBlock Text="Время заполнения (чч:мм:сс)" Style="{StaticResource TextBlockTemplateStyle}" 

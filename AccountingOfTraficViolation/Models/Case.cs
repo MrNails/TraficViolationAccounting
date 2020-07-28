@@ -70,11 +70,27 @@ namespace AccountingOfTraficViolation.Models
 
         [Required]
         [StringLength(12)]
-        public string State { get; set; }
+        public string State
+        {
+            get { return state; }
+            set
+            {
+                state = value;
+                OnPropertyChanged("State");
+            }
+        }
 
         public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt
+        {
+            get { return updatedAt; }
+            set
+            {
+                updatedAt = value;
+                OnPropertyChanged("UpdatedAt");
+            }
+        }
 
         public virtual CaseAccidentPlace CaseAccidentPlace { get; set; }
 

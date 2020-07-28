@@ -83,17 +83,17 @@
                 </StackPanel>
                 <WrapPanel Grid.Row="3" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Гражданство" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-                    <TextBox Width="50" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Citizenship, ValidatesOnDataErrors=True}"
+                    <TextBox Width="50" MaxLength="3" Text="{Binding Path=CurrentAccidentObject.Citizenship, ValidatesOnDataErrors=True}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Квалификация" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-                    <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Qualification}"
+                    <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Qualification, ValidatesOnDataErrors=True}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Возраст" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-                    <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Qualification}"
+                    <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Age, ValidatesOnDataErrors=True}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </WrapPanel>
                 <WrapPanel Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">

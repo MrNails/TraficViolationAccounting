@@ -131,7 +131,7 @@
                                  Style="{StaticResource TextBoxValidationTemplate}" Width="95" Height="22"/>
                         <DatePicker x:Name="PolicyEndDateDatePicker" Style="{StaticResource TextBoxTemplateStyle}" Margin="10 0 0 0"
                                     SelectedDate="{Binding Path=CurrentAccidentObject.PolicyEndDate}" Width="110" Height="22"
-                                    Text="{Binding SelectedDate, RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
+                                    DisplayDateStart="01-01-1990"/>
                     </WrapPanel>
                 </StackPanel>
 

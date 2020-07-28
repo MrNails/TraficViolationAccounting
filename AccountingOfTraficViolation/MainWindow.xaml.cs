@@ -58,7 +58,7 @@ namespace AccountingOfTraficViolation
         }
         private void ShowCaseClick(object sender, RoutedEventArgs e)
         {
-            ShowCaseWindow showCaseWindow = new ShowCaseWindow();
+            ShowCaseWindow showCaseWindow = new ShowCaseWindow(user);
             showCaseWindow.ShowDialog();
         }
 
@@ -71,6 +71,10 @@ namespace AccountingOfTraficViolation
                 user = logInWindow.User;
                 this.Visibility = Visibility.Visible;
                 Welocme();
+            }
+            else
+            {
+                this.Close();
             }
         }
 

@@ -31,6 +31,8 @@ namespace AccountingOfTraficViolation.Models
             Patronymic = "";
             Citizenship = "";
             PDDViolation = "";
+            Qualification = 0;
+            Age = 0;
 
             pddViolationRegex = new Regex(@"\d{2},\d{2}$");
         }

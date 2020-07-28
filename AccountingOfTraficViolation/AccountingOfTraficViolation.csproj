@@ -44,6 +44,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -74,10 +77,12 @@
     <Compile Include="Models\CaseAccidentPlace.cs" />
     <Compile Include="Models\GeneralInfo.cs" />
     <Compile Include="Models\MainTable.cs" />
+    <Compile Include="Services\Converters.cs" />
     <Compile Include="Services\SimpleExtensions.cs" />
     <Compile Include="Services\RelayCommand.cs" />
     <Compile Include="Services\VisualObjectExtensions.cs" />
-    <Compile Include="ViewModels\ParticipantInfoVM.cs" />
+    <Compile Include="ViewModels\AccidenObjectVM.cs" />
+    <Compile Include="ViewModels\CasesVM.cs" />
     <Compile Include="Views\AddInfoWindows\AddAccidentPlaceWindow.xaml.cs" />
     <Compile Include="Views\AddInfoWindows\AddGeneralInfoWindow.xaml.cs">
       <DependentUpon>AddGeneralInfoWindow.xaml</DependentUpon>
@@ -96,6 +101,9 @@
     </Compile>
     <Compile Include="Views\AuthorizationWindow.xaml.cs">
       <DependentUpon>AuthorizationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CaseReviewWindow.xaml.cs">
+      <DependentUpon>CaseReviewWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OpenNewCaseWindow.xaml.cs">
       <DependentUpon>OpenNewCaseWindow.xaml</DependentUpon>
@@ -140,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AuthorizationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CaseReviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
