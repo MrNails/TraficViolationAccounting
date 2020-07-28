@@ -281,7 +281,14 @@ namespace AccountingOfTraficViolation.Views
                     context.AccidentOnVillages.Add(accidentOnVillage);
                 }
 
-                await context.SaveChangesAsync();
+                try
+                {
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Error: {e.Message}\nStack Trace: {e.StackTrace}\nInner exception: {(e.InnerException != null ? e.InnerException.Message : "")}");
+                }
             }
             
         }
