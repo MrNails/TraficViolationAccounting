@@ -4,9 +4,203 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views"
+        xmlns:services="clr-namespace:AccountingOfTraficViolation.Services"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="ShowCaseWindow" Height="450" Width="800">
+        Title="Меню отображения дел" Height="550" Width="1000" 
+        MinHeight="550" Closing="Window_Closing">
+    <Window.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockTemplateStyle}"/>
+
+        <services:MultiplyConverter x:Key="multiplyConverter" />
+        <ControlTemplate x:Key="RadioButtonExpanderTemp" TargetType="{x:Type Expander}">
+            <DockPanel>
+                <TextBlock Text="{TemplateBinding Header}" DockPanel.Dock="Top" Margin="0 0 0 5"/>
+                <ScrollViewer x:Name="ExpanderContentScrollView" DockPanel.Dock="Bottom"
+                              HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                              HorizontalContentAlignment="Stretch" VerticalContentAlignment="Bottom" Background="White">
+                    <ScrollViewer.Tag>
+                        <sys:Double>0.0</sys:Double>
+                    </ScrollViewer.Tag>
+                    <ScrollViewer.Height>
+                        <MultiBinding Converter="{StaticResource multiplyConverter}">
+                            <Binding Path="ActualHeight" ElementName="ExpanderContent"/>
+                            <Binding Path="Tag" RelativeSource="{RelativeSource Self}" />
+                        </MultiBinding>
+                    </ScrollViewer.Height>
+                    <ContentPresenter x:Name="ExpanderContent" ContentSource="Content"/>
+                </ScrollViewer>
+            </DockPanel>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsExpanded" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ExpanderContentScrollView" Storyboard.TargetProperty="Tag" 
+                                                 To="1" Duration="0:0:0.4"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation  Storyboard.TargetName="ExpanderContentScrollView" Storyboard.TargetProperty="Tag" 
+                                                  To="0" Duration="0:0:0.4"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key="RadioButtonCheckedExpander">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=RadioButton}, Path=IsChecked}" Value="True">
+                    <Setter Property="Expander.IsExpanded" Value="True"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </Window.Resources>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="0.1*"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="0.1*"/>
+            <ColumnDefinition />
+            <ColumnDefinition  Width="0.1*"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200*" />
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="135*" />
+            <RowDefinition Height="64*"/>
+        </Grid.RowDefinitions>
+
+        <Canvas Panel.ZIndex="1" Grid.Row="0" Margin="0 10 0 0">
+            <Expander x:Name="FindConditionExpander" Header="Параметры поиска дела" FontSize="15"
+                      Template="{StaticResource RevealExpanderTemp}" HorizontalAlignment="Left" HorizontalContentAlignment="Left">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="5">
+                        <TextBlock Text="Логин, по которому искать" Margin="0 0 0 10"/>
+                        <TextBox x:Name="FindLoginTextBox" MaxLength="15" Width="150"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
+                        <TextBlock Text="Дата откытия дела" Margin="0 0 0 10"/>
+                        <RadioButton Content="Любая" GroupName="FindCaseDate" IsChecked="True"/>
+                        <RadioButton x:Name="ExactDateRadioButton" GroupName="FindCaseDate">
+                            <RadioButton.Content>
+                                <Expander Header="Точная дата" Template="{StaticResource RadioButtonExpanderTemp}"
+                                          Style="{StaticResource RadioButtonCheckedExpander}">
+                                    <StackPanel>
+                                        <DatePicker x:Name="ExactDateDatePicker" DisplayDateStart="01-01-1990"/>
+                                    </StackPanel>
+                                </Expander>
+                            </RadioButton.Content>
+                        </RadioButton>
+                        <RadioButton x:Name="RangeDateRadioButton" GroupName="FindCaseDate">
+                            <RadioButton.Content>
+                                <Expander Header="Диапазон дат" Template="{StaticResource RadioButtonExpanderTemp}"
+                                          Style="{StaticResource RadioButtonCheckedExpander}">
+                                    <StackPanel>
+                                        <WrapPanel>
+                                            <TextBlock Text="От:" Height="17" Margin="0 0 10 0"/>
+                                            <DatePicker x:Name="StartDateDatePicker" DisplayDateStart="01-01-1990"/>
+                                        </WrapPanel>
+                                        <WrapPanel>
+                                            <TextBlock Text="До:" Height="17" Margin="0 0 10 0"/>
+                                            <DatePicker x:Name="EndDateDatePicker" DisplayDateStart="01-01-1990"/>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                </Expander>
+                            </RadioButton.Content>
+                        </RadioButton>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Margin="5">
+                        <TextBlock Text="Статус дела" Margin="0 0 0 10"/>
+                        <ComboBox FontSize="15" Width="100">
+                            <ComboBoxItem Content="Любое" IsSelected="True"/>
+                            <ComboBoxItem Content="Открыто"/>
+                            <ComboBoxItem Content="Закрыто"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                </Grid>
+            </Expander>
+        </Canvas>
+
+
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" VerticalAlignment="Center">
+            <TextBlock Text="Список дел" TextAlignment="Center" Margin="0 0 0 10"/>
+            <DataGrid x:Name="CasesGrid" Height="200" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                      ItemsSource="{Binding Path=FoundCases, Mode=OneWay}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding DoubleClickCaseInfo}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+                
+            </DataGrid>
+            <WrapPanel HorizontalAlignment="Center">
+                <Button Content="Найти" Width="90" Style="{StaticResource ResourceKey=ButtonTemplateStyle}"
+                        Click="FindCaseClick" Margin="0 0 10 0"/>
+                <Button Content="Показать" Width="90" Style="{StaticResource ResourceKey=ButtonTemplateStyle}"
+                        Command="{Binding ShowCaseInfo}" CommandParameter="{Binding ElementName=CasesGrid, Path=SelectedItem}" 
+                        Margin="10 0 0 0"/>
+            </WrapPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" Margin="5">
+            <StackPanel>
+                <TextBlock Text="Основная информация" TextAlignment="Center" Margin="0 0 0 10"/>
+                <DataGrid x:Name="GeneralInfoDataGrid" Height="70" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                          ItemsSource="{Binding CurrentGeneralInfo}"/>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Дорожные условия" TextAlignment="Center" Margin="0 0 0 10"/>
+                <DataGrid x:Name="RoadConditionDataGrid" Height="70" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                          ItemsSource="{Binding CurrentRoadCondition}"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" Grid.RowSpan="2" Margin="5">
+            <StackPanel>
+                <TextBlock Text="Проишествия на автодороге" TextAlignment="Center" Margin="0 0 0 10"/>
+                <DataGrid x:Name="AccidentOnHighwayDataGrid" Height="70" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                          ItemsSource="{Binding CurrentAccidentOnHighway}"/>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Проишествие в населённом пункте" TextAlignment="Center" Margin="0 0 0 10"/>
+                <DataGrid x:Name="AccidentOnVillageDataGrid" Height="70" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                          ItemsSource="{Binding CurrentAccidentOnVillage}"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="4" Grid.Row="0" VerticalAlignment="Center" Margin="5">
+            <TextBlock Text="Учавствовавшие в ДТП" TextAlignment="Center" Margin="0 0 0 10"/>
+            <DataGrid x:Name="ParticipantsInfoDataGrid" Height="150" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                      ItemsSource="{Binding CurrentParticipantsInformation}"/>
+        </StackPanel>
+        <StackPanel Grid.Column="4" Grid.Row="2" VerticalAlignment="Center"  Grid.RowSpan="2">
+            <TextBlock Text="Транспортные средства" TextAlignment="Center" Margin="0 0 0 10"/>
+            <DataGrid x:Name="VehicleDataGrid" Height="150" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                      ItemsSource="{Binding CurrentVehicles}"/>
+        </StackPanel>
+        <StackPanel Grid.Column="6" Grid.Row="0" Grid.RowSpan="3" VerticalAlignment="Center" Margin="5">
+            <TextBlock Text="Пострадавшие" TextAlignment="Center" Margin="0 0 0 10"/>
+            <DataGrid x:Name="VictimsDataGrid" Height="150" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                      ItemsSource="{Binding CurrentVictims}"/>
+        </StackPanel>
     </Grid>
 </Window>
