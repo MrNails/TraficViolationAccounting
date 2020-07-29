@@ -10,14 +10,19 @@ namespace AccountingOfTraficViolation
 
     public abstract class MainTable : IDataErrorInfo, INotifyPropertyChanged
     {
+        public static readonly DateTime MinimumDate;
+
         protected string error;
         protected Dictionary<string, string> errors;
-        protected DateTime minimunDate;
+
+        static MainTable()
+        {
+            MinimumDate = new DateTime(1990, 1, 1);
+        }
 
         public MainTable()
         {
             errors = new Dictionary<string, string>();
-            minimunDate = new DateTime(1990, 1, 1);
         }
 
         public string Error => error;

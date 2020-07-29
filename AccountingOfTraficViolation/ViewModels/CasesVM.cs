@@ -49,10 +49,12 @@ namespace AccountingOfTraficViolation.ViewModels
                     if (_case.CaseAccidentPlace.AccidentOnHighway != null)
                     {
                         CurrentAccidentOnHighway = new AccidentOnHighway[] { _case.CaseAccidentPlace.AccidentOnHighway };
+                        CurrentAccidentOnVillage = null;
                     }
                     else if (_case.CaseAccidentPlace.AccidentOnVillage != null)
                     {
                         CurrentAccidentOnVillage = new AccidentOnVillage[] { _case.CaseAccidentPlace.AccidentOnVillage };
+                        CurrentAccidentOnHighway = null;
                     }
                 }
             });

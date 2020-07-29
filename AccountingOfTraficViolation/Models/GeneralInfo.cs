@@ -30,8 +30,8 @@ namespace AccountingOfTraficViolation.Models
 
             CardNumber = "";
 
-            fillDate = minimunDate;
-            incidentDate = minimunDate;
+            fillDate = MinimumDate;
+            incidentDate = MinimumDate;
         }
 
         public int Id { get; set; }
@@ -92,9 +92,9 @@ namespace AccountingOfTraficViolation.Models
             get { return fillDate; }
             set
             {
-                if (value < minimunDate)
+                if (value < MinimumDate)
                 {
-                    fillDate = minimunDate;
+                    fillDate = MinimumDate;
                 } 
                 else
                 {
@@ -110,9 +110,9 @@ namespace AccountingOfTraficViolation.Models
             get { return incidentDate; }
             set
             {
-                if (value < minimunDate)
+                if (value < MinimumDate)
                 {
-                    incidentDate = minimunDate;
+                    incidentDate = MinimumDate;
                 }
                 else
                 {

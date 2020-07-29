@@ -60,7 +60,7 @@ namespace AccountingOfTraficViolation.Models
             EDRPOU_CodeRegex = new Regex(@"\d{7}-\d{3}$");
             corruptionCodeRegex = new Regex(@"\d{2},\d{2},\d{2},\d{2}$");
 
-            policyEndDate = minimunDate;
+            policyEndDate = MinimumDate;
         }
 
         public int Id { get; set; }
@@ -360,9 +360,9 @@ namespace AccountingOfTraficViolation.Models
             get { return policyEndDate; }
             set
             {
-                if (value < minimunDate)
+                if (value < MinimumDate)
                 {
-                    policyEndDate = minimunDate;
+                    policyEndDate = MinimumDate;
                 }
                 else
                 {

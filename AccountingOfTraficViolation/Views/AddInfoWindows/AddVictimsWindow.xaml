@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
         mc:Ignorable="d"
-        Title="Ведомости о пострадавших" Height="450" Width="850">
+        Title="Ведомости о пострадавших" Height="450" Width="900">
     <Window.Resources>
         <DataTemplate x:Key="ListBoxDataTemplate">
             <StackPanel Width="205">
@@ -48,7 +48,7 @@
         <GroupBox x:Name="VictimsGroupBox" BorderThickness="2">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="1.1*"/>
                     <ColumnDefinition Width="1.2*"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
@@ -84,12 +84,12 @@
 
                 <StackPanel Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <WrapPanel Margin="0 0 0 10">
-                        <TextBlock Text="Умер (покачелен):" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
+                        <TextBlock Text="Умер (травмирован):" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
                         <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.IsDied, ValidatesOnDataErrors=True}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                     </WrapPanel>
                     <WrapPanel>
-                        <TextBlock Text="Категория:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 63 0"/>
+                        <TextBlock Text="Категория:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 81 0"/>
                         <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Category, ValidatesOnDataErrors=True}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                     </WrapPanel>

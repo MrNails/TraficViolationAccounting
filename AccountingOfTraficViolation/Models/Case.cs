@@ -28,7 +28,7 @@ namespace AccountingOfTraficViolation.Models
             Vehicles = new HashSet<Vehicle>();
             Victims = new HashSet<Victim>();
 
-            OpenAt = minimunDate;
+            OpenAt = MinimumDate;
         }
 
         public int Id { get; set; }
@@ -42,9 +42,9 @@ namespace AccountingOfTraficViolation.Models
             get { return openAt; }
             set
             {
-                if (value < minimunDate)
+                if (value < MinimumDate)
                 {
-                    openAt = minimunDate;
+                    openAt = MinimumDate;
                 }
                 else
                 {

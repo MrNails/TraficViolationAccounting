@@ -28,6 +28,11 @@ namespace AccountingOfTraficViolation.Services
                 throw new ArgumentNullException("Indexes");
             }
 
+            if (str == null)
+            {
+                return null;
+            }
+
             string tempStr = str;
             int count = 0;
 
