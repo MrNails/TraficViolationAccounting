@@ -8,12 +8,17 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Меню отображения дел" Height="550" Width="1000" 
-        MinHeight="550" Closing="Window_Closing">
+        Title="Меню отображения дел" Height="700" Width="1100" 
+        MinHeight="700" Closing="Window_Closing">
     <Window.Resources>
+        <services:MultiplyConverter x:Key="multiplyConverter" />
+        <services:StatusCoverter x:Key="statusConverter" />
+        <services:SeparatorCoverter x:Key="separatorConverter" />
+        <services:DayOfWeekConverter x:Key="dayOfWeekConverter" />
+        <services:GenderConverter x:Key="genderConverter" />
+
         <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockTemplateStyle}"/>
 
-        <services:MultiplyConverter x:Key="multiplyConverter" />
         <ControlTemplate x:Key="RadioButtonExpanderTemp" TargetType="{x:Type Expander}">
             <DockPanel>
                 <TextBlock Text="{TemplateBinding Header}" DockPanel.Dock="Top" Margin="0 0 0 5"/>
@@ -60,7 +65,12 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-
+        <Style TargetType="DataGrid">
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -69,14 +79,11 @@
             <ColumnDefinition />
             <ColumnDefinition Width="0.1*"/>
             <ColumnDefinition />
-            <ColumnDefinition  Width="0.1*"/>
-            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="200*" />
-            <RowDefinition Height="20*"/>
-            <RowDefinition Height="135*" />
-            <RowDefinition Height="64*"/>
+            <RowDefinition Height="1.2*"/>
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <Canvas Panel.ZIndex="1" Grid.Row="0" Margin="0 10 0 0">
@@ -97,13 +104,14 @@
                     </StackPanel>
                     <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
                         <TextBlock Text="Дата откытия дела" Margin="0 0 0 10"/>
-                        <RadioButton Content="Любая" GroupName="FindCaseDate" IsChecked="True"/>
+                        <RadioButton x:Name="AllDateRadioButton" Content="Любая" GroupName="FindCaseDate" IsChecked="True"/>
                         <RadioButton x:Name="ExactDateRadioButton" GroupName="FindCaseDate">
                             <RadioButton.Content>
                                 <Expander Header="Точная дата" Template="{StaticResource RadioButtonExpanderTemp}"
                                           Style="{StaticResource RadioButtonCheckedExpander}">
                                     <StackPanel>
-                                        <DatePicker x:Name="ExactDateDatePicker" DisplayDateStart="01-01-1990"/>
+                                        <DatePicker x:Name="ExactDateDatePicker" DisplayDateStart="01-01-1990" SelectedDate="01-01-1990"
+                                                    SelectedDateChanged="DatePicker_SelectedDateChanged"/>
                                     </StackPanel>
                                 </Expander>
                             </RadioButton.Content>
@@ -115,11 +123,13 @@
                                     <StackPanel>
                                         <WrapPanel>
                                             <TextBlock Text="От:" Height="17" Margin="0 0 10 0"/>
-                                            <DatePicker x:Name="StartDateDatePicker" DisplayDateStart="01-01-1990"/>
+                                            <DatePicker x:Name="StartDateDatePicker" DisplayDateStart="01-01-1990" SelectedDate="01-01-1990"
+                                                        SelectedDateChanged="DatePicker_SelectedDateChanged"/>
                                         </WrapPanel>
                                         <WrapPanel>
                                             <TextBlock Text="До:" Height="17" Margin="0 0 10 0"/>
-                                            <DatePicker x:Name="EndDateDatePicker" DisplayDateStart="01-01-1990"/>
+                                            <DatePicker x:Name="EndDateDatePicker" DisplayDateStart="01-01-1990" SelectedDate="01-01-1990"
+                                                        SelectedDateChanged="DatePicker_SelectedDateChanged"/>
                                         </WrapPanel>
                                     </StackPanel>
                                 </Expander>
@@ -128,10 +138,10 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Margin="5">
                         <TextBlock Text="Статус дела" Margin="0 0 0 10"/>
-                        <ComboBox FontSize="15" Width="100">
-                            <ComboBoxItem Content="Любое" IsSelected="True"/>
-                            <ComboBoxItem Content="Открыто"/>
-                            <ComboBoxItem Content="Закрыто"/>
+                        <ComboBox x:Name="CaseStatusComboBox" FontSize="15" Width="100">
+                            <ComboBoxItem Content="Любое" Tag="1" IsSelected="True"/>
+                            <ComboBoxItem Content="Открыто" Tag="2"/>
+                            <ComboBoxItem Content="Закрыто" Tag="3"/>
                         </ComboBox>
                     </StackPanel>
 
@@ -142,18 +152,15 @@
 
         <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" VerticalAlignment="Center">
             <TextBlock Text="Список дел" TextAlignment="Center" Margin="0 0 0 10"/>
-            <DataGrid x:Name="CasesGrid" Height="200" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
-                      ItemsSource="{Binding Path=FoundCases, Mode=OneWay}">
+            <DataGrid x:Name="CasesGrid" Height="300" Margin="0 0 0 10" ItemsSource="{Binding Path=FoundCases, Mode=OneWay}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding DoubleClickCaseInfo}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
+                    <DataGridTextColumn Header="Логин создателя дела" Binding="{Binding Path=CreaterLogin}"/>
+                    <DataGridTextColumn Header="Статус" Binding="{Binding Path=State, Converter={StaticResource ResourceKey=statusConverter}}"/>
+                    <DataGridTextColumn Header="Дата открытия дела" Binding="{Binding Path=OpenAt, StringFormat=dd MMMM yyyy, ConverterCulture=ru-RU}"/>
+                    <DataGridTextColumn Header="Дата закрытия дела" Binding="{Binding Path=CloseAt, StringFormat=dd MMMM yyyy, ConverterCulture=ru-RU, TargetNullValue=Нет даты}"/>
                 </DataGrid.Columns>
-                
+
             </DataGrid>
             <WrapPanel HorizontalAlignment="Center">
                 <Button Content="Найти" Width="90" Style="{StaticResource ResourceKey=ButtonTemplateStyle}"
@@ -166,41 +173,299 @@
         <StackPanel Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" Margin="5">
             <StackPanel>
                 <TextBlock Text="Основная информация" TextAlignment="Center" Margin="0 0 0 10"/>
-                <DataGrid x:Name="GeneralInfoDataGrid" Height="70" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
-                          ItemsSource="{Binding CurrentGeneralInfo}"/>
+                <DataGrid x:Name="GeneralInfoDataGrid" Height="80" Margin="0 0 0 10"
+                          ItemsSource="{Binding Path=CurrentGeneralInfo, Mode=OneWay}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
+                        <DataGridTextColumn Header="Номер карточки" Binding="{Binding Path=CardNumber, 
+                                                                              Converter={StaticResource ResourceKey=separatorConverter}, 
+                                                                              ConverterParameter=1 2 10}"/>
+                        <DataGridTextColumn Header="Тип карточки" Binding="{Binding Path=CardType}"/>
+                        <DataGridTextColumn Header="Дата заполнения" Binding="{Binding Path=FillDate, StringFormat=dd MMMM yyyy, ConverterCulture=ru-RU}"/>
+                        <DataGridTextColumn Header="Дата проишествия" Binding="{Binding Path=IncidentDate, StringFormat=dd MMMM yyyy, ConverterCulture=ru-RU}"/>
+                        <DataGridTextColumn Header="День недели" Binding="{Binding Path=DayOfWeek, Converter={StaticResource dayOfWeekConverter}}"/>
+                        <DataGridTextColumn Header="Время проишествия" Binding="{Binding Path=FillTime}"/>
+                        <DataGridTextColumn Header="Вид проишествия" Binding="{Binding Path=IncidentType}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="Дорожные условия" TextAlignment="Center" Margin="0 0 0 10"/>
-                <DataGrid x:Name="RoadConditionDataGrid" Height="70" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
-                          ItemsSource="{Binding CurrentRoadCondition}"/>
-            </StackPanel>
-        </StackPanel>
-        <StackPanel Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" Grid.RowSpan="2" Margin="5">
-            <StackPanel>
-                <TextBlock Text="Проишествия на автодороге" TextAlignment="Center" Margin="0 0 0 10"/>
-                <DataGrid x:Name="AccidentOnHighwayDataGrid" Height="70" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
-                          ItemsSource="{Binding CurrentAccidentOnHighway}"/>
-            </StackPanel>
-            <StackPanel>
-                <TextBlock Text="Проишествие в населённом пункте" TextAlignment="Center" Margin="0 0 0 10"/>
-                <DataGrid x:Name="AccidentOnVillageDataGrid" Height="70" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
-                          ItemsSource="{Binding CurrentAccidentOnVillage}"/>
+                <DataGrid x:Name="RoadConditionDataGrid" Height="80" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                          ItemsSource="{Binding Path=CurrentRoadCondition, Mode=OneWay}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
+                        <DataGridTextColumn Header="Тип покрытия" Binding="{Binding Path=SurfaceType}"/>
+                        <DataGridTextColumn Header="Состояние покрытия" 
+                                            Binding="{Binding Path=SurfaceState, Converter={StaticResource separatorConverter}, ConverterParameter=2 1}"/>
+                        <DataGridTextColumn Header="Освещённость" Binding="{Binding Path=Illumination}"/>
+                        <DataGridTextColumn Header="Исскуственные сооружения" Binding="{Binding Path=ArtificialConstructions}"/>
+                        <DataGridTextColumn Header="Элементы участка" 
+                                            Binding="{Binding Path=PlaceElement, Converter={StaticResource separatorConverter}, ConverterParameter=2 2 5}"/>
+                        <DataGridTextColumn Header="Инженерно-транспортное оборудование" Binding="{Binding Path=EngineeringTranpsortEquipment}"/>
+                        <DataGridTextColumn Header="Технические приспособления организации дорожнего движения" 
+                                            Binding="{Binding Path=TechnicalTool, 
+                                                      Converter={StaticResource separatorConverter}, 
+                                                      ConverterParameter=2 2 5 8 11}"/>
+                        <DataGridTextColumn Header="Погодные условия" Binding="{Binding Path=WeatherCondition}"/>
+                        <DataGridTextColumn Header="Недостатки в содержании дороги (улицы)"
+                                            Binding="{Binding Path=RoadDisadvantages, 
+                                            Converter={StaticResource separatorConverter}, 
+                                            ConverterParameter=2 2 5 8 11}"/>
+                        <DataGridTextColumn Header="Место концентрации ДТП" Binding="{Binding Path=IncidentPlace}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="4" Grid.Row="0" VerticalAlignment="Center" Margin="5">
-            <TextBlock Text="Учавствовавшие в ДТП" TextAlignment="Center" Margin="0 0 0 10"/>
-            <DataGrid x:Name="ParticipantsInfoDataGrid" Height="150" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
-                      ItemsSource="{Binding CurrentParticipantsInformation}"/>
+            <StackPanel>
+                <TextBlock Text="Проишествия на автодороге" TextAlignment="Center" Margin="0 0 0 10"/>
+                <DataGrid x:Name="AccidentOnHighwayDataGrid" Height="80" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                          ItemsSource="{Binding Path=CurrentAccidentOnHighway, Mode=OneWay}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
+                        <DataGridTextColumn Header="Номер и индекс дороги" 
+                                            Binding="{Binding Path=HighwayIndexAndNumber, 
+                                                      Converter={StaticResource separatorConverter}, 
+                                                      ConverterParameter=1 1 4 7}"/>
+                        <DataGridTextColumn Header="км" Binding="{Binding Path=Kilometer}"/>
+                        <DataGridTextColumn Header="м" Binding="{Binding Path=Meter}"/>
+                        <DataGridTemplateColumn Header="Привязка" MaxWidth="250">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Binding}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Дополнительная ифнормация" MaxWidth="350">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=AdditionalInfo}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Проишествие в населённом пункте" TextAlignment="Center" Margin="0 0 0 10"/>
+                <DataGrid x:Name="AccidentOnVillageDataGrid" Height="80" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
+                          ItemsSource="{Binding Path=CurrentAccidentOnVillage, Mode=OneWay}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
+                        <DataGridTextColumn Header="Статус" Binding="{Binding Path=Status}"/>
+                        <DataGridTemplateColumn Header="Название, региональный код">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} , {1}">
+                                                <Binding Path="Name" />
+                                                <Binding Path="ReginalCodeOfName" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Район, региональный код">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} , {1}">
+                                                <Binding Path="District" />
+                                                <Binding Path="ReginalCodeOfDistrict" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Улица, региональный код">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} , {1}">
+                                                <Binding Path="Street" />
+                                                <Binding Path="ReginalCodeOfStreet" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Привязка, региональный код">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} , {1}">
+                                                <Binding Path="VillageBinding" />
+                                                <Binding Path="ReginalCodeOfBinding" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
         </StackPanel>
-        <StackPanel Grid.Column="4" Grid.Row="2" VerticalAlignment="Center"  Grid.RowSpan="2">
+        <StackPanel Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="5">
+            <TextBlock Text="Учавствовавшие в ДТП" TextAlignment="Center" Margin="0 0 0 10"/>
+            <DataGrid x:Name="ParticipantsInfoDataGrid" Height="150" Margin="0 0 0 10"
+                      ItemsSource="{Binding Path=CurrentParticipantsInformation, Mode=OneWay}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
+                    <DataGridTemplateColumn Header="ФИО">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1} {2}">
+                                            <Binding Path="Surname" />
+                                            <Binding Path="Name" />
+                                            <Binding Path="Patronymic" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Адрес" Binding="{Binding Path=Address}"/>
+                    <DataGridTextColumn Header="Квалификация" Binding="{Binding Path=Qualification}"/>
+                    <DataGridTextColumn Header="Возраст" Binding="{Binding Path=Age}"/>
+                    <DataGridTextColumn Header="Пол" Binding="{Binding Path=Gender, Converter={StaticResource genderConverter}}"/>
+                    <DataGridTextColumn Header="Гражданство" Binding="{Binding Path=Citizenship}"/>
+                    <DataGridTextColumn Header="Водительский стаж" Binding="{Binding Path=DriveExpirience}"/>
+                    <DataGridTextColumn Header="Время за рулём до ДТП" Binding="{Binding Path=DrivingTimeBeforeAccident}"/>
+                    <DataGridTextColumn Header="Нарушение ПДР" Binding="{Binding Path=PDDViolation, 
+                                                                         Converter={StaticResource separatorConverter},
+                                                                         ConverterParameter=2 2}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        <StackPanel Grid.Column="2" Grid.Row="2" VerticalAlignment="Center"  Grid.RowSpan="2">
             <TextBlock Text="Транспортные средства" TextAlignment="Center" Margin="0 0 0 10"/>
             <DataGrid x:Name="VehicleDataGrid" Height="150" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
-                      ItemsSource="{Binding CurrentVehicles}"/>
+                      ItemsSource="{Binding Path=CurrentVehicles, Mode=OneWay}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
+                    <DataGridTextColumn Header="Номерной знак" Binding="{Binding Path=PlateNumber}"/>
+                    <DataGridTemplateColumn Header="№ кузова (рамы, шасси)">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" MaxWidth="70">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="FrameNumber" />
+                                            <Binding Path="ChasisNumber" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Марка" Binding="{Binding Path=Make}"/>
+                    <DataGridTextColumn Header="Модель" Binding="{Binding Path=Model}"/>
+                    <DataGridTextColumn Header="Тип" Binding="{Binding Path=Type}"/>
+                    <DataGridTemplateColumn Header="Серия, № свидетельства о регистрации">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} , {1}">
+                                            <Binding Path="SeriesOfRegistrationSertificate" />
+                                            <Binding Path="RegistrationSertificate" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Наличие прицепа" Binding="{Binding Path=TrailerAvailability}"/>
+                    <DataGridTextColumn Header="Код страховщика" Binding="{Binding Path=InsurerCode}"/>
+                    <DataGridTemplateColumn Header="Серия, № полиса, термин действия">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} , {1} До {2:dd MMMM yyyy}" ConverterCulture="ru-RU">
+                                            <Binding Path="PolicySeries" />
+                                            <Binding Path="PolicyNumber" />
+                                            <Binding Path="PolicyEndDate"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Фамилия водителя" Binding="{Binding Path=Surname}"/>
+                    <DataGridTemplateColumn Header="Серия, № удостоверения водителя">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} , {1} ">
+                                            <Binding Path="LicenceSeries" />
+                                            <Binding Path="LicenceNumber" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Собственник ТС">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Owner}" MaxWidth="100" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Технические неисправности" 
+                                        Binding="{Binding Path=TechnicalFaults, Converter={StaticResource separatorConverter}, ConverterParameter=2 1}"/>
+                    <DataGridTextColumn Header="Код ЕГРПОУ" 
+                                        Binding="{Binding Path=EDRPOU_Code, Converter={StaticResource separatorConverter}, ConverterParameter=1 7}"/>
+                    <DataGridTextColumn Header="Код повреждение ТС" 
+                                        Binding="{Binding Path=CorruptionCode, Converter={StaticResource separatorConverter}, ConverterParameter=2 2 5 8}"/>
+                    <DataGridTextColumn Header="Ведомости о лицензировании водителя" Binding="{Binding Path=ActivityLicensingInfo}"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
-        <StackPanel Grid.Column="6" Grid.Row="0" Grid.RowSpan="3" VerticalAlignment="Center" Margin="5">
+        <StackPanel Grid.Column="4" Grid.Row="2" Grid.RowSpan="3" VerticalAlignment="Center" Margin="5">
             <TextBlock Text="Пострадавшие" TextAlignment="Center" Margin="0 0 0 10"/>
             <DataGrid x:Name="VictimsDataGrid" Height="150" Margin="0 0 0 10" HorizontalScrollBarVisibility="Visible"
-                      ItemsSource="{Binding CurrentVictims}"/>
+                      ItemsSource="{Binding Path=CurrentVictims, Mode=OneWay}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
+                    <DataGridTemplateColumn Header="ФИО">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1} {2}">
+                                            <Binding Path="Surname" />
+                                            <Binding Path="Name" />
+                                            <Binding Path="Patronymic" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Гражданство" Binding="{Binding Path=Citizenship}"/>
+                    <DataGridTextColumn Header="Умер (травмирован)" Binding="{Binding Path=IsDied}"/>
+                    <DataGridTextColumn Header="Категория" Binding="{Binding Path=Category}"/>
+                    <DataGridTextColumn Header="Пол" Binding="{Binding Path=Gender, Converter={StaticResource genderConverter}}"/>
+                    <DataGridTextColumn Header="Возраст" Binding="{Binding Path=Age}"/>
+                    <DataGridTextColumn Header="Порядковый номер ТС" Binding="{Binding Path=TORSerialNumber}"/>
+                    <DataGridCheckBoxColumn Header="Ремень безопасности, шлем" Binding="{Binding Path=SeatBelt}"/>
+                    <DataGridTextColumn Header="Результаты мед. обследования" Binding="{Binding Path=MedicalResult}"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
     </Grid>
 </Window>
