@@ -28,4 +28,136 @@ namespace AccountingOfTraficViolation.Services
             throw new Exception("Not implemented");
         }
     }
+
+    public class StatusCoverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string status = null;
+
+            switch ((string)value)
+            {
+                case "PROCESSING":
+                    status = "Рассматривается";
+                    break;
+                case "CLOSE":
+                    status = "Закрыто";
+                    break;
+                default:
+                    break;
+            }
+
+            return status;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class SeparatorCoverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string[] parametrs = parameter.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            char separator;
+            byte index = 0;
+            List<int> indexes = new List<int>();
+
+            for (int i = 1; i < parametrs.Length; i++)
+            {
+                if (byte.TryParse(parametrs[i], out index))
+                {
+                    indexes.Add(index);
+                }
+            }
+
+            switch (parametrs[1])
+            {
+                case "1":
+                    separator = '-';
+                    break;
+                case "2":
+                    separator = ',';
+                    break;
+                default:
+                    separator = ' ';
+                    break;
+            }
+            
+            return ((string)value).AddSeparator(separator, indexes.ToArray());
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class DayOfWeekConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string dayOfWeek = null;
+
+            switch (value.ToString())
+            {
+                case "1":
+                    dayOfWeek = "Понедельник";
+                    break;
+                case "2":
+                    dayOfWeek = "Вторник";
+                    break;
+                case "3":
+                    dayOfWeek = "Среда";
+                    break;
+                case "4":
+                    dayOfWeek = "Четверг";
+                    break;
+                case "5":
+                    dayOfWeek = "Пятница";
+                    break;
+                case "6":
+                    dayOfWeek = "Суббота";
+                    break;
+                case "7":
+                    dayOfWeek = "Воскресенье";
+                    break;
+                default:
+                    break;
+            }
+
+            return dayOfWeek;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class GenderConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string gender = null;
+
+            if ((bool)value)
+            {
+                gender = "Мужчина";
+            }
+            else
+            {
+                gender = "Женщина";
+            }
+
+            return gender;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
