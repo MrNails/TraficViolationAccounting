@@ -3,23 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
-
-
+using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
 {
     public partial class Case : MainTable
     {
-        private int generalInfoId;
-        private int roadConditionId;
-        private string createrLogin;
         private string state;
         private DateTime openAt;
         private DateTime? closeAt;
-        private DateTime createdAt;
         private DateTime updatedAt;
-        private GeneralInfo generalInfo;
-        private RoadCondition roadCondition;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Case()
@@ -31,6 +24,7 @@ namespace AccountingOfTraficViolation.Models
             OpenAt = MinimumDate;
         }
 
+        [NotAssing]
         public int Id { get; set; }
 
         public int GeneralInfoId { get; set; }

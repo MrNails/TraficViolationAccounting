@@ -77,12 +77,14 @@
     <Compile Include="Models\CaseAccidentPlace.cs" />
     <Compile Include="Models\GeneralInfo.cs" />
     <Compile Include="Models\MainTable.cs" />
+    <Compile Include="Services\Attributes.cs" />
     <Compile Include="Services\Converters.cs" />
     <Compile Include="Services\SimpleExtensions.cs" />
     <Compile Include="Services\RelayCommand.cs" />
     <Compile Include="Services\VisualObjectExtensions.cs" />
     <Compile Include="ViewModels\AccidenObjectVM.cs" />
     <Compile Include="ViewModels\CasesVM.cs" />
+    <Compile Include="ViewModels\Expression.cs" />
     <Compile Include="Views\AddInfoWindows\AddAccidentPlaceWindow.xaml.cs" />
     <Compile Include="Views\AddInfoWindows\AddGeneralInfoWindow.xaml.cs">
       <DependentUpon>AddGeneralInfoWindow.xaml</DependentUpon>

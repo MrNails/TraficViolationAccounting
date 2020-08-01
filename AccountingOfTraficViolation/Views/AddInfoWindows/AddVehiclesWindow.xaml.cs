@@ -29,7 +29,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
         public AddVehiclesWindow() : this(null)
         { }
-        public AddVehiclesWindow(ObservableCollection<Vehicle> vehicles)
+        public AddVehiclesWindow(ObservableCollection<Vehicle> vehicles, bool isEditable = true)
         {
             InitializeComponent();
 
@@ -38,6 +38,17 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             DataContext = AccidentObjectsVM;
 
             VehiclesListBox.ItemsSource = AccidentObjectsVM.AccidentObjects;
+
+            if (isEditable)
+            {
+                VehicleGroupBox.Header = "Транспортное средство № 1";
+            }
+            else
+            {
+                VehicleGroupBox.Header = "Транспортное средство";
+                AddVehicle.IsEnabled = false;
+                RemoveVehicle.IsEnabled = false;
+            }
         }
 
         private void SeparatorTextBox_TextChanged(object sender, TextChangedEventArgs e)

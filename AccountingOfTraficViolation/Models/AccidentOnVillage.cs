@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
+using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
 {
@@ -29,6 +30,7 @@ namespace AccountingOfTraficViolation.Models
             VillageBinding = "";
         }
 
+        [NotAssing]
         public int Id { get; set; }
 
         public byte Status

@@ -1,10 +1,10 @@
-using AccountingOfTraficViolation.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
 using System.Text.RegularExpressions;
+using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
 {
@@ -34,6 +34,7 @@ namespace AccountingOfTraficViolation.Models
             Meter = "";
         }
 
+        [NotAssing]
         public int Id { get; set; }
 
         [Required]

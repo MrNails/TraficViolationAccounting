@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
 using System.Text.RegularExpressions;
+using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
 {
@@ -34,6 +35,7 @@ namespace AccountingOfTraficViolation.Models
             incidentDate = MinimumDate;
         }
 
+        [NotAssing]
         public int Id { get; set; }
 
         [Required]

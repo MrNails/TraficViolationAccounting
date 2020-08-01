@@ -29,6 +29,7 @@ namespace AccountingOfTraficViolation.Views
         public ShowCaseWindow(User user)
         {
             InitializeComponent();
+
             casesVM = new CasesVM();
             this.user = user;
 
@@ -39,6 +40,13 @@ namespace AccountingOfTraficViolation.Views
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (casesVM.CaseChanged && 
+                MessageBox.Show("Вы уверенны, что хотите выйти?\nВы можете потерять все изменения.", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+            {
+                e.Cancel = true;
+                return;    
+            }
+
             casesVM.Dispose();
         }
 
@@ -109,13 +117,13 @@ namespace AccountingOfTraficViolation.Views
 
                 try
                 {
-                    await casesVM.FindCaseAsync(contex =>
+                    await casesVM.FindCaseAsync(c =>
                     {
-                        return contex.Cases.Where(c => (string.IsNullOrEmpty(login) || c.CreaterLogin == login || c.CreaterLogin.Contains(login)) &&
-                                                       (string.IsNullOrEmpty(status) || c.State == status || c.State.Contains(status)) &&
-                                                       (exactDate == default(DateTime) || exactDate < MainTable.MinimumDate || c.OpenAt == exactDate) &&
-                                                       (startDate == default(DateTime) || startDate < MainTable.MinimumDate || c.OpenAt >= startDate) &&
-                                                       (endDate == default(DateTime) || c.OpenAt <= endDate));
+                        return (string.IsNullOrEmpty(login) || c.CreaterLogin == login || c.CreaterLogin.Contains(login)) &&
+                               (string.IsNullOrEmpty(status) || c.State == status) &&
+                               (exactDate == default(DateTime) || exactDate < MainTable.MinimumDate || c.OpenAt == exactDate) &&
+                               (startDate == default(DateTime) || startDate < MainTable.MinimumDate || c.OpenAt >= startDate) &&
+                               (endDate == default(DateTime) || c.OpenAt <= endDate);
                     }, cancellationTokenSource.Token);
                 }
                 catch (Exception ex)
@@ -150,11 +158,6 @@ namespace AccountingOfTraficViolation.Views
             return status;
         }
 
-        private void CasesGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            MessageBox.Show("+");
-        }
-
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is DatePicker)
@@ -165,6 +168,42 @@ namespace AccountingOfTraficViolation.Views
                 {
                     datePicker.SelectedDate = MainTable.MinimumDate;
                 }
+            }
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DataGridRow)
+            {
+                DataGridRow dataGridRow = (DataGridRow)sender;
+
+                if (casesVM.DoubleClickCaseInfo.CanExecute(dataGridRow.Item))
+                {
+                    casesVM.DoubleClickCaseInfo.Execute(dataGridRow.Item);
+                }
+            }
+        }
+
+        private void SaveChangesClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                casesVM.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}\nСтек трейс: {ex.StackTrace}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void DiscardChangesClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                casesVM.DiscardChanges();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}\nСтек трейс: {ex.StackTrace}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -29,7 +29,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
         public AddVictimsWindow() : this(null)
         {  }
-        public AddVictimsWindow(ObservableCollection<Victim> victims)
+        public AddVictimsWindow(ObservableCollection<Victim> victims, bool isEditable = true)
         {
             InitializeComponent();
 
@@ -39,7 +39,16 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
             DataContext = AccidentObjectsVM;
 
-            VictimsGroupBox.Header = "Пострадавший № 1";
+            if (isEditable)
+            {
+                VictimsGroupBox.Header = "Пострадавший № 1";
+            }
+            else
+            {
+                VictimsGroupBox.Header = "Пострадавший";
+                AddVictim.IsEnabled = false;
+                RemoveVictim.IsEnabled = false;
+            }
         }
 
         private void GenderComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

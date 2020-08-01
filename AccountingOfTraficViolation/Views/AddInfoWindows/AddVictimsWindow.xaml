@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
         mc:Ignorable="d"
-        Title="Ведомости о пострадавших" Height="450" Width="900">
+        Title="Информация о пострадавших" Height="450" Width="900">
     <Window.Resources>
         <DataTemplate x:Key="ListBoxDataTemplate">
             <StackPanel Width="205">
@@ -146,10 +146,10 @@
                 <ListBox x:Name="VictimsListBox" Grid.Row="0" Grid.ColumnSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          SelectionChanged="VictimsListBox_SelectionChanged" ItemTemplate="{StaticResource ListBoxDataTemplate}" 
                          SelectedItem="{Binding CurrentAccidentObject}" Margin="0 6 0 0"/>
-                <Button Grid.Column="0" Grid.Row="1" Content="Добавить" Width="90" Style="{StaticResource ButtonTemplateStyle}" 
+                <Button Grid.Column="0" Grid.Row="1" x:Name="AddVictim" Content="Добавить" Width="90" Style="{StaticResource ButtonTemplateStyle}" 
                         HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding AddCommand}"
                         CommandParameter="{Binding ElementName=VictimsListBox, Path=SelectedItem}"/>
-                <Button Grid.Column="1" Grid.Row="1" Content="Удалить " Width="90" Style="{StaticResource ButtonTemplateStyle}"
+                <Button Grid.Column="1" Grid.Row="1" x:Name="RemoveVictim" Content="Удалить " Width="90" Style="{StaticResource ButtonTemplateStyle}"
                         HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RemoveCommand}"
                         CommandParameter="{Binding ElementName=VictimsListBox, Path=SelectedItem}"/>
             </Grid>

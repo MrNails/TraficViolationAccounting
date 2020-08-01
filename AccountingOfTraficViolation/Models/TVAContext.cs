@@ -1,9 +1,12 @@
+
+
 using System;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using AccountingOfTraficViolation.Services;
+using System.Diagnostics;
 
 namespace AccountingOfTraficViolation.Models
 {
@@ -11,20 +14,24 @@ namespace AccountingOfTraficViolation.Models
     public partial class TVAContext : DbContext
     {
         public TVAContext()
-            : base("name=TraficViolationAccounting")
+#if !DEBUG
+    : base("name=TraficViolationAccounting")
+#else
+    : base("name=DefaultConnection")
+#endif
         {
             if (Database.CreateIfNotExists())
             {
-                Users.Add(new User 
-                { 
-                    Login = "admin", 
-                    Password = "12345", 
-                    Role = 0 
+                Users.Add(new User
+                {
+                    Login = "user",
+                    Password = "12345",
+                    Role = 1
                 });
+
                 this.SaveChanges();
             }
         }
-
         public virtual DbSet<AccidentOnHighway> AccidentOnHighways { get; set; }
         public virtual DbSet<AccidentOnVillage> AccidentOnVillages { get; set; }
         public virtual DbSet<Case> Cases { get; set; }
@@ -46,6 +53,16 @@ namespace AccountingOfTraficViolation.Models
         {
             SetDateTime();
             return base.SaveChangesAsync();
+        }
+
+        public void CancelAllChanges()
+        {
+            var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Modified);
+
+            foreach (var entry in entries)
+            {
+                entry.Reload();
+            }
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -86,10 +103,11 @@ namespace AccountingOfTraficViolation.Models
 
         protected void SetDateTime()
         {
+
             var entries = ChangeTracker.Entries().
                                         Where(e => e.Entity is Case &&
-                                                   e.State == EntityState.Added ||
-                                                   e.State == EntityState.Modified);
+                                                   (e.State == EntityState.Added ||
+                                                   e.State == EntityState.Modified));
 
             foreach (var entry in entries)
             {

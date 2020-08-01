@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
@@ -13,9 +15,10 @@ namespace AccountingOfTraficViolation.Services
                 throw new ArgumentNullException("obj");
             }
 
-            var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
+            var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, ReferenceLoopHandling = ReferenceLoopHandling.Ignore};
 
-            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj), deserializeSettings);
+            T newObj = JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj, deserializeSettings), deserializeSettings);
+            return newObj;
         }
     }
 
@@ -72,6 +75,17 @@ namespace AccountingOfTraficViolation.Services
             }
 
             return tempStr;
+        }
+    }
+
+    public static class ObservableCollectionExtension
+    {
+        public static void AddRange<T>(this ObservableCollection<T> collection, IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                collection.Add(item);
+            }
         }
     }
 }

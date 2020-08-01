@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views"
         mc:Ignorable="d"
-        Title="Просмотр дела" Height="450" Width="800">
+        Title="Просмотр дела" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -31,14 +31,14 @@
         </WrapPanel>
         <WrapPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Статус дела:" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-            <ComboBox FontSize="15" Width="120">
-                <ComboBoxItem Content="В процессе"/>
-                <ComboBoxItem Content="Закрыто"/>
+            <ComboBox x:Name="CaseStatusComboBox" FontSize="15" Width="120">
+                <ComboBoxItem Content="В процессе" Tag="1"/>
+                <ComboBoxItem Content="Закрыто" Tag="2"/>
             </ComboBox>
         </WrapPanel>
         <Button Grid.Column="0" Grid.Row="3" Content="Подтвердить" Style="{StaticResource ButtonTemplateStyle}" Width="100"
-                VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 30 0"/>       
+                VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 30 0" Click="AcceptClick"/>       
         <Button Grid.Column="1" Grid.Row="3" Content="Отменить" Style="{StaticResource ButtonTemplateStyle}" Width="100"
-                VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30 0 0 0"/>
+                VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30 0 0 0" Click="RejectClick"/>
     </Grid>
 </Window>

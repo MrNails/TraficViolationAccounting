@@ -23,30 +23,55 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
     /// </summary>
     public partial class AddAccidentPlaceWindow : Window
     {
-        public AccidentOnHighway AccidentOnHighway { get; private set; }
-        public AccidentOnVillage AccidentOnVillage { get; private set; }
+        private AccidentOnHighway AccidentOnHighway;
+        private AccidentOnVillage AccidentOnVillage;
+        private bool isEditable;
 
-        public AddAccidentPlaceWindow() : this(null, null)
+        public CaseAccidentPlace CaseAccidentPlace { get; private set; }
+
+        public AddAccidentPlaceWindow() : this(null)
         { }
-        public AddAccidentPlaceWindow(AccidentOnHighway accidentOnHighway, AccidentOnVillage accidentOnVillage)
+        public AddAccidentPlaceWindow(CaseAccidentPlace caseAccidentPlace, bool isEditable = true)
         {
             InitializeComponent();
 
-            if (accidentOnHighway != null)
+            if (caseAccidentPlace == null)
             {
-                AccidentOnHighway = accidentOnHighway.Clone();
+                CaseAccidentPlace = new CaseAccidentPlace();
+            }
+            else
+            {
+                CaseAccidentPlace = caseAccidentPlace.Clone();
+            }
+
+
+            AccidentOnHighway = CaseAccidentPlace.AccidentOnHighway;
+            AccidentOnVillage = CaseAccidentPlace.AccidentOnVillage;
+
+            this.isEditable = isEditable;
+
+            if (CaseAccidentPlace.AccidentOnHighway != null)
+            {
                 AccidentOnVillage = new AccidentOnVillage();
 
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = false;
+                if (isEditable)
+                {
+                    AccidentOnVillageGroup.IsEnabled = false;
+                }
 
                 DataContext = AccidentOnHighway;
             }
-            else if (accidentOnVillage != null)
+            else if (CaseAccidentPlace.AccidentOnVillage != null)
             {
-                AccidentOnVillage = accidentOnVillage.Clone();
                 AccidentOnHighway = new AccidentOnHighway();
 
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
+
+                if (isEditable)
+                {
+                    AccidentOnHighwayGroup.IsEnabled = false;
+                }
 
                 DataContext = AccidentOnVillage;
             }
@@ -83,6 +108,9 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 AccidentOnHighway = null;
             }
 
+            CaseAccidentPlace.AccidentOnVillage = AccidentOnVillage;
+            CaseAccidentPlace.AccidentOnHighway = AccidentOnHighway;
+
             DialogResult = true;
         }
         private void RejectClick(object sender, RoutedEventArgs e)
@@ -102,7 +130,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
         private void AccidentOnVillageGroup_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (AccidentOnVillageGroup.Content is Grid && AccidentOnHighwayGroup.Content is Grid)
+            if (AccidentOnVillageGroup.Content is Grid && AccidentOnHighwayGroup.Content is Grid && isEditable)
             {
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = true;
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = false;
@@ -112,7 +140,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
         }
         private void AccidentOnHighwayGroup_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (AccidentOnVillageGroup.Content is Grid && AccidentOnHighwayGroup.Content is Grid)
+            if (AccidentOnVillageGroup.Content is Grid && AccidentOnHighwayGroup.Content is Grid && isEditable)
             {
                 ((Grid)AccidentOnVillageGroup.Content).IsEnabled = false;
                 ((Grid)AccidentOnHighwayGroup.Content).IsEnabled = true;

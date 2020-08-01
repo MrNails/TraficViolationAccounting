@@ -25,14 +25,12 @@ namespace AccountingOfTraficViolation.Views
     {
         private User user;
         private GeneralInfo generalInfo;
-        private AccidentOnHighway accidentOnHighway;
-        private AccidentOnVillage accidentOnVillage;
+        private CaseAccidentPlace caseAccidentPlace;
         private RoadCondition roadCondition;
         private ObservableCollection<ParticipantsInformation> participantsInformations;
         private ObservableCollection<Vehicle> vehicles;
         private ObservableCollection<Victim> victims;
         private Case _case;
-        private CaseAccidentPlace caseAccidentPlace;
 
         public OpenNewCaseWindow(User user)
         {
@@ -56,12 +54,11 @@ namespace AccountingOfTraficViolation.Views
         }
         private void AccidentPlaceClick(object sender, RoutedEventArgs e)
         {
-            AddAccidentPlaceWindow accidentPlaceWinow = new AddAccidentPlaceWindow(accidentOnHighway, accidentOnVillage);
+            AddAccidentPlaceWindow accidentPlaceWinow = new AddAccidentPlaceWindow(caseAccidentPlace);
             if (accidentPlaceWinow.ShowDialog() == true)
             {
                 AccidentPlaceProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
-                accidentOnHighway = accidentPlaceWinow.AccidentOnHighway;
-                accidentOnVillage = accidentPlaceWinow.AccidentOnVillage;
+                caseAccidentPlace = accidentPlaceWinow.CaseAccidentPlace;
             }
         }
         private void RoadConditionClick(object sender, RoutedEventArgs e)
@@ -115,7 +112,7 @@ namespace AccountingOfTraficViolation.Views
                 StopBorderAnimation(GeneralInfoBorder);
             }
 
-            if (accidentOnHighway == null && accidentOnVillage == null)
+            if (caseAccidentPlace == null)
             {
                 SetBorderAnimation(AccidentPlaceBorder);
                 isValid = false;
@@ -251,8 +248,6 @@ namespace AccountingOfTraficViolation.Views
                 _case.CaseAccidentPlace = caseAccidentPlace;
                 _case.CreaterLogin = user.Login;
 
-                caseAccidentPlace.AccidentOnHighway = accidentOnHighway;
-                caseAccidentPlace.AccidentOnVillage = accidentOnVillage;
                 caseAccidentPlace.Case = _case;
 
                 foreach (var participantsInformation in participantsInformations)
@@ -272,13 +267,13 @@ namespace AccountingOfTraficViolation.Views
                 context.Vehicles.AddRange(vehicles);
                 context.Victims.AddRange(victims);
 
-                if (accidentOnHighway != null)
+                if (caseAccidentPlace.AccidentOnHighway != null)
                 {
-                    context.AccidentOnHighways.Add(accidentOnHighway);
+                    context.AccidentOnHighways.Add(caseAccidentPlace.AccidentOnHighway);
                 }
-                if (accidentOnVillage != null)
+                if (caseAccidentPlace.AccidentOnVillage != null)
                 {
-                    context.AccidentOnVillages.Add(accidentOnVillage);
+                    context.AccidentOnVillages.Add(caseAccidentPlace.AccidentOnVillage);
                 }
 
                 try

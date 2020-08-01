@@ -212,10 +212,10 @@
                 <ListBox x:Name="VehiclesListBox" Grid.Row="0" Grid.ColumnSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ItemTemplate="{StaticResource ListBoxDataTemplate}" SelectionChanged="VehiclesListBox_SelectionChanged"
                          SelectedItem="{Binding CurrentAccidentObject}" Margin="0 6 0 0"/>
-                <Button Grid.Column="0" Grid.Row="1" Content="Добавить" Width="90" Style="{StaticResource ButtonTemplateStyle}" 
+                <Button Grid.Column="0" Grid.Row="1" x:Name="AddVehicle" Content="Добавить" Width="90" Style="{StaticResource ButtonTemplateStyle}" 
                         HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding AddCommand}"
                         CommandParameter="{Binding ElementName=VehiclesListBox, Path=SelectedItem}"/>
-                <Button Grid.Column="1" Grid.Row="1" Content="Удалить " Width="90" Style="{StaticResource ButtonTemplateStyle}"
+                <Button Grid.Column="1" Grid.Row="1" x:Name="RemoveVehicle" Content="Удалить " Width="90" Style="{StaticResource ButtonTemplateStyle}"
                         HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding RemoveCommand}"
                         CommandParameter="{Binding ElementName=VehiclesListBox, Path=SelectedItem}"/>
             </Grid>

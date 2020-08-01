@@ -145,11 +145,11 @@ namespace AccountingOfTraficViolation.Services
 
             if ((bool)value)
             {
-                gender = "Мужчина";
+                gender = "Женщина";
             }
             else
             {
-                gender = "Женщина";
+                gender = "Мужчина";
             }
 
             return gender;

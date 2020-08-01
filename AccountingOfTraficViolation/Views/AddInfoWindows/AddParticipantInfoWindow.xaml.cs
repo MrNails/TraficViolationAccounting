@@ -29,7 +29,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
         public AddParticipantInfoWindow() : this(null)
         { }
-        public AddParticipantInfoWindow(ObservableCollection<ParticipantsInformation> participantsInfo)
+        public AddParticipantInfoWindow(ObservableCollection<ParticipantsInformation> participantsInfo, bool isEditable = true)
         {
             AccidentObjectsVM = new AccidentObjectsVM<ParticipantsInformation>(participantsInfo);
 
@@ -38,7 +38,17 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             DataContext = AccidentObjectsVM;
 
             ParticipantsListBox.ItemsSource = AccidentObjectsVM.AccidentObjects;
-            ParticipantInfoGroupBox.Header = "Учавствующий № 1";
+
+            if (isEditable)
+            {
+                ParticipantInfoGroupBox.Header = "Учавствующий № 1";
+            }
+            else
+            {
+                ParticipantInfoGroupBox.Header = "Учавствующий";
+                AddParticipantInfo.IsEnabled = false;
+                RemoveParticipantInfo.IsEnabled = false;
+            }
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

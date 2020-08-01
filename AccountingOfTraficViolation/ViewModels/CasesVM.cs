@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
-using Microsoft.Xaml.Behaviors;
 using AccountingOfTraficViolation.Models;
+using AccountingOfTraficViolation.Services;
+using AccountingOfTraficViolation.Views;
+using AccountingOfTraficViolation.Views.AddInfoWindows;
 
 namespace AccountingOfTraficViolation.ViewModels
 {
@@ -18,49 +18,164 @@ namespace AccountingOfTraficViolation.ViewModels
     {
         private TVAContext TVAContext;
         private Case currentCase;
-        private IEnumerable<GeneralInfo> currentGeneralInfo;
-        private IEnumerable<RoadCondition> currentRoadCondition;
-        private IEnumerable<AccidentOnHighway> currentaccidentOnHighways;
-        private IEnumerable<AccidentOnVillage> currentAccidentOnVillage;
-        private IEnumerable<ParticipantsInformation> currentParticipantsInformation;
-        private IEnumerable<Vehicle> currentVehicles;
-        private IEnumerable<Victim> currentVictims;
         private IEnumerable<Case> cases;
         private RelayCommand showCaseInfo;
         private RelayCommand doubleClickCaseInfo;
+        private bool caseChanged;
+
+        private object locker = new object();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public CasesVM()
         {
             TVAContext = new TVAContext();
+
+            CurrentGeneralInfo = new ObservableCollection<GeneralInfo>();
+            CurrentRoadCondition = new ObservableCollection<RoadCondition>();
+            CurrentParticipantsInformation = new ObservableCollection<ParticipantsInformation>();
+            CurrentVehicles = new ObservableCollection<Vehicle>();
+            CurrentVictims = new ObservableCollection<Victim>();
+            CurrentAccidentOnHighway = new ObservableCollection<AccidentOnHighway>();
+            CurrentAccidentOnVillage = new ObservableCollection<AccidentOnVillage>();
+
+            CaseChanged = false;
+
             showCaseInfo = new RelayCommand(obj =>
             {
                 if (obj != null && obj is Case)
                 {
-                    Case _case = (Case)obj;
+                    CurrentCase = (Case)obj;
 
-                    CurrentGeneralInfo = new GeneralInfo[] { _case.GeneralInfo };
-                    CurrentRoadCondition = new RoadCondition[] { _case.RoadCondition };
-                    CurrentParticipantsInformation = _case.ParticipantsInformations;
-                    CurrentVehicles = _case.Vehicles;
-                    CurrentVictims = _case.Victims;
+                    ClearCollections();
 
-                    if (_case.CaseAccidentPlace.AccidentOnHighway != null)
+                    CurrentGeneralInfo.Add(CurrentCase.GeneralInfo);
+                    CurrentRoadCondition.Add(CurrentCase.RoadCondition);
+                    CurrentParticipantsInformation.AddRange(CurrentCase.ParticipantsInformations);
+                    CurrentVehicles.AddRange(CurrentCase.Vehicles);
+                    CurrentVictims.AddRange(CurrentCase.Victims);
+
+                    if (CurrentCase.CaseAccidentPlace.AccidentOnHighway != null)
                     {
-                        CurrentAccidentOnHighway = new AccidentOnHighway[] { _case.CaseAccidentPlace.AccidentOnHighway };
-                        CurrentAccidentOnVillage = null;
+                        AccidentOnHighway accidentOnHighway = CurrentCase.CaseAccidentPlace.AccidentOnHighway;
+                        accidentOnHighway.CaseAccidentPlaces = null;
+
+                        CurrentAccidentOnHighway.Add(accidentOnHighway);
                     }
-                    else if (_case.CaseAccidentPlace.AccidentOnVillage != null)
+                    else if (CurrentCase.CaseAccidentPlace.AccidentOnVillage != null)
                     {
-                        CurrentAccidentOnVillage = new AccidentOnVillage[] { _case.CaseAccidentPlace.AccidentOnVillage };
-                        CurrentAccidentOnHighway = null;
+                        AccidentOnVillage accidentOnVillage = CurrentCase.CaseAccidentPlace.AccidentOnVillage;
+                        accidentOnVillage.CaseAccidentPlaces = null;
+
+                        CurrentAccidentOnVillage.Add(accidentOnVillage);
                     }
                 }
             });
             doubleClickCaseInfo = new RelayCommand(obj =>
             {
-                MessageBox.Show("+");
+                if (obj == null)
+                {
+                    return;
+                }
+
+                if (obj is Case)
+                {
+                    if (currentCase == null)
+                    {
+                        currentCase = (Case)obj;
+                    }
+
+                    CaseReviewWindow caseReviewWindow = new CaseReviewWindow((Case)obj);
+                    if (caseReviewWindow.ShowDialog() == true)
+                    {
+                        currentCase.Assign(caseReviewWindow.Case);
+                        CaseChanged = true;
+                    }
+                }
+
+                if (obj is GeneralInfo)
+                {
+                    AddGeneralInfoWindow generalInfoWindow = new AddGeneralInfoWindow((GeneralInfo)obj);
+                    if (generalInfoWindow.ShowDialog() == true)
+                    {
+                        GeneralInfo generalInfo = CurrentGeneralInfo.FirstOrDefault();
+
+                        generalInfo.Assign(generalInfoWindow.GeneralInfo);
+
+                        CaseChanged = true;
+                    }
+                }
+
+                if (obj is RoadCondition)
+                {
+                    AddRoadConditionWindow roadConditionWindow = new AddRoadConditionWindow((RoadCondition)obj);
+                    if (roadConditionWindow.ShowDialog() == true)
+                    {
+                        RoadCondition roadCondition = CurrentRoadCondition.FirstOrDefault();
+                        roadCondition.Assign(roadConditionWindow.RoadCondition);
+                        CaseChanged = true;
+                    }
+                }
+
+                if (obj is AccidentOnHighway || obj is AccidentOnVillage)
+                {
+                    AddAccidentPlaceWindow accidentPlaceWindow = new AddAccidentPlaceWindow(currentCase.CaseAccidentPlace, false);
+                    if (accidentPlaceWindow.ShowDialog() == true)
+                    {
+                        AccidentOnHighway accidentOnHighway = CurrentAccidentOnHighway.FirstOrDefault();
+                        AccidentOnVillage accidentOnVillage = CurrentAccidentOnVillage.FirstOrDefault();
+
+                        if (accidentOnVillage != null)
+                        {
+                            accidentOnVillage.Assign(accidentPlaceWindow.CaseAccidentPlace.AccidentOnVillage);
+                        }
+                        else if (accidentOnHighway != null)
+                        {
+                            accidentOnHighway.Assign(accidentPlaceWindow.CaseAccidentPlace.AccidentOnHighway);
+                        }
+
+                        CaseChanged = true;
+                    }
+                }
+
+                if (obj is ParticipantsInformation)
+                {
+                    AddParticipantInfoWindow participantInfoWindow = new AddParticipantInfoWindow(new ObservableCollection<ParticipantsInformation> { (ParticipantsInformation)obj }, false);
+                    if (participantInfoWindow.ShowDialog() == true)
+                    {
+                        ParticipantsInformation windowParticipantInfo = participantInfoWindow.ParticipantsInformations.FirstOrDefault();
+                        ParticipantsInformation participantsInformation = CurrentParticipantsInformation.FirstOrDefault(p => p.Id == windowParticipantInfo.Id);
+                        
+                        participantsInformation.Assign(windowParticipantInfo);
+                        CaseChanged = true;
+                    }
+                }
+
+                if (obj is Vehicle)
+                {
+                    AddVehiclesWindow vehiclesWindow = new AddVehiclesWindow(new ObservableCollection<Vehicle> { (Vehicle)obj }, false);
+                    if (vehiclesWindow.ShowDialog() == true)
+                    {
+                        Vehicle windowVehicle = vehiclesWindow.Vehicles.FirstOrDefault();
+                        Vehicle vehicle = CurrentVehicles.FirstOrDefault(p => p.Id == windowVehicle.Id);
+
+                        vehicle.Assign(windowVehicle);
+                        CaseChanged = true;
+                    }
+                }
+
+                if (obj is Victim)
+                {
+                    AddVictimsWindow victimsWindow = new AddVictimsWindow(new ObservableCollection<Victim> { (Victim)obj }, false);
+                    if (victimsWindow.ShowDialog() == true)
+                    {
+                        Victim windowVictim = victimsWindow.Victims.FirstOrDefault();
+                        Victim victim = CurrentVictims.FirstOrDefault(p => p.Id == windowVictim.Id);
+
+                        victim.Assign(windowVictim);
+                        CaseChanged = true;
+                    }
+                }
             });
         }
 
@@ -76,7 +191,6 @@ namespace AccountingOfTraficViolation.ViewModels
                 OnPropertyChanged("FoundCases");
             }
         }
-
         public Case CurrentCase
         {
             get { return currentCase; }
@@ -86,69 +200,23 @@ namespace AccountingOfTraficViolation.ViewModels
                 OnPropertyChanged("CurrentCase");
             }
         }
-        public IEnumerable<GeneralInfo> CurrentGeneralInfo
+        public bool CaseChanged
         {
-            get { return currentGeneralInfo; }
+            get { return caseChanged; }
             private set
             {
-                currentGeneralInfo = value;
-                OnPropertyChanged("CurrentGeneralInfo");
+                caseChanged = value;
+                OnPropertyChanged("CaseChanged");
             }
         }
-        public IEnumerable<RoadCondition> CurrentRoadCondition
-        {
-            get { return currentRoadCondition; }
-            private set
-            {
-                currentRoadCondition = value;
-                OnPropertyChanged("CurrentRoadCondition");
-            }
-        }
-        public IEnumerable<AccidentOnHighway> CurrentAccidentOnHighway
-        {
-            get { return currentaccidentOnHighways; }
-            private set
-            {
-                currentaccidentOnHighways = value;
-                OnPropertyChanged("CurrentAccidentOnHighway");
-            }
-        }
-        public IEnumerable<AccidentOnVillage> CurrentAccidentOnVillage
-        {
-            get { return currentAccidentOnVillage; }
-            private set
-            {
-                currentAccidentOnVillage = value;
-                OnPropertyChanged("CurrentAccidentOnVillage");
-            }
-        }
-        public IEnumerable<ParticipantsInformation> CurrentParticipantsInformation
-        {
-            get { return currentParticipantsInformation; }
-            private set
-            {
-                currentParticipantsInformation = value;
-                OnPropertyChanged("CurrentParticipantsInformation");
-            }
-        }
-        public IEnumerable<Vehicle> CurrentVehicles
-        {
-            get { return currentVehicles; }
-            private set
-            {
-                currentVehicles = value;
-                OnPropertyChanged("CurrentVehicles");
-            }
-        }
-        public IEnumerable<Victim> CurrentVictims
-        {
-            get { return currentVictims; }
-            private set
-            {
-                currentVictims = value;
-                OnPropertyChanged("CurrentVictims");
-            }
-        }
+
+        public ObservableCollection<GeneralInfo> CurrentGeneralInfo { get; set; }
+        public ObservableCollection<RoadCondition> CurrentRoadCondition { get; set; }
+        public ObservableCollection<AccidentOnHighway> CurrentAccidentOnHighway { get; set; }
+        public ObservableCollection<AccidentOnVillage> CurrentAccidentOnVillage { get; set; }
+        public ObservableCollection<ParticipantsInformation> CurrentParticipantsInformation { get; set; }
+        public ObservableCollection<Vehicle> CurrentVehicles { get; set; }
+        public ObservableCollection<Victim> CurrentVictims { get; set; }
 
         public bool FindCase(Func<TVAContext, IEnumerable<Case>> findFunc)
         {
@@ -161,21 +229,26 @@ namespace AccountingOfTraficViolation.ViewModels
 
             return FoundCases.Count() != 0;
         }
-        public async Task<bool> FindCaseAsync(Func<TVAContext, IQueryable<Case>> findFunc, CancellationToken cancellationToken)
+        public async Task<bool> FindCaseAsync(Func<Case, bool> predicate, CancellationToken cancellationToken)
         {
-            if (findFunc == null)
+            if (predicate == null)
             {
-                throw new ArgumentNullException("findFunc");
+                throw new ArgumentNullException("predicate");
             }
 
             bool findRes;
 
             try
             {
-                findRes = await Task.Run(async () =>
+                findRes = await Task.Run(() =>
                 {
-                    var res = await findFunc(TVAContext).ToArrayAsync(cancellationToken);
-                    FoundCases = res;
+                    var res = TVAContext.Cases.Where(predicate).ToArray();
+
+                    lock (locker)
+                    {
+                        FoundCases = res;
+                    }
+
                     return FoundCases.Count() != 0;
                 });
             }
@@ -183,8 +256,19 @@ namespace AccountingOfTraficViolation.ViewModels
             {
                 findRes = false;
             }
-            
+
             return findRes;
+        }
+        public async void SaveChangesAsync()
+        {
+            await TVAContext.SaveChangesAsync();
+            CaseChanged = false;
+        }
+
+        public void DiscardChanges()
+        {
+            TVAContext.CancelAllChanges();
+            CaseChanged = false;
         }
 
         public void OnPropertyChanged(string prop)
@@ -194,6 +278,17 @@ namespace AccountingOfTraficViolation.ViewModels
         public void Dispose()
         {
             TVAContext.Dispose();
+        }
+
+        private void ClearCollections()
+        {
+            CurrentGeneralInfo.Clear();
+            CurrentRoadCondition.Clear();
+            CurrentAccidentOnHighway.Clear();
+            CurrentAccidentOnVillage.Clear();
+            CurrentParticipantsInformation.Clear();
+            CurrentVehicles.Clear();
+            CurrentVictims.Clear();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace AccountingOfTraficViolation.ViewModels
         {
             if (participantsInfo != null)
             {
-                AccidentObjects = participantsInfo;
+                AccidentObjects = participantsInfo.Clone();
                 CurrentAccidentObject = AccidentObjects.FirstOrDefault();
             }
             else
