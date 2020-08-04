@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AccountingOfTraficViolation.Services;
 using AccountingOfTraficViolation.Views;
 
 namespace AccountingOfTraficViolation
@@ -25,18 +26,61 @@ namespace AccountingOfTraficViolation
         public MainWindow()
         {
             InitializeComponent();
+        }
 
+        private void Welocme()
+        {
+            if (!string.IsNullOrEmpty(user.Name) && !string.IsNullOrEmpty(user.Surname))
+            {
+                WelcomeTextBlock.Text = $"Добро пожаловать, {user.Name} {user.Surname}";
+            }
+            else
+            {
+                WelcomeTextBlock.Text = "Добро пожаловать";
+            }
+
+            if (user.Role == 0)
+            {
+                AdminWindowMenuItem.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                AdminWindowMenuItem.Visibility = Visibility.Hidden;
+            }
         }
 
         private void Window_Initialized(object sender, EventArgs e)
         {
             AuthorizationWindow logInWindow = new AuthorizationWindow();
-            if (logInWindow.ShowDialog() != true)
+
+            try
             {
-                this.Close();
+                if (logInWindow.ShowDialog() != true)
+                {
+                    this.Close();
+                }
+
+                user = logInWindow.User;
+            }
+            catch (Exception ex)
+            {
+                string innerExceptionMessage = ex.GetInnerExceptionMessage();
+                string exceptionMessage = "Ошибка: ";
+
+                if (string.IsNullOrEmpty(innerExceptionMessage))
+                {
+                    exceptionMessage += ex.Message;
+                }
+                else
+                {
+                    exceptionMessage += innerExceptionMessage;
+                }
+
+                exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
+
+                MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            user = logInWindow.User;
             Welocme();
         }
 
@@ -54,39 +98,126 @@ namespace AccountingOfTraficViolation
                 return;
             }
             OpenNewCaseWindow caseWindow = new OpenNewCaseWindow(user);
-            caseWindow.ShowDialog();
+
+            try
+            {
+                caseWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                string innerExceptionMessage = ex.GetInnerExceptionMessage();
+                string exceptionMessage = "Ошибка: ";
+
+                if (string.IsNullOrEmpty(innerExceptionMessage))
+                {
+                    exceptionMessage += ex.Message;
+                } 
+                else
+                {
+                    exceptionMessage += innerExceptionMessage;
+                }
+
+                exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
+
+                MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         private void ShowCaseClick(object sender, RoutedEventArgs e)
         {
             ShowCaseWindow showCaseWindow = new ShowCaseWindow(user);
-            showCaseWindow.ShowDialog();
+
+            try
+            {
+                showCaseWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                string innerExceptionMessage = ex.GetInnerExceptionMessage();
+                string exceptionMessage = "Ошибка: ";
+
+                if (string.IsNullOrEmpty(innerExceptionMessage))
+                {
+                    exceptionMessage += ex.Message;
+                }
+                else
+                {
+                    exceptionMessage += innerExceptionMessage;
+                }
+
+                exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
+
+                MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ExitAccountClick(object sender, RoutedEventArgs e)
         {
             AuthorizationWindow logInWindow = new AuthorizationWindow();
             this.Visibility = Visibility.Hidden;
-            if (logInWindow.ShowDialog() == true)
+
+            try
             {
-                user = logInWindow.User;
-                this.Visibility = Visibility.Visible;
-                Welocme();
+                if (logInWindow.ShowDialog() == true)
+                {
+                    user = logInWindow.User;
+                    this.Visibility = Visibility.Visible;
+                    Welocme();
+                }
+                else
+                {
+                    this.Close();
+                }
             }
-            else
+            catch (Exception ex)
+            {
+                string innerExceptionMessage = ex.GetInnerExceptionMessage();
+                string exceptionMessage = "Ошибка: ";
+
+                if (string.IsNullOrEmpty(innerExceptionMessage))
+                {
+                    exceptionMessage += ex.Message;
+                }
+                else
+                {
+                    exceptionMessage += innerExceptionMessage;
+                }
+
+                exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
+
+                MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
             {
                 this.Close();
             }
+
         }
 
-        private void Welocme()
+        private void AdminWindowMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(user.Name) && !string.IsNullOrEmpty(user.Surname))
+            AdminWindow adminWindow = new AdminWindow();
+
+            try
             {
-                WelcomeTextBlock.Text = $"Добро пожаловать, {user.Name} {user.Surname}";
+                adminWindow.ShowDialog();
             }
-            else
+            catch (Exception ex)
             {
-                WelcomeTextBlock.Text = "Добро пожаловать";
+                string innerExceptionMessage = ex.GetInnerExceptionMessage();
+                string exceptionMessage = "Ошибка: ";
+
+                if (string.IsNullOrEmpty(innerExceptionMessage))
+                {
+                    exceptionMessage += ex.Message;
+                }
+                else
+                {
+                    exceptionMessage += innerExceptionMessage;
+                }
+
+                exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
+
+                MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -18,7 +18,7 @@ namespace AccountingOfTraficViolation.Models
         private AccidentOnVillage accidentOnVillage;
 
         [Key]
-        [NotAssing]
+        [NotAssign]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int CaseId
         {

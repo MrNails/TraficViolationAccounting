@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using AccountingOfTraficViolation.Models;
 using AccountingOfTraficViolation.Services;
 using AccountingOfTraficViolation.Views;
@@ -16,9 +17,11 @@ namespace AccountingOfTraficViolation.ViewModels
 {
     public class CasesVM : INotifyPropertyChanged, IDisposable
     {
+        private readonly User user;
+
         private TVAContext TVAContext;
         private Case currentCase;
-        private IEnumerable<Case> cases;
+        private List<Case> cases;
         private RelayCommand showCaseInfo;
         private RelayCommand doubleClickCaseInfo;
         private bool caseChanged;
@@ -27,9 +30,10 @@ namespace AccountingOfTraficViolation.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public CasesVM()
+        public CasesVM(User user)
         {
             TVAContext = new TVAContext();
+            this.user = user;
 
             CurrentGeneralInfo = new ObservableCollection<GeneralInfo>();
             CurrentRoadCondition = new ObservableCollection<RoadCondition>();
@@ -57,17 +61,11 @@ namespace AccountingOfTraficViolation.ViewModels
 
                     if (CurrentCase.CaseAccidentPlace.AccidentOnHighway != null)
                     {
-                        AccidentOnHighway accidentOnHighway = CurrentCase.CaseAccidentPlace.AccidentOnHighway;
-                        accidentOnHighway.CaseAccidentPlaces = null;
-
-                        CurrentAccidentOnHighway.Add(accidentOnHighway);
+                        CurrentAccidentOnHighway.Add(CurrentCase.CaseAccidentPlace.AccidentOnHighway);
                     }
                     else if (CurrentCase.CaseAccidentPlace.AccidentOnVillage != null)
                     {
-                        AccidentOnVillage accidentOnVillage = CurrentCase.CaseAccidentPlace.AccidentOnVillage;
-                        accidentOnVillage.CaseAccidentPlaces = null;
-
-                        CurrentAccidentOnVillage.Add(accidentOnVillage);
+                        CurrentAccidentOnVillage.Add(CurrentCase.CaseAccidentPlace.AccidentOnVillage);
                     }
                 }
             });
@@ -85,12 +83,26 @@ namespace AccountingOfTraficViolation.ViewModels
                         currentCase = (Case)obj;
                     }
 
-                    CaseReviewWindow caseReviewWindow = new CaseReviewWindow((Case)obj);
+                    CaseReviewWindow caseReviewWindow = new CaseReviewWindow((Case)obj, user);
                     if (caseReviewWindow.ShowDialog() == true)
                     {
                         currentCase.Assign(caseReviewWindow.Case);
                         CaseChanged = true;
                     }
+
+                    return;
+                }
+
+                if (currentCase != null && currentCase.State == "CLOSE")
+                {
+                    MessageBox.Show("Подробности дела нельзя изменить после его закрытия.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (currentCase != null && currentCase.CreaterLogin != user.Login)
+                {
+                    MessageBox.Show("Вы не можете изменять подробности в чужом деле.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
                 }
 
                 if (obj is GeneralInfo)
@@ -145,7 +157,7 @@ namespace AccountingOfTraficViolation.ViewModels
                     {
                         ParticipantsInformation windowParticipantInfo = participantInfoWindow.ParticipantsInformations.FirstOrDefault();
                         ParticipantsInformation participantsInformation = CurrentParticipantsInformation.FirstOrDefault(p => p.Id == windowParticipantInfo.Id);
-                        
+
                         participantsInformation.Assign(windowParticipantInfo);
                         CaseChanged = true;
                     }
@@ -176,18 +188,24 @@ namespace AccountingOfTraficViolation.ViewModels
                         CaseChanged = true;
                     }
                 }
+
+                if (CaseChanged)
+                {
+                    TVAContext.Entry(CurrentCase).State = System.Data.Entity.EntityState.Modified;
+                }
             });
         }
 
         public RelayCommand ShowCaseInfo => showCaseInfo;
         public RelayCommand DoubleClickCaseInfo => doubleClickCaseInfo;
 
-        public IEnumerable<Case> FoundCases
+        public List<Case> FoundCases
         {
             get { return cases; }
             private set
             {
                 cases = value;
+
                 OnPropertyChanged("FoundCases");
             }
         }
@@ -218,17 +236,18 @@ namespace AccountingOfTraficViolation.ViewModels
         public ObservableCollection<Vehicle> CurrentVehicles { get; set; }
         public ObservableCollection<Victim> CurrentVictims { get; set; }
 
-        public bool FindCase(Func<TVAContext, IEnumerable<Case>> findFunc)
+        public bool FindCase(Func<Case, bool> predicate)
         {
-            if (findFunc == null)
+            if (predicate == null)
             {
-                throw new ArgumentNullException("findFunc");
+                throw new ArgumentNullException("predicate");
             }
 
-            FoundCases = findFunc(TVAContext);
+            FoundCases = TVAContext.Cases.Where(predicate).ToList();
 
-            return FoundCases.Count() != 0;
+            return FoundCases.Count != 0;
         }
+
         public async Task<bool> FindCaseAsync(Func<Case, bool> predicate, CancellationToken cancellationToken)
         {
             if (predicate == null)
@@ -242,17 +261,30 @@ namespace AccountingOfTraficViolation.ViewModels
             {
                 findRes = await Task.Run(() =>
                 {
-                    var res = TVAContext.Cases.Where(predicate).ToArray();
-
-                    lock (locker)
+                    Func<Case, bool> cancellationPredicate = c =>
                     {
-                        FoundCases = res;
-                    }
+                        cancellationToken.ThrowIfCancellationRequested();
+                        return predicate(c);
+                    };
 
-                    return FoundCases.Count() != 0;
-                });
+                    int count = 0;
+                    var res = TVAContext.Cases.Where(cancellationPredicate).ToList();
+
+                        lock (locker)
+                        {
+                            FoundCases = res;
+                            count = res.Count;
+                        }
+
+                    return count != 0;
+                }, cancellationToken);
+
             }
-            catch
+            catch (OperationCanceledException ex)
+            {
+                throw ex;
+            }
+            catch (Exception)
             {
                 findRes = false;
             }

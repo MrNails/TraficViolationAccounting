@@ -54,7 +54,7 @@
         </DockPanel>
         <DockPanel Grid.Row="4" Grid.Column="0"  Height="70">
             <Image x:Name="VehicleProgresImage"  />
-            <TextBlock Text="Информация про транспортные средства и их принадлежность" DockPanel.Dock="Top" 
+            <TextBlock Text="Информация про транспортные средства" DockPanel.Dock="Top" 
                        Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center"/>
             <Border x:Name="VehicleBorder" Width="82" Height="32" DockPanel.Dock="Bottom" BorderThickness="1">
                 <Button Content="Открыть" DockPanel.Dock="Bottom" Style="{StaticResource ButtonTemplateStyle}" 

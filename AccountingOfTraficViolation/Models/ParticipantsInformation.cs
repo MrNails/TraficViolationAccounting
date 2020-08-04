@@ -37,7 +37,7 @@ namespace AccountingOfTraficViolation.Models
             pddViolationRegex = new Regex(@"\d{2},\d{2}$");
         }
 
-        [NotAssing]
+        [NotAssign]
         public int Id { get; set; }
 
         [Required]
@@ -276,6 +276,7 @@ namespace AccountingOfTraficViolation.Models
 
         public int CaseId { get; set; }
 
+        [NotAssign]
         public virtual Case Case { get; set; }
 
         public override string ToString()

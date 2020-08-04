@@ -41,7 +41,7 @@ namespace AccountingOfTraficViolation.Models
             RoadDisadvantages = "";
         }
 
-        [NotAssing]
+        [NotAssign]
         public int Id { get; set; }
 
         public byte SurfaceType
@@ -269,6 +269,7 @@ namespace AccountingOfTraficViolation.Models
             }
         }
 
+        [NotAssign]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Case> Cases { get; set; }
     }

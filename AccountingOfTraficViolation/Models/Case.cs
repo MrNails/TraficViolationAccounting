@@ -24,7 +24,7 @@ namespace AccountingOfTraficViolation.Models
             OpenAt = MinimumDate;
         }
 
-        [NotAssing]
+        [NotAssign]
         public int Id { get; set; }
 
         public int GeneralInfoId { get; set; }
@@ -86,18 +86,24 @@ namespace AccountingOfTraficViolation.Models
             }
         }
 
+        [NotAssign]
         public virtual CaseAccidentPlace CaseAccidentPlace { get; set; }
 
+        [NotAssign]
         public virtual GeneralInfo GeneralInfo { get; set; }
 
+        [NotAssign]
         public virtual RoadCondition RoadCondition { get; set; }
 
+        [NotAssign]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ParticipantsInformation> ParticipantsInformations { get; set; }
 
+        [NotAssign]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vehicle> Vehicles { get; set; }
 
+        [NotAssign]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Victim> Victims { get; set; }
     }

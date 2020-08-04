@@ -30,12 +30,95 @@ namespace AccountingOfTraficViolation.Views
         {
             InitializeComponent();
 
-            casesVM = new CasesVM();
+            casesVM = new CasesVM(user);
             this.user = user;
 
-            FindLoginTextBox.Text = user.Login;
+            if (user.Role != 0)
+            {
+                FindLoginTextBox.Text = user.Login;
+            }
 
             DataContext = casesVM;
+        }
+
+        private async void FindCase()
+        {
+            ComboBoxItem statusItem = CaseStatusComboBox.SelectedItem as ComboBoxItem;
+
+            string login = null;
+            string status = null;
+            DateTime exactDate = default(DateTime);
+            DateTime startDate = default(DateTime);
+            DateTime endDate = default(DateTime);
+
+            if (string.IsNullOrEmpty(FindLoginTextBox.Text) && AllDateRadioButton.IsChecked == true &&
+                statusItem != null && statusItem.Tag.ToString() == "1")
+            {
+                MessageBox.Show("Вы не можете выбрать все дела.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            login = string.Copy(FindLoginTextBox.Text);
+            status = GetStatusFromComboBox(statusItem);
+
+            if (ExactDateRadioButton.IsChecked == true && ExactDateDatePicker.SelectedDate.HasValue)
+            {
+                exactDate = ExactDateDatePicker.SelectedDate.Value;
+            }
+            else if (RangeDateRadioButton.IsChecked == true && StartDateDatePicker.SelectedDate.HasValue &&
+                     EndDateDatePicker.SelectedDate.HasValue)
+            {
+                if (StartDateDatePicker.SelectedDate.Value >= MainTable.MinimumDate)
+                {
+                    startDate = StartDateDatePicker.SelectedDate.Value;
+                }
+                else
+                {
+                    startDate = MainTable.MinimumDate;
+                }
+
+                if (EndDateDatePicker.SelectedDate.Value >= MainTable.MinimumDate)
+                {
+                    endDate = EndDateDatePicker.SelectedDate.Value;
+                }
+                else
+                {
+                    endDate = MainTable.MinimumDate;
+                }
+            }
+
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource = null;
+                return;
+            }
+
+            cancellationTokenSource = new CancellationTokenSource();
+
+            try
+            {
+                await casesVM.FindCaseAsync(c =>
+                {
+                    return (string.IsNullOrEmpty(login) || c.CreaterLogin == login || c.CreaterLogin.Contains(login)) &&
+                           (string.IsNullOrEmpty(status) || c.State == status) &&
+                           (exactDate == default(DateTime) || exactDate < MainTable.MinimumDate || c.OpenAt == exactDate) &&
+                           (startDate == default(DateTime) || startDate < MainTable.MinimumDate || c.OpenAt >= startDate) &&
+                           (endDate == default(DateTime) || c.OpenAt <= endDate);
+                }, cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException ex)
+            {
+                MessageBox.Show(ex.Message, "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                cancellationTokenSource = null;
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -50,90 +133,14 @@ namespace AccountingOfTraficViolation.Views
             casesVM.Dispose();
         }
 
-        private async void FindCaseClick(object sender, RoutedEventArgs e)
+        private void FindCaseClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
             {
                 Button button = (Button)sender;
                 button.Content = "Отменить";
-                ComboBoxItem statusItem = CaseStatusComboBox.SelectedItem as ComboBoxItem;
 
-                string login = null;
-                string status = null;
-                DateTime exactDate = default(DateTime);
-                DateTime startDate = default(DateTime);
-                DateTime endDate = default(DateTime);
-
-                if (string.IsNullOrEmpty(FindLoginTextBox.Text) && AllDateRadioButton.IsChecked == true &&
-                    statusItem != null && statusItem.Tag.ToString() == "1")
-                {
-                    button.Content = "Найти";
-                    MessageBox.Show("Вы не можете выбрать все дела.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                login = string.Copy(FindLoginTextBox.Text);
-                status = GetStatusFromComboBox(statusItem);
-
-                if (ExactDateRadioButton.IsChecked == true && ExactDateDatePicker.SelectedDate.HasValue)
-                {
-                    exactDate = ExactDateDatePicker.SelectedDate.Value;
-                }
-                else if (RangeDateRadioButton.IsChecked == true && StartDateDatePicker.SelectedDate.HasValue &&
-                         EndDateDatePicker.SelectedDate.HasValue)
-                {
-                    if (StartDateDatePicker.SelectedDate.Value >= MainTable.MinimumDate)
-                    {
-                        startDate = StartDateDatePicker.SelectedDate.Value;
-                    }
-                    else
-                    {
-                        startDate = MainTable.MinimumDate;
-                    }
-
-                    if (EndDateDatePicker.SelectedDate.Value >= MainTable.MinimumDate)
-                    {
-                        endDate = EndDateDatePicker.SelectedDate.Value;
-                    }
-                    else
-                    {
-                        endDate = MainTable.MinimumDate;
-                    }
-                }
-
-
-                if (cancellationTokenSource != null)
-                {
-                    cancellationTokenSource.Cancel();
-                    cancellationTokenSource = null;
-                    return;
-                }
-
-                cancellationTokenSource = new CancellationTokenSource();
-                cancellationTokenSource.Token.Register(() =>
-                {
-                    MessageBox.Show("Операция прервана.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
-                });
-
-                try
-                {
-                    await casesVM.FindCaseAsync(c =>
-                    {
-                        return (string.IsNullOrEmpty(login) || c.CreaterLogin == login || c.CreaterLogin.Contains(login)) &&
-                               (string.IsNullOrEmpty(status) || c.State == status) &&
-                               (exactDate == default(DateTime) || exactDate < MainTable.MinimumDate || c.OpenAt == exactDate) &&
-                               (startDate == default(DateTime) || startDate < MainTable.MinimumDate || c.OpenAt >= startDate) &&
-                               (endDate == default(DateTime) || c.OpenAt <= endDate);
-                    }, cancellationTokenSource.Token);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                finally
-                {
-                    cancellationTokenSource = null;
-                }
+                FindCase();
 
                 button.Content = "Найти";
             }
@@ -206,5 +213,6 @@ namespace AccountingOfTraficViolation.Views
                 MessageBox.Show($"Ошибка: {ex.Message}\nСтек трейс: {ex.StackTrace}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
     }
 }

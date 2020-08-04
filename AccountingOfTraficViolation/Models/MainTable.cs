@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Reflection;
 using AccountingOfTraficViolation.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace AccountingOfTraficViolation
 {
@@ -43,14 +44,15 @@ namespace AccountingOfTraficViolation
 
             foreach (var property in currentObject.GetProperties())
             {
-                if (property.CanWrite && property.GetCustomAttribute(typeof(NotAssingAttribute), false) == null)
+                if (property.CanWrite && property.GetCustomAttribute(typeof(NotAssignAttribute), false) == null && 
+                    !property.GetMethod.IsVirtual && property.ReflectedType.IsPublic)
                 {
                     property.SetValue(this, newObject.GetProperty(property.Name).GetValue(entity));
                 }
             }
         }
 
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

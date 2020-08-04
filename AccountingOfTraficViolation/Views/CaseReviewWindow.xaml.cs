@@ -21,20 +21,20 @@ namespace AccountingOfTraficViolation.Views
     /// </summary>
     public partial class CaseReviewWindow : Window
     {
+        private readonly User user;
+
         public Case Case { get; private set; }
 
-        public CaseReviewWindow(Case @case)
+        public CaseReviewWindow(Case @case, User user)
         {
+            this.user = user;
+
             Case = @case.Clone();
             InitializeComponent();
 
-            if (Case.State == "PROCESSING")
+            if (Case.State == "CLOSE" || Case.CreaterLogin != user.Login)
             {
-                CaseStatusComboBox.SelectedIndex = 0;
-            }
-            else
-            {
-                CaseStatusComboBox.SelectedIndex = 1;
+                CloseCaseButton.IsEnabled = false;
             }
 
             DataContext = Case;
@@ -52,10 +52,22 @@ namespace AccountingOfTraficViolation.Views
         {
             DialogResult = true;
         }
-
         private void RejectClick(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        private void CloseCaseClick(object sender, RoutedEventArgs e)
+        {
+            Case.State = "CLOSE";
+            CloseCaseButton.IsEnabled = false;
+        }
+
+        private void Calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Calendar calendar = (Calendar)sender;
+
+            calendar.SelectedDate = Case.OpenAt;
         }
     }
 }

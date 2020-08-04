@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views"
+        xmlns:services="clr-namespace:AccountingOfTraficViolation.Services"
         mc:Ignorable="d"
         Title="Просмотр дела" Height="450" Width="800" Loaded="Window_Loaded">
+    <Window.Resources>
+        <services:StatusCoverter x:Key="statusConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -23,19 +27,20 @@
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Дата открытия дела" TextAlignment="Center" 
                        Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-            <Calendar DisplayDate="{Binding Path=OpenAt, Mode=OneWay}"/>
+            <Calendar DisplayDate="{Binding Path=OpenAt, Mode=OneWay}" SelectedDate="{Binding Path=OpenAt, Mode=OneWay}" SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
         </StackPanel>
         <WrapPanel Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Дело открыл: " Style="{StaticResource TextBlockTemplateStyle}"/>
             <TextBlock Text="{Binding CreaterLogin}" Style="{StaticResource TextBlockTemplateStyle}"/>
         </WrapPanel>
-        <WrapPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock Text="Статус дела:" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-            <ComboBox x:Name="CaseStatusComboBox" FontSize="15" Width="120">
-                <ComboBoxItem Content="В процессе" Tag="1"/>
-                <ComboBoxItem Content="Закрыто" Tag="2"/>
-            </ComboBox>
-        </WrapPanel>
+        <StackPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <WrapPanel Margin="0 0 0 10">
+                <TextBlock Text="Статус дела:" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
+                <TextBlock Text="{Binding Path=State, Converter={StaticResource statusConverter}}" Style="{StaticResource TextBlockTemplateStyle}"/>
+            </WrapPanel>
+            <Button x:Name="CloseCaseButton" Content="Закрыть" Style="{StaticResource ButtonTemplateStyle}" Width="100" 
+                 HorizontalAlignment="Center" Click="CloseCaseClick"/>
+        </StackPanel>
         <Button Grid.Column="0" Grid.Row="3" Content="Подтвердить" Style="{StaticResource ButtonTemplateStyle}" Width="100"
                 VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 30 0" Click="AcceptClick"/>       
         <Button Grid.Column="1" Grid.Row="3" Content="Отменить" Style="{StaticResource ButtonTemplateStyle}" Width="100"

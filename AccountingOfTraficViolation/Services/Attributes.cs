@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace AccountingOfTraficViolation.Services
 {
-    [System.AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = true)]
-    sealed class NotAssingAttribute : Attribute
-    { }
+    [System.AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple =false)]
+    sealed class NotAssignAttribute : Attribute
+    {
+    }
 }

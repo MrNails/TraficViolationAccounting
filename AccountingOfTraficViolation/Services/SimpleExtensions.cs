@@ -17,8 +17,7 @@ namespace AccountingOfTraficViolation.Services
 
             var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, ReferenceLoopHandling = ReferenceLoopHandling.Ignore};
 
-            T newObj = JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj, deserializeSettings), deserializeSettings);
-            return newObj;
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj, deserializeSettings), deserializeSettings);
         }
     }
 
@@ -86,6 +85,19 @@ namespace AccountingOfTraficViolation.Services
             {
                 collection.Add(item);
             }
+        }
+    }
+
+    public static class ExceptionExtension
+    {
+        public static string GetInnerExceptionMessage(this Exception ex)
+        {
+            if (ex.InnerException != null)
+            {
+                return ex.GetInnerExceptionMessage();
+            }
+
+            return "";
         }
     }
 }

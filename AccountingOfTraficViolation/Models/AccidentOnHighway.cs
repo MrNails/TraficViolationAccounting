@@ -34,7 +34,7 @@ namespace AccountingOfTraficViolation.Models
             Meter = "";
         }
 
-        [NotAssing]
+        [NotAssign]
         public int Id { get; set; }
 
         [Required]
@@ -178,6 +178,7 @@ namespace AccountingOfTraficViolation.Models
             }
         }
 
+        [NotAssign]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CaseAccidentPlace> CaseAccidentPlaces { get; set; }
     }

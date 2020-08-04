@@ -63,7 +63,7 @@ namespace AccountingOfTraficViolation.Models
             policyEndDate = MinimumDate;
         }
 
-        [NotAssing]
+        [NotAssign]
         public int Id { get; set; }
 
         [Required]
@@ -593,6 +593,7 @@ namespace AccountingOfTraficViolation.Models
 
         public int CaseId { get; set; }
 
+        [NotAssign]
         public virtual Case Case { get; set; }
     }
 }

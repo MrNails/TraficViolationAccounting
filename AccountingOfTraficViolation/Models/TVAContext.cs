@@ -14,11 +14,7 @@ namespace AccountingOfTraficViolation.Models
     public partial class TVAContext : DbContext
     {
         public TVAContext()
-#if !DEBUG
-    : base("name=TraficViolationAccounting")
-#else
-    : base("name=DefaultConnection")
-#endif
+            : base("name=TraficViolationAccounting")
         {
             if (Database.CreateIfNotExists())
             {
@@ -103,7 +99,6 @@ namespace AccountingOfTraficViolation.Models
 
         protected void SetDateTime()
         {
-
             var entries = ChangeTracker.Entries().
                                         Where(e => e.Entity is Case &&
                                                    (e.State == EntityState.Added ||

@@ -84,7 +84,7 @@
     <Compile Include="Services\VisualObjectExtensions.cs" />
     <Compile Include="ViewModels\AccidenObjectVM.cs" />
     <Compile Include="ViewModels\CasesVM.cs" />
-    <Compile Include="ViewModels\Expression.cs" />
+    <Compile Include="ViewModels\UserVM.cs" />
     <Compile Include="Views\AddInfoWindows\AddAccidentPlaceWindow.xaml.cs" />
     <Compile Include="Views\AddInfoWindows\AddGeneralInfoWindow.xaml.cs">
       <DependentUpon>AddGeneralInfoWindow.xaml</DependentUpon>
@@ -100,6 +100,9 @@
     </Compile>
     <Compile Include="Views\AddInfoWindows\AddVictimsWindow.xaml.cs">
       <DependentUpon>AddVictimsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AdminWindow.xaml.cs">
+      <DependentUpon>AdminWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AuthorizationWindow.xaml.cs">
       <DependentUpon>AuthorizationWindow.xaml</DependentUpon>
@@ -146,6 +149,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AddInfoWindows\AddVictimsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AdminWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
