@@ -51,6 +51,8 @@ namespace AccountingOfTraficViolation.Views
             }
 
             userVM.ConfirmChange();
+
+            MessageBox.Show("Пользователь был успешно добавлен.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         private void RejectClick(object sender, RoutedEventArgs e)
         {

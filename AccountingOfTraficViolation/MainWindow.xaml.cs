@@ -79,6 +79,7 @@ namespace AccountingOfTraficViolation
                 exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
 
                 MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
             }
 
             Welocme();
@@ -120,6 +121,7 @@ namespace AccountingOfTraficViolation
                 exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
 
                 MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
             }
         }
         private void ShowCaseClick(object sender, RoutedEventArgs e)
@@ -185,12 +187,9 @@ namespace AccountingOfTraficViolation
                 exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
 
                 MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
+
                 this.Close();
             }
-
         }
 
         private void AdminWindowMenuItem_Click(object sender, RoutedEventArgs e)
