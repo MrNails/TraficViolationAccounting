@@ -23,8 +23,8 @@ namespace AccountingOfTraficViolation.Models
             CaseAccidentPlaces = new HashSet<CaseAccidentPlace>();
             regexes = new Regex[]
             {
-                new Regex(@"[a-zA-Z]-\d{2}-\d{2}(-[0-9])?$"),
-                new Regex(@"[a-zA-Z]\d{4}[0-9]?$")
+                new Regex(@"[а-яА-Яa-zA-Z]-\d{2}-\d{2}(-[0-9])?$"),
+                new Regex(@"[а-яА-Яa-zA-Z]\d{4}[0-9]?$")
             };
 
             HighwayIndexAndNumber = "";
@@ -109,19 +109,22 @@ namespace AccountingOfTraficViolation.Models
                 {
                     errors["Kilometer"] = "Поле с количеством километров не может быть пустым.";
                     kilometer = null;
-                    return;
                 }
-
-                if (value.Length <= 4)
+                else if (int.TryParse(value, out int km))
+                {
+                    errors["Kilometer"] = $"Невозможно преобразовать значение '{value}'.";
+                }
+                else if (value.Length <= 4)
                 {
                     kilometer = value;
-                    OnPropertyChanged("Kilometer");
                     errors["Kilometer"] = null;
                 }
                 else
                 {
                     errors["Kilometer"] = "Количество символов в поле с километрами не может быть больше 4.";
                 }
+
+                OnPropertyChanged("Kilometer");
             }
         }
 
@@ -135,10 +138,12 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Meter"] = "Поле с количеством метров не может быть пустым.";
-                    return;
                 }
-
-                if (value.Length <= 3)
+                else if (int.TryParse(value, out int m))
+                {
+                    errors["Kilometer"] = $"Невозможно преобразовать значение '{value}'.";
+                }
+                else if (value.Length <= 3)
                 {
                     meter = value;
                     OnPropertyChanged("Meter");

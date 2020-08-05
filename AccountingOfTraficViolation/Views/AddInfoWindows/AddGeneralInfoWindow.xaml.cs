@@ -60,5 +60,15 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 textBox.SeparatorTemplate('-', 2, 10);
             }
         }
+
+        private void FillTimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is TextBox)
+            {
+                TextBox textBox = (TextBox)sender;
+
+                textBox.SeparatorTemplate(':', 2, 5);
+            }
+        }
     }
 }

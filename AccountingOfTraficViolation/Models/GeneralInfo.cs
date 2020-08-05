@@ -1,4 +1,3 @@
-using AccountingOfTraficViolation.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +12,8 @@ namespace AccountingOfTraficViolation.Models
     [Table("GeneralInfos")]
     public partial class GeneralInfo : MainTable
     {
+        private static Regex[] cardNumberRegexes;
+
         private byte сardType;
         private byte incidentType;
         private byte dayOfWeek;
@@ -20,19 +21,21 @@ namespace AccountingOfTraficViolation.Models
         private DateTime fillDate;
         private DateTime incidentDate;
         private TimeSpan fillTime;
-        private Regex cardNumberRegex;
+
+        static GeneralInfo()
+        {
+            cardNumberRegexes = new Regex[] { new Regex(@"\d{2}-\d{7}(-[0-9])?$"), new Regex(@"\d{9}[0-9]?$") };
+        }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public GeneralInfo()
         {
             Cases = new HashSet<Case>();
 
-            cardNumberRegex = new Regex(@"\d{2}-\d{7}(-[0-9])?$");
-
             CardNumber = "";
 
-            fillDate = MinimumDate;
-            incidentDate = MinimumDate;
+            fillDate = DateTime.Now;
+            incidentDate = DateTime.Now;
         }
 
         [NotAssign]
@@ -52,19 +55,24 @@ namespace AccountingOfTraficViolation.Models
                     return;
                 }
 
-                if (cardNumberRegex.IsMatch(value) || long.TryParse(value, out long cn))
+                foreach (var cardNumberRegex in cardNumberRegexes)
                 {
-                    cardNumber = value.GetStrWithoutSeparator('-');
-                    errors["CardNumber"] = null;
+                    if (cardNumberRegex.IsMatch(value))
+                    {
+                        cardNumber = value.GetStrWithoutSeparator('-');
+                        errors["CardNumber"] = null;
+                        break;
+                    }
+                    else
+                    {
+                        cardNumber = value;
+                        errors["CardNumber"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                                 "- 00-0000000-0*\n" +
+                                                 "- 0000000000*\n" +
+                                                 "* - не обязательный элемент";
+                    }
                 }
-                else
-                {
-                    cardNumber = value;
-                    errors["CardNumber"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
-                                             "- 00-0000000-0*\n" +
-                                             "- 0000000000*\n" +
-                                             "* - не обязательный элемент";
-                }
+
 
                 OnPropertyChanged("CardNumber");
             }

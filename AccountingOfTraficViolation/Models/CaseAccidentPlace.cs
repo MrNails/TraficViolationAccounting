@@ -79,7 +79,7 @@ namespace AccountingOfTraficViolation.Models
                     errors["AccidentOnHighwayId"] = "»д проишестви€ на автодороге не может быть меньше 0.";
                 }
             }
-        }
+        } 
         public int? AccidentOnVillageId
         {
             get { return accidentOnVillageId; }

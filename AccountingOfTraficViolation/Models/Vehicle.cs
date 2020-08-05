@@ -10,6 +10,10 @@ namespace AccountingOfTraficViolation.Models
 {
     public partial class Vehicle : MainTable
     {
+        private static Regex[] technicalFaultsRegexes;
+        private static Regex[] EDRPOU_CodeRegexes;
+        private static Regex[] corruptionCodeRegexes;
+
         private bool trailerAvailability;
         private short type;
         private short insurerCode;
@@ -31,9 +35,13 @@ namespace AccountingOfTraficViolation.Models
         private string registrationSertificate;
         private string seriesOfRegistrationSertificate;
         private DateTime policyEndDate;
-        private Regex technicalFaultsRegex;
-        private Regex EDRPOU_CodeRegex;
-        private Regex corruptionCodeRegex;
+
+        static Vehicle()
+        {
+            technicalFaultsRegexes = new Regex[] { new Regex(@"\d{1},\d{1}$"), new Regex(@"\d{2}$") };
+            EDRPOU_CodeRegexes = new Regex[] { new Regex(@"\d{7}-\d{3}$"), new Regex(@"\d{10}$") };
+            corruptionCodeRegexes = new Regex[] { new Regex(@"\d{2},\d{2},\d{2},\d{2}$"), new Regex(@"\d{2},\d{2},\d{2},\d{2}$") };
+        }
 
         public Vehicle()
         {
@@ -55,12 +63,7 @@ namespace AccountingOfTraficViolation.Models
             RegistrationSertificate = "";
             SeriesOfRegistrationSertificate = "";
 
-
-            technicalFaultsRegex = new Regex(@"\d{1},\d{1}$");
-            EDRPOU_CodeRegex = new Regex(@"\d{7}-\d{3}$");
-            corruptionCodeRegex = new Regex(@"\d{2},\d{2},\d{2},\d{2}$");
-
-            policyEndDate = MinimumDate;
+            policyEndDate = DateTime.Now;
         }
 
         [NotAssign]
@@ -492,18 +495,24 @@ namespace AccountingOfTraficViolation.Models
                 {
                     errors["TechnicalFaults"] = "Поле технические неисправности не может быть пустым.";
                     technicalFaults = null;
+                    return;
                 }
-                else if (technicalFaultsRegex.IsMatch(value) || int.TryParse(value, out int tf))
+
+                foreach (var technicalFaultsRegex in technicalFaultsRegexes)
                 {
-                    technicalFaults = value.GetStrWithoutSeparator(',');
-                    errors["TechnicalFaults"] = null;
-                }
-                else
-                {
-                    technicalFaults = value;
-                    errors["TechnicalFaults"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
-                                             "\t- 0,0\n" +
-                                             "\t- 00";
+                    if (technicalFaultsRegex.IsMatch(value))
+                    {
+                        technicalFaults = value.GetStrWithoutSeparator(',');
+                        errors["TechnicalFaults"] = null;
+                        break;
+                    }
+                    else
+                    {
+                        technicalFaults = value;
+                        errors["TechnicalFaults"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                                 "\t- 0,0\n" +
+                                                 "\t- 00";
+                    }
                 }
 
                 OnPropertyChanged("TechnicalFaults");
@@ -521,18 +530,24 @@ namespace AccountingOfTraficViolation.Models
                 {
                     errors["EDRPOU_Code"] = "Код ЕДРПОУ не может быть пустым.";
                     _EDRPOU_Code = null;
+                    return;
                 }
-                else if (EDRPOU_CodeRegex.IsMatch(value) || long.TryParse(value, out long edrpou))
+
+                foreach (var EDRPOU_CodeRegex in EDRPOU_CodeRegexes)
                 {
-                    _EDRPOU_Code = value.GetStrWithoutSeparator('-');
-                    errors["EDRPOU_Code"] = null;
-                }
-                else
-                {
-                    _EDRPOU_Code = value;
-                    errors["EDRPOU_Code"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
-                                             "\t- 0000000-000\n" +
-                                             "\t- 0000000000";
+                    if (EDRPOU_CodeRegex.IsMatch(value))
+                    {
+                        _EDRPOU_Code = value.GetStrWithoutSeparator('-');
+                        errors["EDRPOU_Code"] = null;
+                        break;
+                    }
+                    else
+                    {
+                        _EDRPOU_Code = value;
+                        errors["EDRPOU_Code"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                                 "\t- 0000000-000\n" +
+                                                 "\t- 0000000000";
+                    }
                 }
 
                 OnPropertyChanged("EDRPOU_Code");
@@ -549,17 +564,22 @@ namespace AccountingOfTraficViolation.Models
                 {
                     corruptionCode = null;
                 }
-                else if (corruptionCodeRegex.IsMatch(value) || int.TryParse(value, out int cd))
+
+                foreach (var corruptionCodeRegex in corruptionCodeRegexes)
                 {
-                    corruptionCode = value.GetStrWithoutSeparator(',');
-                    errors["CorruptionCode"] = null;
-                }
-                else
-                {
-                    corruptionCode = value;
-                    errors["CorruptionCode"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
-                                             "\t- 00,00,00,00\n" +
-                                             "\t- 00000000";
+                    if (corruptionCodeRegex.IsMatch(value))
+                    {
+                        corruptionCode = value.GetStrWithoutSeparator(',');
+                        errors["CorruptionCode"] = null;
+                        break;
+                    }
+                    else
+                    {
+                        corruptionCode = value;
+                        errors["CorruptionCode"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                                 "\t- 00,00,00,00\n" +
+                                                 "\t- 00000000";
+                    }
                 }
 
                 OnPropertyChanged("CorruptionCode");

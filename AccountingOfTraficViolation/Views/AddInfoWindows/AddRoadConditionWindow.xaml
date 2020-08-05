@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
         mc:Ignorable="d"
-        Title="Дорожные условия" Height="370" Width="920" ResizeMode="NoResize">
+        Title="Дорожные условия" Height="370" Width="920" MinHeight="250" MinWidth="900">
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.8*"/>

@@ -79,6 +79,7 @@
     <Compile Include="Models\MainTable.cs" />
     <Compile Include="Services\Attributes.cs" />
     <Compile Include="Services\Converters.cs" />
+    <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\SimpleExtensions.cs" />
     <Compile Include="Services\RelayCommand.cs" />
     <Compile Include="Services\VisualObjectExtensions.cs" />

@@ -10,6 +10,8 @@ namespace AccountingOfTraficViolation.Models
 {
     public partial class ParticipantsInformation : MainTable
     {
+        private static Regex[] pddViolationRegexes;
+
         private bool gender;
         private byte age;
         private byte qualification;
@@ -21,7 +23,11 @@ namespace AccountingOfTraficViolation.Models
         private string patronymic;
         private string citizenship;
         private string _PDDViolation;
-        private Regex pddViolationRegex;
+
+        static ParticipantsInformation()
+        {
+            pddViolationRegexes = new Regex[] { new Regex(@"\d{2},\d{2}$"), new Regex(@"\d{4}$") };
+        }
 
         public ParticipantsInformation()
         {
@@ -33,8 +39,6 @@ namespace AccountingOfTraficViolation.Models
             PDDViolation = "";
             Qualification = 0;
             Age = 0;
-
-            pddViolationRegex = new Regex(@"\d{2},\d{2}$");
         }
 
         [NotAssign]
@@ -257,18 +261,23 @@ namespace AccountingOfTraficViolation.Models
                     return;
                 }
 
-                if (pddViolationRegex.IsMatch(value) || int.TryParse(value, out int pdd))
+                foreach (var pddViolationRegex in pddViolationRegexes)
                 {
-                    _PDDViolation = value.GetStrWithoutSeparator(',');
-                    errors["PDDViolation"] = null;
+                    if (pddViolationRegex.IsMatch(value))
+                    {
+                        _PDDViolation = value.GetStrWithoutSeparator(',');
+                        errors["PDDViolation"] = null;
+                        break;
+                    }
+                    else
+                    {
+                        _PDDViolation = value;
+                        errors["PDDViolation"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                             "- 00,00\n" +
+                             "- 0000\n";
+                    }
                 }
-                else
-                {
-                    _PDDViolation = value;
-                    errors["PDDViolation"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
-                         "- 00,00\n" +
-                         "- 0000\n";
-                }
+
 
                 OnPropertyChanged("PDDViolation");
             }

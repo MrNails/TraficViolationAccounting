@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
         mc:Ignorable="d"
-        Title="Место проишествия" Height="450" Width="800"  ResizeMode="NoResize">
+        Title="Место проишествия" Height="450" Width="800" MinHeight="430" MinWidth="750">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -104,10 +104,12 @@
 
                 <WrapPanel Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="194">
                     <TextBox Width="100" x:Name="KilometerTextBox" MaxLength="4" Style="{StaticResource TextBoxValidationTemplate}"
-                             Text="{Binding Path=Kilometer, ValidatesOnDataErrors=True}"/>
+                             Text="{Binding Path=Kilometer, ValidatesOnDataErrors=True}" 
+                             GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
                     <TextBlock Text="+" FontSize="15" FontWeight="Bold" Margin="4 0 4 0"/>
                     <TextBox Width="70" x:Name="MeterTextBox" MaxLength="3" Style="{StaticResource TextBoxValidationTemplate}"
-                             Text="{Binding Path=Meter, ValidatesOnDataErrors=True}"/>
+                             Text="{Binding Path=Meter, ValidatesOnDataErrors=True}"
+                             GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
                     <TextBlock Text="км" Style="{StaticResource TextBlockTemplateStyle}" Margin="45 0 0 0"/>
                     <TextBlock Text="м" Style="{StaticResource TextBlockTemplateStyle}" Margin="90 0 0 0"/>
                 </WrapPanel>

@@ -148,5 +148,22 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 DataContext = AccidentOnHighway;
             }
         }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox)
+            {
+                TextBox textBox = (TextBox)sender;
+                textBox.Text = textBox.Text.RemoveZeroBeforeText();
+            }
+        }
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox)
+            {
+                TextBox textBox = (TextBox)sender;
+                textBox.Text = textBox.Text.AddZeroBeforeText(textBox.MaxLength - textBox.Text.Length);
+            }
+        }
     }
 }

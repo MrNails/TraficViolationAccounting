@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
         mc:Ignorable="d"
-        Title="Информация о пострадавших" Height="450" Width="900">
+        Title="Информация о пострадавших" Height="450" Width="900" MinWidth="850" MinHeight="300">
     <Window.Resources>
         <DataTemplate x:Key="ListBoxDataTemplate">
             <StackPanel Width="205">

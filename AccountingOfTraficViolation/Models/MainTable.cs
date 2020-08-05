@@ -56,5 +56,35 @@ namespace AccountingOfTraficViolation
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
+
+        public string ToDebugString()
+        {
+            string text = "";
+
+            Type type = this.GetType();
+
+            text += $"{{{Environment.NewLine}Type: {type.Name}.{Environment.NewLine}Properties:{Environment.NewLine}\t{{{Environment.NewLine}";
+
+            foreach (var propertyInfo in type.GetProperties())
+            {
+                if (propertyInfo.GetMethod.IsPublic && !propertyInfo.GetMethod.IsVirtual)
+                {
+                    object value = propertyInfo.GetValue(this);
+
+                    if (value != null)
+                    {
+                        text += $"\t  {propertyInfo.Name}: {propertyInfo.GetValue(this)},{Environment.NewLine}";
+                    }
+                    else
+                    {
+                        text += $"\t  {propertyInfo.Name}: null,{Environment.NewLine}";
+                    }
+                }
+            }
+
+            text += $"\t}}{Environment.NewLine}}}{Environment.NewLine}";
+
+            return text;
+        }
     }
 }

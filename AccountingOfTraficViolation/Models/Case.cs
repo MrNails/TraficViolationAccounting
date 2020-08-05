@@ -21,7 +21,7 @@ namespace AccountingOfTraficViolation.Models
             Vehicles = new HashSet<Vehicle>();
             Victims = new HashSet<Victim>();
 
-            OpenAt = MinimumDate;
+            OpenAt = DateTime.Now;
         }
 
         [NotAssign]

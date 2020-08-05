@@ -23,9 +23,12 @@ namespace AccountingOfTraficViolation
     public partial class MainWindow : Window
     {
         private Models.User user;
+        private ILogger logger;
+
         public MainWindow()
         {
             InitializeComponent();
+            logger = new FileLogger("Errors.txt");
         }
 
         private void Welocme()
@@ -67,6 +70,7 @@ namespace AccountingOfTraficViolation
                 string innerExceptionMessage = ex.GetInnerExceptionMessage();
                 string exceptionMessage = "Ошибка: ";
 
+
                 if (string.IsNullOrEmpty(innerExceptionMessage))
                 {
                     exceptionMessage += ex.Message;
@@ -76,9 +80,12 @@ namespace AccountingOfTraficViolation
                     exceptionMessage += innerExceptionMessage;
                 }
 
-                exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
+                exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
 
-                MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                logger.ErrorMessage = exceptionMessage;
+                logger.Log();
+
                 this.Close();
             }
 
@@ -118,10 +125,11 @@ namespace AccountingOfTraficViolation
                     exceptionMessage += innerExceptionMessage;
                 }
 
-                exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
+                exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n" + "\n";
 
-                MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
+                MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                logger.ErrorMessage = exceptionMessage;
+                logger.Log();
             }
         }
         private void ShowCaseClick(object sender, RoutedEventArgs e)
@@ -146,9 +154,11 @@ namespace AccountingOfTraficViolation
                     exceptionMessage += innerExceptionMessage;
                 }
 
-                exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
+                exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
 
-                MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                logger.ErrorMessage = exceptionMessage;
+                logger.Log();
             }
         }
 
@@ -184,9 +194,11 @@ namespace AccountingOfTraficViolation
                     exceptionMessage += innerExceptionMessage;
                 }
 
-                exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
+                exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
 
-                MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                logger.ErrorMessage = exceptionMessage;
+                logger.Log();
 
                 this.Close();
             }
@@ -214,7 +226,7 @@ namespace AccountingOfTraficViolation
                     exceptionMessage += innerExceptionMessage;
                 }
 
-                exceptionMessage += "\nСтек трейс: " + ex.StackTrace;
+                exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
 
                 MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }

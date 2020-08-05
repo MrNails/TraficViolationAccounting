@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using AccountingOfTraficViolation.Views.AddInfoWindows;
 using AccountingOfTraficViolation.Models;
 using System.Windows.Media.Animation;
+using System.Data.Entity.Validation;
+using System.Runtime.ExceptionServices;
 
 namespace AccountingOfTraficViolation.Views
 {
@@ -50,6 +52,7 @@ namespace AccountingOfTraficViolation.Views
             {
                 generalInfo = generalInfoAddWindow.GeneralInfo;
                 GeneralInfoProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                StopBorderAnimation(GeneralInfoBorder);
             }
         }
         private void AccidentPlaceClick(object sender, RoutedEventArgs e)
@@ -59,6 +62,7 @@ namespace AccountingOfTraficViolation.Views
             {
                 AccidentPlaceProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
                 caseAccidentPlace = accidentPlaceWinow.CaseAccidentPlace;
+                StopBorderAnimation(AccidentPlaceBorder);
             }
         }
         private void RoadConditionClick(object sender, RoutedEventArgs e)
@@ -68,6 +72,7 @@ namespace AccountingOfTraficViolation.Views
             {
                 roadCondition = roadConditionWindow.RoadCondition;
                 RoadConditionProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                StopBorderAnimation(RoadConditionBorder);
             }
         }
         private void ParticipanInfoClick(object sender, RoutedEventArgs e)
@@ -77,6 +82,7 @@ namespace AccountingOfTraficViolation.Views
             {
                 participantsInformations = participantInfoWindow.ParticipantsInformations;
                 ParticipanInfoProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                StopBorderAnimation(ParticipanInfoBorder);
             }
         }
         private void VehicleClick(object sender, RoutedEventArgs e)
@@ -86,6 +92,7 @@ namespace AccountingOfTraficViolation.Views
             {
                 vehicles = vehiclesWindow.Vehicles;
                 VehicleProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                StopBorderAnimation(VehicleBorder);
             }
         }
         private void VictimClick(object sender, RoutedEventArgs e)
@@ -95,6 +102,7 @@ namespace AccountingOfTraficViolation.Views
             {
                 victims = victimsWindow.Victims;
                 VictimProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                StopBorderAnimation(VictimBorder);
             }
         }
 
@@ -164,8 +172,47 @@ namespace AccountingOfTraficViolation.Views
 
             if (isValid)
             {
-                AddCaseToDB();
-                DialogResult = true;
+                try
+                {
+                    AddCaseToDB();
+                }
+                catch (Exception ex)
+                {
+                    string entitiesInfo = "";
+                    entitiesInfo += generalInfo?.ToDebugString();
+                    entitiesInfo += caseAccidentPlace?.AccidentOnHighway.ToDebugString();
+                    entitiesInfo += caseAccidentPlace?.AccidentOnVillage.ToDebugString();
+                    entitiesInfo += roadCondition?.ToDebugString();
+
+                    if (participantsInformations != null)
+                    {
+                        foreach (var participantsInformation in participantsInformations)
+                        {
+                            entitiesInfo += participantsInformation.ToDebugString();
+                        }
+                    }
+                    if (vehicles != null)
+                    {
+                        foreach (var vehicle in vehicles)
+                        {
+                            entitiesInfo += vehicle.ToDebugString();
+                        }
+                    }
+                    if (victims != null)
+                    {
+                        foreach (var victim in victims)
+                        {
+                            entitiesInfo += victim.ToDebugString();
+                        }
+                    }
+
+                    throw new Exception($"{ex.Message}{Environment.NewLine}Информация о добавленных объектах:" +
+                                       $"{Environment.NewLine}{entitiesInfo}");
+                }
+                finally
+                {
+                    DialogResult = true;
+                }
             }
         }
         private void RejectClick(object sender, RoutedEventArgs e)
@@ -237,8 +284,6 @@ namespace AccountingOfTraficViolation.Views
         {
             using (TVAContext context = new TVAContext())
             {
-                caseAccidentPlace = new CaseAccidentPlace();
-
                 context.GeneralInfos.Add(generalInfo);
                 context.RoadConditions.Add(roadCondition);
 

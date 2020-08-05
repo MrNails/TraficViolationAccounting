@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
         mc:Ignorable="d"
-        Title="Транспорт и его пренадлежность" Height="600" Width="950" ResizeMode="NoResize">
+        Title="Транспорт и его пренадлежность" Height="600" Width="950" MinHeight="470" MinWidth="925">
     <Window.Resources>
         <DataTemplate x:Key="ListBoxDataTemplate">
             <StackPanel Width="195">

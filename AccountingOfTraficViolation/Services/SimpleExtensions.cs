@@ -75,6 +75,48 @@ namespace AccountingOfTraficViolation.Services
 
             return tempStr;
         }
+        public static string AddZeroBeforeText(this string str, int zerosNumber)
+        {
+            if (string.IsNullOrEmpty(str) || zerosNumber < 0)
+            {
+                return str;
+            }
+            
+            string tempStr = "";
+
+            for (int i = 0; i < zerosNumber; i++)
+            {
+                tempStr += "0";
+            }
+
+            tempStr += string.Copy(str);
+
+            return tempStr;
+        }
+        public static string RemoveZeroBeforeText(this string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return str;
+            }
+
+            string tempStr = string.Copy(str);
+
+            for (int i = 0; i < tempStr.Length; i++)
+            {
+                if (tempStr[i] == '0')
+                {
+                    tempStr = tempStr.Remove(i, 1);
+                    i--;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return tempStr;
+        }
     }
 
     public static class ObservableCollectionExtension
