@@ -24,6 +24,7 @@ namespace AccountingOfTraficViolation
     {
         private Models.User user;
         private ILogger logger;
+        private AccountSettingsWindow accountSettingsWindow;
 
         public MainWindow()
         {
@@ -229,6 +230,19 @@ namespace AccountingOfTraficViolation
                 exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
 
                 MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void AccountSettings_Click(object sender, RoutedEventArgs e)
+        {
+            if (accountSettingsWindow == null)
+            {
+                accountSettingsWindow = new AccountSettingsWindow(user);
+                accountSettingsWindow.Show();
+                accountSettingsWindow.Closed += (obj, arg) => 
+                {
+                    accountSettingsWindow = null;
+                };
             }
         }
     }

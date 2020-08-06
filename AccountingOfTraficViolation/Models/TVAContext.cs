@@ -27,6 +27,7 @@ namespace AccountingOfTraficViolation.Models
 
                 this.SaveChanges();
             }
+
         }
         public virtual DbSet<AccidentOnHighway> AccidentOnHighways { get; set; }
         public virtual DbSet<AccidentOnVillage> AccidentOnVillages { get; set; }

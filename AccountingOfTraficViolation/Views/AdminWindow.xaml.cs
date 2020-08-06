@@ -119,13 +119,16 @@ namespace AccountingOfTraficViolation.Views
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (userVM.IsCurrentUserChanged &&
-                MessageBox.Show("Изменение не сохранены, продолжить?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+            if (userVM.IsCurrentUserChanged)
             {
+                if (MessageBox.Show("Изменение не сохранены, продолжить?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                {
+                    return;
+                }
                 userVM.DiscardChange();
-                return;
             }
 
+            userVM.DiscardChange();
             userVM.Dispose();
         }
     }

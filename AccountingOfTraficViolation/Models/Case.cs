@@ -69,6 +69,11 @@ namespace AccountingOfTraficViolation.Models
             get { return state; }
             set
             {
+                if (value == "CLOSE")
+                {
+                    CloseAt = DateTime.Now;
+                }
+
                 state = value;
                 OnPropertyChanged("State");
             }

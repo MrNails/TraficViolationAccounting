@@ -139,6 +139,7 @@ namespace AccountingOfTraficViolation.Views
             {
                 Button button = (Button)sender;
                 button.Content = "Отменить";
+                FindConditionExpander.IsExpanded = false;
 
                 FindCase();
 

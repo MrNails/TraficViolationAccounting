@@ -84,7 +84,7 @@ namespace AccountingOfTraficViolation.ViewModels
                     }
 
                     CaseReviewWindow caseReviewWindow = new CaseReviewWindow((Case)obj, user);
-                    if (caseReviewWindow.ShowDialog() == true)
+                    if (caseReviewWindow.ShowDialog() == true && caseReviewWindow.Case.State != "CLOSE")
                     {
                         currentCase.Assign(caseReviewWindow.Case);
                         CaseChanged = true;

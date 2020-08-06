@@ -563,6 +563,7 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     corruptionCode = null;
+                    return;
                 }
 
                 foreach (var corruptionCodeRegex in corruptionCodeRegexes)
