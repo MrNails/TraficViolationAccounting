@@ -175,6 +175,7 @@ namespace AccountingOfTraficViolation.Views
                 try
                 {
                     AddCaseToDB();
+                    MessageBox.Show("Дело успешно добавлено.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {

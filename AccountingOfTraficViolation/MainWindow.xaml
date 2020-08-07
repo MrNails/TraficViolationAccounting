@@ -22,8 +22,14 @@
             </MenuItem>
             <MenuItem x:Name="AdminWindowMenuItem" Header="Для администратора" Click="AdminWindowMenuItem_Click"/>
         </Menu>
-        <TextBlock x:Name="WelcomeTextBlock" Grid.ColumnSpan="2" FontSize="30" TextAlignment="Center"
-                   HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"/>
+        <WrapPanel Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock FontSize="30" TextAlignment="Center" TextWrapping="Wrap">
+                <Run Text="Добро пожаловать,"/>
+                <Run Text="{Binding Path=Name}"/>
+                <Run Text="{Binding Path=Surname}"/>
+            </TextBlock>
+        </WrapPanel>
+
         <Button Grid.Row="1"  Grid.Column="0" Content="Открыть дело" Width="150" Click="OpenCaseClick"
                 VerticalAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonTemplateStyle}" />
         <Button Grid.Row="1"  Grid.Column="1" Content="Просмотреть дела" Width="150" Click="ShowCaseClick"

@@ -30,19 +30,12 @@ namespace AccountingOfTraficViolation
         {
             InitializeComponent();
             logger = new FileLogger("Errors.txt");
+
+            DataContext = user;
         }
 
-        private void Welocme()
+        private void InitUser()
         {
-            if (!string.IsNullOrEmpty(user.Name) && !string.IsNullOrEmpty(user.Surname))
-            {
-                WelcomeTextBlock.Text = $"Добро пожаловать, {user.Name} {user.Surname}";
-            }
-            else
-            {
-                WelcomeTextBlock.Text = "Добро пожаловать";
-            }
-
             if (user.Role == 0)
             {
                 AdminWindowMenuItem.Visibility = Visibility.Visible;
@@ -51,6 +44,8 @@ namespace AccountingOfTraficViolation
             {
                 AdminWindowMenuItem.Visibility = Visibility.Hidden;
             }
+
+            DataContext = user;
         }
 
         private void Window_Initialized(object sender, EventArgs e)
@@ -68,29 +63,12 @@ namespace AccountingOfTraficViolation
             }
             catch (Exception ex)
             {
-                string innerExceptionMessage = ex.GetInnerExceptionMessage();
-                string exceptionMessage = "Ошибка: ";
-
-
-                if (string.IsNullOrEmpty(innerExceptionMessage))
-                {
-                    exceptionMessage += ex.Message;
-                }
-                else
-                {
-                    exceptionMessage += innerExceptionMessage;
-                }
-
-                exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
-
-                MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                logger.ErrorMessage = exceptionMessage;
-                logger.Log();
+                CatchError(ex);
 
                 this.Close();
             }
 
-            Welocme();
+            InitUser();
         }
 
         private void OpenCaseClick(object sender, RoutedEventArgs e)
@@ -114,23 +92,7 @@ namespace AccountingOfTraficViolation
             }
             catch (Exception ex)
             {
-                string innerExceptionMessage = ex.GetInnerExceptionMessage();
-                string exceptionMessage = "Ошибка: ";
-
-                if (string.IsNullOrEmpty(innerExceptionMessage))
-                {
-                    exceptionMessage += ex.Message;
-                } 
-                else
-                {
-                    exceptionMessage += innerExceptionMessage;
-                }
-
-                exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n" + "\n";
-
-                MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                logger.ErrorMessage = exceptionMessage;
-                logger.Log();
+                CatchError(ex);
             }
         }
         private void ShowCaseClick(object sender, RoutedEventArgs e)
@@ -143,23 +105,7 @@ namespace AccountingOfTraficViolation
             }
             catch (Exception ex)
             {
-                string innerExceptionMessage = ex.GetInnerExceptionMessage();
-                string exceptionMessage = "Ошибка: ";
-
-                if (string.IsNullOrEmpty(innerExceptionMessage))
-                {
-                    exceptionMessage += ex.Message;
-                }
-                else
-                {
-                    exceptionMessage += innerExceptionMessage;
-                }
-
-                exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
-
-                MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                logger.ErrorMessage = exceptionMessage;
-                logger.Log();
+                CatchError(ex);
             }
         }
 
@@ -174,7 +120,7 @@ namespace AccountingOfTraficViolation
                 {
                     user = logInWindow.User;
                     this.Visibility = Visibility.Visible;
-                    Welocme();
+                    InitUser();
                 }
                 else
                 {
@@ -183,23 +129,7 @@ namespace AccountingOfTraficViolation
             }
             catch (Exception ex)
             {
-                string innerExceptionMessage = ex.GetInnerExceptionMessage();
-                string exceptionMessage = "Ошибка: ";
-
-                if (string.IsNullOrEmpty(innerExceptionMessage))
-                {
-                    exceptionMessage += ex.Message;
-                }
-                else
-                {
-                    exceptionMessage += innerExceptionMessage;
-                }
-
-                exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
-
-                MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                logger.ErrorMessage = exceptionMessage;
-                logger.Log();
+                CatchError(ex);
 
                 this.Close();
             }
@@ -215,21 +145,7 @@ namespace AccountingOfTraficViolation
             }
             catch (Exception ex)
             {
-                string innerExceptionMessage = ex.GetInnerExceptionMessage();
-                string exceptionMessage = "Ошибка: ";
-
-                if (string.IsNullOrEmpty(innerExceptionMessage))
-                {
-                    exceptionMessage += ex.Message;
-                }
-                else
-                {
-                    exceptionMessage += innerExceptionMessage;
-                }
-
-                exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
-
-                MessageBox.Show(exceptionMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                CatchError(ex);
             }
         }
 
@@ -237,13 +153,43 @@ namespace AccountingOfTraficViolation
         {
             if (accountSettingsWindow == null)
             {
-                accountSettingsWindow = new AccountSettingsWindow(user);
-                accountSettingsWindow.Show();
-                accountSettingsWindow.Closed += (obj, arg) => 
+                try
                 {
-                    accountSettingsWindow = null;
-                };
+                    accountSettingsWindow = new AccountSettingsWindow(user);
+                    accountSettingsWindow.Show();
+                    accountSettingsWindow.Closed += (obj, arg) =>
+                    {
+                        accountSettingsWindow = null;
+                    };
+                }
+                catch (Exception ex)
+                {
+                    CatchError(ex);
+
+                    this.Close();
+                }
             }
+        }
+
+        private void CatchError(Exception ex)
+        {
+            string innerExceptionMessage = ex.GetInnerExceptionMessage();
+            string exceptionMessage = "Ошибка: ";
+
+            if (string.IsNullOrEmpty(innerExceptionMessage))
+            {
+                exceptionMessage += ex.Message;
+            }
+            else
+            {
+                exceptionMessage += innerExceptionMessage;
+            }
+
+            exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
+
+            MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            logger.ErrorMessage = exceptionMessage;
+            logger.Log();
         }
     }
 }
