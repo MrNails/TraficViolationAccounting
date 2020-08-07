@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views"
         mc:Ignorable="d"
         Title="AccountSettingsWindow" Height="400" Width="600" MinHeight="250" MinWidth="350"
-        Closing="Window_Closing">
+        Closing="Window_Closing" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -15,40 +15,56 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
         </Grid.RowDefinitions>
 
         <TextBlock Text="Здесь вы можете настраивать свой аккаунт" FontSize="25" FontWeight="Bold"
                    VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
 
-        <DockPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5" Width="230">
-            <TextBlock Text="Имя:" Style="{StaticResource TextBlockTemplateStyle}" DockPanel.Dock="Left"
+        <GroupBox Header="Персональные данные" FontSize="13"  Grid.Row="1" Grid.Column="0">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <DockPanel Margin="5" Width="230">
+                    <TextBlock Text="Имя:" Style="{StaticResource TextBlockTemplateStyle}" DockPanel.Dock="Left"
                        TextAlignment="Center" Height="17"/>
-            <TextBox Text="{Binding Path=Name, Mode=OneWay, ValidatesOnDataErrors=True}" MaxLength="15" Width="120"
+                    <TextBox Text="{Binding Path=Name, ValidatesOnDataErrors=True}" MaxLength="15" Width="120"
                      Style="{StaticResource TextBoxValidationTemplate}" DockPanel.Dock="Right" HorizontalAlignment="Right"
-                     TextChanged="TextBox_TextChanged"/>
-        </DockPanel>
-        <DockPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5" Width="230">
-            <TextBlock Text="Фамилия:" Style="{StaticResource TextBlockTemplateStyle}" 
+                     TextChanged="PersonalTextBox_TextChanged"/>
+                </DockPanel>
+                <DockPanel  Margin="5" Width="230">
+                    <TextBlock Text="Фамилия:" Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" Height="17" DockPanel.Dock="Left"/>
-            <TextBox Text="{Binding Path=Surname, Mode=OneWay, ValidatesOnDataErrors=True}" MaxLength="15" Width="120"
+                    <TextBox Text="{Binding Path=Surname, ValidatesOnDataErrors=True}" MaxLength="15" Width="120"
                      Style="{StaticResource TextBoxValidationTemplate}" HorizontalAlignment="Right" DockPanel.Dock="Right"
-                     TextChanged="TextBox_TextChanged"/>
-        </DockPanel>
-        <DockPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5" Width="230">
-            <TextBlock Text="Пароль:" Style="{StaticResource TextBlockTemplateStyle}" 
-                       TextAlignment="Center" Height="17" DockPanel.Dock="Left"/>
-            <TextBox x:Name="PasswordTextBox" Text="{Binding Path=Password, Mode=OneWay, ValidatesOnDataErrors=True}" MaxLength="20" Width="160"
-                     Style="{StaticResource TextBoxValidationTemplate}" DockPanel.Dock="Right" HorizontalAlignment="Right"
-                     TextChanged="TextBox_TextChanged"/>
-        </DockPanel>
-        <WrapPanel Grid.Row="4" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Button x:Name="SaveChangeButton" Content="Сохранить" Style="{StaticResource ButtonTemplateStyle}" Width="100"
-                    Click="SaveChangeClick" Margin="0 0 15 0" IsEnabled="False"/>
-            <Button x:Name="CancelButton" Content="Отменить" Style="{StaticResource ButtonTemplateStyle}"  Width="100"
-                    Click="CancelClick" Margin="15 0 0 0" IsEnabled="False"/>
-        </WrapPanel>
-
+                     TextChanged="PersonalTextBox_TextChanged"/>
+                </DockPanel>
+                <WrapPanel Margin="10">
+                    <Button x:Name="SavePersonalDataButton" Content="Сохранить" Style="{StaticResource ButtonTemplateStyle}" Width="100"
+                    Click="SaveChangeClick" Margin="15 0 15 0" IsEnabled="False" Tag="1"/>
+                    <Button x:Name="DiscardPersonalDataButton" Content="Отменить" Style="{StaticResource ButtonTemplateStyle}"  Width="100"
+                    Click="CancelClick" Margin="15 0 0 0" IsEnabled="False" Tag="1"/>
+                </WrapPanel>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Данные аккаунта" FontSize="13"  Grid.Row="2" Grid.Column="0">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <DockPanel  Margin="5" Width="300">
+                    <TextBlock Text="Новый пароль:" Style="{StaticResource TextBlockTemplateStyle}" 
+                               TextAlignment="Center" Height="17" DockPanel.Dock="Left"/>
+                    <PasswordBox x:Name="FirstPasswordTextBox" MaxLength="20" Width="160"
+                             Style="{StaticResource TextBoxValidationTemplate}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                </DockPanel>
+                <DockPanel  Margin="5" Width="300">
+                    <TextBlock Text="Повторите пароль:" Style="{StaticResource TextBlockTemplateStyle}" 
+                               TextAlignment="Center" Height="17" DockPanel.Dock="Left"/>
+                    <PasswordBox x:Name="SecondPasswordTextBox"  MaxLength="20" Width="160"
+                             Style="{StaticResource TextBoxValidationTemplate}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                </DockPanel>
+                <WrapPanel Margin="10" HorizontalAlignment="Center">
+                    <Button  Content="Иземенить" Style="{StaticResource ButtonTemplateStyle}" Width="100"
+                    Click="SaveChangeClick" Margin="0 0 15 0" Tag="2"/>
+                    <Button Content="Очистить" Style="{StaticResource ButtonTemplateStyle}"  Width="100"
+                    Click="ClearPwdClick" Margin="15 0 0 0" Tag="3"/>
+                </WrapPanel>
+            </StackPanel>
+        </GroupBox>
     </Grid>
 </Window>
