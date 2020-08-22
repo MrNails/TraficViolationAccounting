@@ -18,14 +18,6 @@ namespace AccountingOfTraficViolation.Models
         {
             if (Database.CreateIfNotExists())
             {
-                Users.Add(new User
-                {
-                    Login = "user",
-                    Password = "12345",
-                    Role = 1
-                });
-
-                this.SaveChanges();
             }
 
         }

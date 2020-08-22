@@ -504,7 +504,7 @@ namespace AccountingOfTraficViolation.Models
                     {
                         technicalFaults = value.GetStrWithoutSeparator(',');
                         errors["TechnicalFaults"] = null;
-                        break;
+                        return;
                     }
                     else
                     {
@@ -539,7 +539,7 @@ namespace AccountingOfTraficViolation.Models
                     {
                         _EDRPOU_Code = value.GetStrWithoutSeparator('-');
                         errors["EDRPOU_Code"] = null;
-                        break;
+                        return;
                     }
                     else
                     {
@@ -572,7 +572,7 @@ namespace AccountingOfTraficViolation.Models
                     {
                         corruptionCode = value.GetStrWithoutSeparator(',');
                         errors["CorruptionCode"] = null;
-                        break;
+                        return;
                     }
                     else
                     {

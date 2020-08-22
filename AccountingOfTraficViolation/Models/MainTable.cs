@@ -31,7 +31,12 @@ namespace AccountingOfTraficViolation
 
         public string Error => error;
 
+
         public string this[string columnName] => errors.ContainsKey(columnName) ? errors[columnName] : null;
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
 
         public delegate void ErrorHandler(string errorMessage);
 

@@ -61,7 +61,7 @@ namespace AccountingOfTraficViolation.Models
                     {
                         cardNumber = value.GetStrWithoutSeparator('-');
                         errors["CardNumber"] = null;
-                        break;
+                        return;
                     }
                     else
                     {

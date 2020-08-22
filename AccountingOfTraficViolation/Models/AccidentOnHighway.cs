@@ -57,7 +57,7 @@ namespace AccountingOfTraficViolation.Models
                     {
                         errors["HighwayIndexAndNumber"] = null;
                         highwayIndexAndNumber = value.GetStrWithoutSeparator('-');
-                        break;
+                        return;
                     }
                     else
                     {
@@ -110,7 +110,7 @@ namespace AccountingOfTraficViolation.Models
                     errors["Kilometer"] = "ѕоле с количеством километров не может быть пустым.";
                     kilometer = null;
                 }
-                else if (int.TryParse(value, out int km))
+                else if (!int.TryParse(value, out int km))
                 {
                     errors["Kilometer"] = $"Ќевозможно преобразовать значение '{value}'.";
                 }
@@ -139,7 +139,7 @@ namespace AccountingOfTraficViolation.Models
                 {
                     errors["Meter"] = "ѕоле с количеством метров не может быть пустым.";
                 }
-                else if (int.TryParse(value, out int m))
+                else if (!int.TryParse(value, out int m))
                 {
                     errors["Kilometer"] = $"Ќевозможно преобразовать значение '{value}'.";
                 }

@@ -10,6 +10,11 @@ namespace AccountingOfTraficViolation.Models
 {
     public partial class RoadCondition : MainTable
     {
+        private static Regex[] surfaceStateRegexes;
+        private static Regex[] placeElementRegexes;
+        private static Regex[] roadDisadvantagesRegexes;
+        private static Regex[] technicalToolRegexes;
+
         private byte surfaceType;
         private byte illumination;
         private byte artificialConstructions;
@@ -20,20 +25,19 @@ namespace AccountingOfTraficViolation.Models
         private string placeElement;
         private string technicalTool;
         private string roadDisadvantages;
-        private Regex surfaceStateRegex;
-        private Regex placeElementRegex;
-        private Regex roadDisadvantagesRegex;
-        private Regex technicalToolRegex;
+
+        static RoadCondition()
+        {
+            surfaceStateRegexes = new Regex[] { new Regex(@"\d{1},\d{1}$"), new Regex(@"\d{2}$") };
+            placeElementRegexes = new Regex[] { new Regex(@"\d{2},\d{2},\d{2}$"), new Regex(@"\d{6}$") };
+            roadDisadvantagesRegexes = new Regex[] { new Regex(@"\d{2},\d{2},\d{2},\d{2},\d{2}$"), new Regex(@"\d{10}$") };
+            technicalToolRegexes = new Regex[] { new Regex(@"\d{2},\d{2},\d{2},\d{2},\d{2}$"), new Regex(@"\d{10}$") };
+        }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RoadCondition()
         {
             Cases = new HashSet<Case>();
-
-            surfaceStateRegex = new Regex(@"\d{1},\d{1}$");
-            placeElementRegex = new Regex(@"\d{2},\d{2},\d{2}$");
-            roadDisadvantagesRegex = new Regex(@"\d{2},\d{2},\d{2},\d{2},\d{2}$");
-            technicalToolRegex = new Regex(@"\d{2},\d{2},\d{2},\d{2},\d{2}$");
 
             SurfaceState = "";
             PlaceElement = "";
@@ -76,18 +80,23 @@ namespace AccountingOfTraficViolation.Models
                     return;
                 }
 
-                if (surfaceStateRegex.IsMatch(value) || int.TryParse(value, out int st))
+                foreach (var surfaceStateRegex in surfaceStateRegexes)
                 {
-                    surfaceState = value.GetStrWithoutSeparator(',');
-                    errors["SurfaceState"] = null;
+                    if (surfaceStateRegex.IsMatch(value))
+                    {
+                        surfaceState = value.GetStrWithoutSeparator(',');
+                        errors["SurfaceState"] = null;
+                        return;
+                    }
+                    else
+                    {
+                        surfaceState = value;
+                        errors["SurfaceState"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                                 "\t- 0,0\n" +
+                                                 "\t- 00";
+                    }
                 }
-                else
-                {
-                    surfaceState = value;
-                    errors["SurfaceState"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
-                                             "\t- 0,0\n" +
-                                             "\t- 00";
-                }
+
 
                 OnPropertyChanged("SurfaceState");
             }
@@ -140,18 +149,24 @@ namespace AccountingOfTraficViolation.Models
                 {
                     errors["PlaceElement"] = "Элемент не может быть пустым.";
                     placeElement = null;
+                    return;
                 }
-                else if (placeElementRegex.IsMatch(value) || int.TryParse(value, out int pl))
+
+                foreach (var placeElementRegex in placeElementRegexes)
                 {
-                    placeElement = value.GetStrWithoutSeparator(',');
-                    errors["PlaceElement"] = null;
-                }
-                else
-                {
-                    placeElement = value;
-                    errors["PlaceElement"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
-                                             "\t- 00,00,00\n" +
-                                             "\t- 000000";
+                    if (placeElementRegex.IsMatch(value))
+                    {
+                        placeElement = value.GetStrWithoutSeparator(',');
+                        errors["PlaceElement"] = null;
+                        return;
+                    }
+                    else
+                    {
+                        placeElement = value;
+                        errors["PlaceElement"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                                 "\t- 00,00,00\n" +
+                                                 "\t- 000000";
+                    }
                 }
 
                 OnPropertyChanged("PlaceElement");
@@ -187,19 +202,26 @@ namespace AccountingOfTraficViolation.Models
                 {
                     errors["TechnicalTool"] = "Поле с техническими приспособлениями не может быть пустым.";
                     technicalTool = null;
+                    return;
                 }
-                else if (technicalToolRegex.IsMatch(value) || long.TryParse(value, out long tt))
+
+                foreach (var technicalToolRegex in technicalToolRegexes)
                 {
-                    technicalTool = value.GetStrWithoutSeparator(',');
-                    errors["TechnicalTool"] = null;
+                    if (technicalToolRegex.IsMatch(value))
+                    {
+                        technicalTool = value.GetStrWithoutSeparator(',');
+                        errors["TechnicalTool"] = null;
+                        return;
+                    }
+                    else
+                    {
+                        technicalTool = value;
+                        errors["TechnicalTool"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                                 "\t- 00,00,00,00,00\n" +
+                                                 "\t- 0000000000";
+                    }
                 }
-                else
-                {
-                    technicalTool = value;
-                    errors["TechnicalTool"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
-                                             "\t- 00,00,00,00,00\n" +
-                                             "\t- 0000000000";
-                }
+
 
                 OnPropertyChanged("TechnicalTool");
             }
@@ -234,18 +256,24 @@ namespace AccountingOfTraficViolation.Models
                 {
                     errors["RoadDisadvantages"] = "Поле с неисправностями дороги не может быть пустым.";
                     roadDisadvantages = null;
+                    return;
                 }
-                else if (roadDisadvantagesRegex.IsMatch(value) || long.TryParse(value, out long rd))
+
+                foreach (var roadDisadvantagesRegex in roadDisadvantagesRegexes)
                 {
-                    roadDisadvantages = value.GetStrWithoutSeparator(',');
-                    errors["RoadDisadvantages"] = null;
-                }
-                else
-                {
-                    roadDisadvantages = value;
-                    errors["RoadDisadvantages"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
-                                             "\t- 00,00,00,00,00\n" +
-                                             "\t- 0000000000";
+                    if (roadDisadvantagesRegex.IsMatch(value))
+                    {
+                        roadDisadvantages = value.GetStrWithoutSeparator(',');
+                        errors["RoadDisadvantages"] = null;
+                        return;
+                    }
+                    else
+                    {
+                        roadDisadvantages = value;
+                        errors["RoadDisadvantages"] = "Строка не соответствует ни одному из ниже перечисленных форматов:\n" +
+                                                 "\t- 00,00,00,00,00\n" +
+                                                 "\t- 0000000000";
+                    }
                 }
 
                 OnPropertyChanged("RoadDisadvantages");
