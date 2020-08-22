@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -71,11 +72,6 @@ namespace AccountingOfTraficViolation.ViewModels
             });
             doubleClickCaseInfo = new RelayCommand(obj =>
             {
-                if (obj == null)
-                {
-                    return;
-                }
-
                 if (obj is Case)
                 {
                     if (currentCase == null)
@@ -193,7 +189,7 @@ namespace AccountingOfTraficViolation.ViewModels
                 {
                     TVAContext.Entry(CurrentCase).State = System.Data.Entity.EntityState.Modified;
                 }
-            });
+            }, (o) => o != null);
         }
 
         public RelayCommand ShowCaseInfo => showCaseInfo;
@@ -293,8 +289,20 @@ namespace AccountingOfTraficViolation.ViewModels
         }
         public async void SaveChangesAsync()
         {
-            await TVAContext.SaveChangesAsync();
-            CaseChanged = false;
+            using (var transaction = TVAContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    await TVAContext.SaveChangesAsync();
+                    CaseChanged = false;
+                    transaction.Commit();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    MessageBox.Show("Не возможно изменить данные, так как они уже были изменены кем-то другим", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    transaction.Rollback();
+                }
+            }
         }
 
         public void DiscardChanges()
