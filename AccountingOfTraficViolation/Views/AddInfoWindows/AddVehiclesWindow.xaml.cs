@@ -77,6 +77,8 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             }
 
             textBox.SeparatorTemplate(separator, indexes);
+
+            textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
         }
 
         private void VehiclesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

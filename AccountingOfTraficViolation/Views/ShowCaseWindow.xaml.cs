@@ -197,6 +197,7 @@ namespace AccountingOfTraficViolation.Views
             try
             {
                 casesVM.SaveChangesAsync();
+                MessageBox.Show("Данные успешно сохранены.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -208,6 +209,7 @@ namespace AccountingOfTraficViolation.Views
             try
             {
                 casesVM.DiscardChanges();
+                MessageBox.Show("Данные возвращены в начальное состояние.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

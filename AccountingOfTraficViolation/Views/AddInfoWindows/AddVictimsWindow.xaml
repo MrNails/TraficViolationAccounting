@@ -62,35 +62,35 @@
 
                 <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Имя" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentAccidentObject.Name, ValidatesOnDataErrors=True}"
+                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentAccidentObject.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                               Style="{StaticResource TextBoxValidationTemplate}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Фамилия" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentAccidentObject.Surname, ValidatesOnDataErrors=True}"
+                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentAccidentObject.Surname, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                               Style="{StaticResource TextBoxValidationTemplate}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Отчество" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentAccidentObject.Patronymic, ValidatesOnDataErrors=True}"
+                    <TextBox  Width="160" MaxLength="15" Text="{Binding Path=CurrentAccidentObject.Patronymic, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                               Style="{StaticResource TextBoxValidationTemplate}"/>
                 </StackPanel>
 
                 <WrapPanel Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Гражданство:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-                    <TextBox Width="50" MaxLength="3" Text="{Binding Path=CurrentAccidentObject.Citizenship, ValidatesOnDataErrors=True}"
+                    <TextBox Width="50" MaxLength="3" Text="{Binding Path=CurrentAccidentObject.Citizenship, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </WrapPanel>
 
                 <StackPanel Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <WrapPanel Margin="0 0 0 10">
                         <TextBlock Text="Умер (травмирован):" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-                        <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.IsDied, ValidatesOnDataErrors=True}"
+                        <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.IsDied, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                     </WrapPanel>
                     <WrapPanel>
                         <TextBlock Text="Категория:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 81 0"/>
-                        <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Category, ValidatesOnDataErrors=True}"
+                        <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.Category, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                     </WrapPanel>
                 </StackPanel>
@@ -98,12 +98,12 @@
                 <StackPanel Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <WrapPanel Margin="0 0 0 10">
                         <TextBlock Text="Возраст:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 112 0"/>
-                        <TextBox Width="30" MaxLength="3" Text="{Binding Path=CurrentAccidentObject.Age, ValidatesOnDataErrors=True}"
+                        <TextBox Width="30" MaxLength="3" Text="{Binding Path=CurrentAccidentObject.Age, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                     </WrapPanel>
                     <WrapPanel>
                         <TextBlock Text="Порядковый номер ТС:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 10 0"/>
-                        <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.TORSerialNumber, ValidatesOnDataErrors=True}"
+                        <TextBox Width="30" MaxLength="2" Text="{Binding Path=CurrentAccidentObject.TORSerialNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                     </WrapPanel>
                 </StackPanel>
@@ -120,7 +120,7 @@
                            VerticalAlignment="Center" HorizontalAlignment="Center" >
                     <TextBlock Text="Результаты медосмотра:" TextAlignment="Center" Height="17"
                                Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 10 0"/>
-                    <TextBox Width="30" MaxLength="3" Text="{Binding Path=CurrentAccidentObject.MedicalResult, ValidatesOnDataErrors=True}"
+                    <TextBox Width="30" MaxLength="3" Text="{Binding Path=CurrentAccidentObject.MedicalResult, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </WrapPanel>
 

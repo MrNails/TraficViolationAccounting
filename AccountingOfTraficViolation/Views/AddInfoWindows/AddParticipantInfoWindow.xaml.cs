@@ -75,6 +75,8 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             TextBox textBox = (TextBox)sender;
 
             textBox.SeparatorTemplate(',', 2);
+
+            textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
         }
 
         private void ParticipantsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

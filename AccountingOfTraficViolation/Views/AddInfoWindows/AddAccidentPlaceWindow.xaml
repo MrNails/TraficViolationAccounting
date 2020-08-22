@@ -37,7 +37,7 @@
                 <WrapPanel Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock  Text="Статус (код):" Style="{StaticResource TextBoxValidationTemplate}" Height="17"/>
                     <TextBox Padding="2" VerticalAlignment="Center" Width="50" Margin="10 0 0 0" 
-                             Text="{Binding Path=Status, ValidatesOnDataErrors=True}" Style="{StaticResource TextBoxValidationTemplate}"/>
+                             Text="{Binding Path=Status, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxValidationTemplate}"/>
                 </WrapPanel>
 
                 <TextBlock Grid.Column="1" Grid.Row="1" Text="Текстова информация" Style="{StaticResource TextBlockTemplateStyle}" 
@@ -52,25 +52,25 @@
 
                 <TextBox x:Name="VillageNameTextBox" Grid.Column="1" Grid.Row="2"
                          VerticalAlignment="Center" Padding="2" MaxLength="22" Style="{StaticResource TextBoxValidationTemplate}"
-                         Text="{Binding Path=Name, ValidatesOnDataErrors=True}"/>
+                         Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox x:Name="VillageDistrictTextBox" Grid.Column="1" Grid.Row="3"
                          VerticalAlignment="Center" Padding="2" MaxLength="22" Style="{StaticResource TextBoxValidationTemplate}"
-                         Text="{Binding Path=District, ValidatesOnDataErrors=True}"/>
+                         Text="{Binding Path=District, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox x:Name="VillageStreetTextBox" Grid.Column="1" Grid.Row="4" 
                          VerticalAlignment="Center" Padding="2" MaxLength="22" Style="{StaticResource TextBoxValidationTemplate}"
-                         Text="{Binding Path=Street, ValidatesOnDataErrors=True}"/>
+                         Text="{Binding Path=Street, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox x:Name="VillageBindingTextBox" Grid.Column="1" Grid.Row="5" 
                          VerticalAlignment="Center" Padding="2" MaxLength="47" Style="{StaticResource TextBoxValidationTemplate}"
-                         Text="{Binding Path=VillageBinding, ValidatesOnDataErrors=True}"/>
+                         Text="{Binding Path=VillageBinding, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBox Grid.Column="2" Grid.Row="2" x:Name="NameRegionalCodeTextBox" Style="{StaticResource TextBoxValidationTemplate}" 
-                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding Path=ReginalCodeOfName, ValidatesOnDataErrors=True}"/>
+                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding Path=ReginalCodeOfName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox Grid.Column="2" Grid.Row="3" x:Name="DistrictRegionalCodeTextBox" Style="{StaticResource TextBoxValidationTemplate}" 
-                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding Path=ReginalCodeOfDistrict, ValidatesOnDataErrors=True}"/>
+                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding Path=ReginalCodeOfDistrict, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox Grid.Column="2" Grid.Row="4" x:Name="StreetRegionalCodeTextBox" Style="{StaticResource TextBoxValidationTemplate}" 
-                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding Path=ReginalCodeOfStreet, ValidatesOnDataErrors=True}"/>
+                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding Path=ReginalCodeOfStreet, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox Grid.Column="2" Grid.Row="5" x:Name="BindingRegionalCodeTextBox" Style="{StaticResource TextBoxValidationTemplate}" 
-                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding Path=ReginalCodeOfBinding, ValidatesOnDataErrors=True}"/>
+                         Padding="2" VerticalAlignment="Center" Width="70" Text="{Binding Path=ReginalCodeOfBinding, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
 
         </GroupBox>
@@ -93,9 +93,9 @@
                 <TextBox Grid.Column="1" Grid.Row="0"  Name="RoadIndexAndNumberTextBox" MaxLength="9" 
                          Padding="2" VerticalAlignment="Center" Width="150" HorizontalAlignment="Left"
                          TextChanged="RoadIndexAndNumberTextBox_TextChanged" Style="{StaticResource TextBoxValidationTemplate}"
-                         Text="{Binding Path=HighwayIndexAndNumber, ValidatesOnDataErrors=True}"/>
+                         Text="{Binding Path=HighwayIndexAndNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=Explicit}"/>
                 <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
-                    <TextBox Margin="0 0 0 7" Text="{Binding Path=AdditionalInfo, ValidatesOnDataErrors=True}"
+                    <TextBox Margin="0 0 0 7" Text="{Binding Path=AdditionalInfo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                          Padding="2" VerticalAlignment="Center" VerticalContentAlignment="Center" MaxLength="20"
                              Style="{StaticResource TextBoxValidationTemplate}"/>
                     <TextBlock  Text="Дополнительная текстовая информация" FontSize="13"
@@ -104,11 +104,11 @@
 
                 <WrapPanel Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="194">
                     <TextBox Width="100" x:Name="KilometerTextBox" MaxLength="4" Style="{StaticResource TextBoxValidationTemplate}"
-                             Text="{Binding Path=Kilometer, ValidatesOnDataErrors=True}" 
+                             Text="{Binding Path=Kilometer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
                              GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
                     <TextBlock Text="+" FontSize="15" FontWeight="Bold" Margin="4 0 4 0"/>
                     <TextBox Width="70" x:Name="MeterTextBox" MaxLength="3" Style="{StaticResource TextBoxValidationTemplate}"
-                             Text="{Binding Path=Meter, ValidatesOnDataErrors=True}"
+                             Text="{Binding Path=Meter, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                              GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
                     <TextBlock Text="км" Style="{StaticResource TextBlockTemplateStyle}" Margin="45 0 0 0"/>
                     <TextBlock Text="м" Style="{StaticResource TextBlockTemplateStyle}" Margin="90 0 0 0"/>
@@ -117,7 +117,7 @@
                 <TextBlock Grid.Column="0" Grid.Row="3" Text="Привязка" Style="{StaticResource TextBlockTemplateStyle}" VerticalAlignment="Center"/>
                 <Border Grid.Column="1" Grid.Row="3" x:Name="RoadBindingBorder" BorderThickness="1"  VerticalAlignment="Center">
                     <TextBox  x:Name="RoadBindingTextBox" Padding="2" Height="50" MaxLength="47" 
-                              Text="{Binding Path=Binding, ValidatesOnDataErrors=True}"
+                              Text="{Binding Path=Binding, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                               Style="{StaticResource TextBoxValidationTemplate}"/>
                 </Border>
             </Grid>

@@ -51,7 +51,7 @@ namespace AccountingOfTraficViolation.Views
             if (generalInfoAddWindow.ShowDialog() == true)
             {
                 generalInfo = generalInfoAddWindow.GeneralInfo;
-                GeneralInfoProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                GeneralInfoProgresImage.Source = new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));
                 StopBorderAnimation(GeneralInfoBorder);
             }
         }
@@ -60,7 +60,7 @@ namespace AccountingOfTraficViolation.Views
             AddAccidentPlaceWindow accidentPlaceWinow = new AddAccidentPlaceWindow(caseAccidentPlace);
             if (accidentPlaceWinow.ShowDialog() == true)
             {
-                AccidentPlaceProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                AccidentPlaceProgresImage.Source = new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));
                 caseAccidentPlace = accidentPlaceWinow.CaseAccidentPlace;
                 StopBorderAnimation(AccidentPlaceBorder);
             }
@@ -71,7 +71,7 @@ namespace AccountingOfTraficViolation.Views
             if (roadConditionWindow.ShowDialog() == true)
             {
                 roadCondition = roadConditionWindow.RoadCondition;
-                RoadConditionProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                RoadConditionProgresImage.Source = new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));
                 StopBorderAnimation(RoadConditionBorder);
             }
         }
@@ -81,7 +81,7 @@ namespace AccountingOfTraficViolation.Views
             if (participantInfoWindow.ShowDialog() == true)
             {
                 participantsInformations = participantInfoWindow.ParticipantsInformations;
-                ParticipanInfoProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                ParticipanInfoProgresImage.Source = new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));
                 StopBorderAnimation(ParticipanInfoBorder);
             }
         }
@@ -91,7 +91,7 @@ namespace AccountingOfTraficViolation.Views
             if (vehiclesWindow.ShowDialog() == true)
             {
                 vehicles = vehiclesWindow.Vehicles;
-                VehicleProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                VehicleProgresImage.Source = new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));
                 StopBorderAnimation(VehicleBorder);
             }
         }
@@ -101,7 +101,7 @@ namespace AccountingOfTraficViolation.Views
             if (victimsWindow.ShowDialog() == true)
             {
                 victims = victimsWindow.Victims;
-                VictimProgresImage.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Images/AcceptIcon.jpg")));
+                VictimProgresImage.Source = new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));
                 StopBorderAnimation(VictimBorder);
             }
         }

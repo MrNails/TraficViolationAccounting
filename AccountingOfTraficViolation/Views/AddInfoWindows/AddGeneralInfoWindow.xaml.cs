@@ -58,6 +58,8 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
                 TextBox textBox = (TextBox)sender;
 
                 textBox.SeparatorTemplate('-', 2, 10);
+
+                textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
             }
         }
 

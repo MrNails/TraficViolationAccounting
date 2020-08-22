@@ -21,7 +21,8 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="145">
             <TextBlock Text="Номер карточки" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" Margin="0 0 0 10"/>
-            <TextBox x:Name="CardNumberTextBox" TextChanged="CardNumberTextBox_TextChanged" Text="{Binding Path=CardNumber, ValidatesOnDataErrors=True}"
+            <TextBox x:Name="CardNumberTextBox" TextChanged="CardNumberTextBox_TextChanged" 
+                     Text="{Binding Path=CardNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=Explicit}"
                      MaxLength="12" TextAlignment="Center" Padding="2" Style="{StaticResource TextBoxValidationTemplate}"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="200">
@@ -44,12 +45,12 @@
         </StackPanel>
         <WrapPanel Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource StackPanelTemplateStyle}" Width="175">
             <TextBlock Text="Тип проишествия" Style="{StaticResource TextBlockTemplateStyle}" Padding="0 0 10 0" Height="17"/>
-            <TextBox x:Name="IncidentTypeTextBox" Text="{Binding Path=IncidentType, ValidatesOnDataErrors=True}" Width="40" MaxLength="2"
+            <TextBox x:Name="IncidentTypeTextBox" Text="{Binding Path=IncidentType, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="40" MaxLength="2"
                      Style="{StaticResource TextBoxValidationTemplate}"/>
         </WrapPanel>
         <WrapPanel Grid.Row="0" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
             <TextBlock Text="Тип карточки" Style="{StaticResource TextBlockTemplateStyle}" Padding="0 0 10 0" Height="17"/>
-            <TextBox x:Name="CardTypeTextBox" Width="40" Text="{Binding Path=CardType, ValidatesOnDataErrors=True}" MaxLength="1"
+            <TextBox x:Name="CardTypeTextBox" Width="40" Text="{Binding Path=CardType, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MaxLength="1"
                      Style="{StaticResource TextBoxValidationTemplate}"/>
         </WrapPanel>
         <StackPanel Grid.Row="1" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="200">
@@ -61,7 +62,7 @@
         <StackPanel Grid.Row="2" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
             <TextBlock Text="Время заполнения (чч:мм:сс)" Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" Margin="0 0 0 10"/>
-            <TextBox x:Name="FillTimeTextBox" Text="{Binding Path=FillTime, ValidatesOnDataErrors=True}" MaxLength="8"
+            <TextBox x:Name="FillTimeTextBox" Text="{Binding Path=FillTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MaxLength="8"
                      Style="{StaticResource TextBoxValidationTemplate}" TextChanged="FillTimeTextBox_TextChanged"/>
         </StackPanel>
         <Button Grid.Row="4" Grid.Column="0" Content="Применить" Width="100" Margin="0 0 30 0" Click="AcceptClick"

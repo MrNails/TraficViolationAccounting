@@ -86,6 +86,8 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             }
 
             textBox.SeparatorTemplate(',', indexes);
+
+            textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
         }
 
     }
