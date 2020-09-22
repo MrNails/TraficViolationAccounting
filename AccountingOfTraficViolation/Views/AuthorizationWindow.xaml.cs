@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -33,19 +35,30 @@ namespace AccountingOfTraficViolation.Views
 
         private async void AcceptClick(object sender, RoutedEventArgs e)
         {
-            MainGrid.IsEnabled = false;
-
-            User = await CheckCerdentialsAsync();
-
-            MainGrid.IsEnabled = true;
-
-            if (User == null)
+            try
             {
-                MessageBox.Show("Пользователь не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+                MainGrid.IsEnabled = false;
 
-            DialogResult = true;
+                User = await CheckCerdentialsAsync();
+
+                MainGrid.IsEnabled = true;
+
+                if (User == null)
+                {
+                    MessageBox.Show("Пользователь не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                DialogResult = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                MainGrid.IsEnabled = true;
+            }
         }
         private void RefuseClick(object sender, RoutedEventArgs e)
         {

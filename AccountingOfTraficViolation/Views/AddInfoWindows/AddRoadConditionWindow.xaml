@@ -54,28 +54,32 @@
         <WrapPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
             <TextBlock Text="Состояние покрытия: " Style="{StaticResource TextBlockTemplateStyle}" Height="17"/>
             <TextBox x:Name="SurfaceStateTextBox" Width="40" MaxLength="3" 
-                     Text="{Binding Path=SurfaceState, ValidatesOnDataErrors=True, UpdateSourceTrigger=Explicit}"
-                     TextChanged="TemplateTextBox_TextChanged" Margin="38 0 0 0" Style="{StaticResource TextBoxValidationTemplate}"/>
+                     Text="{Binding Path=SurfaceState, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=2 1}"
+                     Margin="38 0 0 0" Style="{StaticResource TextBoxValidationTemplate}"/>
         </WrapPanel>
         <WrapPanel Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
             <TextBlock Text="Элементы участка: " Style="{StaticResource TextBlockTemplateStyle}" Height="17"/>
             <TextBox x:Name="PlaceElementTextBox" Width="80" MaxLength="8" 
-                     Text="{Binding Path=PlaceElement, ValidatesOnDataErrors=True, UpdateSourceTrigger=Explicit}"
-                     TextChanged="TemplateTextBox_TextChanged" Margin="14 0 0 0" Style="{StaticResource TextBoxValidationTemplate}"/>
+                     Text="{Binding Path=PlaceElement, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=2 2 5}"
+                     Margin="14 0 0 0" Style="{StaticResource TextBoxValidationTemplate}"/>
         </WrapPanel>
         <StackPanel Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Технические способы организации дорожного движения: " Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" TextWrapping="Wrap" Margin="0 0 0 10"/>
             <TextBox x:Name="TechnicalToolTextBox" MaxLength="14" Width="120" 
-                     TextChanged="TemplateTextBox_TextChanged" Style="{StaticResource TextBoxValidationTemplate}"
-                     Text="{Binding Path=TechnicalTool, ValidatesOnDataErrors=True, UpdateSourceTrigger=Explicit}"/>
+                     Style="{StaticResource TextBoxValidationTemplate}"
+                     Text="{Binding Path=TechnicalTool, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=2 2 5 8 11}"/>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Имеющиеся недостатки в содержании дороги (улицы): " Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" Height="17"/>
             <TextBox x:Name="RoadDisadvantagesTextBox" MaxLength="14" Width="120" 
-                     TextChanged="TemplateTextBox_TextChanged" Style="{StaticResource TextBoxValidationTemplate}"
-                     Text="{Binding Path=RoadDisadvantages, ValidatesOnDataErrors=True, UpdateSourceTrigger=Explicit}"/>
+                     Style="{StaticResource TextBoxValidationTemplate}"
+                     Text="{Binding Path=RoadDisadvantages, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=2 2 5 8 11}"/>
         </StackPanel>
         <WrapPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Button Content="Применить" Width="100" Margin="0 0 30 0" Click="AcceptClick"

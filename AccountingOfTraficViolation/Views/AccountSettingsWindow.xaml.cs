@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using AccountingOfTraficViolation.Models;
@@ -13,23 +14,40 @@ namespace AccountingOfTraficViolation.Views
     {
         private TVAContext TVAContext;
         private User user;
-        private User origUser;
         private bool isChanged;
 
         public AccountSettingsWindow(User user)
         {
             InitializeComponent();
 
-            TVAContext = new TVAContext();
-            origUser = user;
-            this.user = TVAContext.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+            this.user = user;
+
+            LoadContext();
 
             isChanged = false;
 
             DataContext = this.user;
         }
 
-        private void SaveChangeClick(object sender, RoutedEventArgs e)
+        private async void LoadContext(Action<Exception> action = null)
+        {
+            try
+            {
+                TVAContext = await Task.Run<TVAContext>(() =>
+                {
+                    TVAContext dbContext = new TVAContext();
+                    return dbContext;
+                });
+
+                TVAContext.Users.Attach(user);
+            }
+            catch (Exception ex) when (action != null)
+            {
+                action(ex);
+            }
+        }
+
+        private async void SaveChangeClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button button)
             {
@@ -68,8 +86,16 @@ namespace AccountingOfTraficViolation.Views
                         break;
                 }
 
-                TVAContext.SaveChanges();
-                MessageBox.Show("Данные успешно изменены");
+                try
+                {
+                    await TVAContext.SaveChangesAsync();
+                    MessageBox.Show("Данные успешно изменены.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Произошла ошибка при сохранении данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    throw ex;
+                }
             }
         }
         private void CancelClick(object sender, RoutedEventArgs e)
@@ -120,7 +146,6 @@ namespace AccountingOfTraficViolation.Views
                 TVAContext.CancelAllChanges();
             }
 
-            origUser.Assign(user);
             TVAContext.Dispose();
         }
 

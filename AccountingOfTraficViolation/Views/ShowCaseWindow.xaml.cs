@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AccountingOfTraficViolation.Models;
 using AccountingOfTraficViolation.ViewModels;
+using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Views
 {
@@ -33,7 +34,7 @@ namespace AccountingOfTraficViolation.Views
             casesVM = new CasesVM(user);
             this.user = user;
 
-            if (user.Role != 0)
+            if (user.Role == (byte)UserRole.User)
             {
                 FindLoginTextBox.Text = user.Login;
             }
@@ -41,8 +42,17 @@ namespace AccountingOfTraficViolation.Views
             DataContext = casesVM;
         }
 
-        private async void FindCase()
+        private async Task FindCase()
         {
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource = null;
+                return;
+            }
+
+            cancellationTokenSource = new CancellationTokenSource();
+
             ComboBoxItem statusItem = CaseStatusComboBox.SelectedItem as ComboBoxItem;
 
             string login = null;
@@ -87,29 +97,24 @@ namespace AccountingOfTraficViolation.Views
                 }
             }
 
-            if (cancellationTokenSource != null)
-            {
-                cancellationTokenSource.Cancel();
-                cancellationTokenSource = null;
-                return;
-            }
-
-            cancellationTokenSource = new CancellationTokenSource();
-
             try
             {
-                await casesVM.FindCaseAsync(c =>
+                await casesVM.FindCaseAsync(_case =>
                 {
-                    return (string.IsNullOrEmpty(login) || c.CreaterLogin == login || c.CreaterLogin.Contains(login)) &&
+                    return _case.Where (c => (string.IsNullOrEmpty(login) || c.CreaterLogin == login || c.CreaterLogin.Contains(login)) &&
                            (string.IsNullOrEmpty(status) || c.State == status) &&
                            (exactDate == default(DateTime) || exactDate < MainTable.MinimumDate || c.OpenAt == exactDate) &&
                            (startDate == default(DateTime) || startDate < MainTable.MinimumDate || c.OpenAt >= startDate) &&
-                           (endDate == default(DateTime) || c.OpenAt <= endDate);
+                           (endDate == default(DateTime) || c.OpenAt <= endDate));
                 }, cancellationTokenSource.Token);
             }
             catch (OperationCanceledException ex)
             {
                 MessageBox.Show(ex.Message, "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex) when (ex.InnerException != null)
+            {
+                MessageBox.Show(ex.InnerException.Message.Split('\n')[1], "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -133,15 +138,16 @@ namespace AccountingOfTraficViolation.Views
             casesVM.Dispose();
         }
 
-        private void FindCaseClick(object sender, RoutedEventArgs e)
+        private async void FindCaseClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
             {
                 Button button = (Button)sender;
                 button.Content = "Отменить";
+
                 FindConditionExpander.IsExpanded = false;
 
-                FindCase();
+                await FindCase();
 
                 button.Content = "Найти";
             }

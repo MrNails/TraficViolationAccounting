@@ -92,8 +92,9 @@
 
                 <TextBox Grid.Column="1" Grid.Row="0"  Name="RoadIndexAndNumberTextBox" MaxLength="9" 
                          Padding="2" VerticalAlignment="Center" Width="150" HorizontalAlignment="Left"
-                         TextChanged="RoadIndexAndNumberTextBox_TextChanged" Style="{StaticResource TextBoxValidationTemplate}"
-                         Text="{Binding Path=HighwayIndexAndNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=Explicit}"/>
+                         Style="{StaticResource TextBoxValidationTemplate}"
+                         Text="{Binding Path=HighwayIndexAndNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, 
+                                Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=1 1 4 7}"/>
                 <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
                     <TextBox Margin="0 0 0 7" Text="{Binding Path=AdditionalInfo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                          Padding="2" VerticalAlignment="Center" VerticalContentAlignment="Center" MaxLength="20"

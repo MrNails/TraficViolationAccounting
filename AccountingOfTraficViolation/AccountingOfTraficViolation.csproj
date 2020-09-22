@@ -76,13 +76,7 @@
       <DependentUpon>202008221624542_AddRowVersionMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccidentOnHighway.cs" />
-    <Compile Include="Models\AccidentOnVillage.cs" />
-    <Compile Include="Models\Case.cs" />
-    <Compile Include="Models\CaseAccidentPlace.cs" />
-    <Compile Include="Models\GeneralInfo.cs" />
-    <Compile Include="Models\MainTable.cs" />
-    <Compile Include="Services\Attributes.cs" />
+    <Compile Include="ProgramCore.cs" />
     <Compile Include="Services\Converters.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\SimpleExtensions.cs" />
@@ -187,12 +181,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\ParticipantsInformation.cs" />
-    <Compile Include="Models\RoadCondition.cs" />
-    <Compile Include="Models\TVAContext.cs" />
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Models\Vehicle.cs" />
-    <Compile Include="Models\Victim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -230,7 +218,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\AccountOfTraficViolationDB\AccountOfTraficViolationDB\AccountOfTraficViolationDB.csproj">
+      <Project>{83080e99-ba43-49eb-b5e3-3ac4fb64279c}</Project>
+      <Name>AccountOfTraficViolationDB</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

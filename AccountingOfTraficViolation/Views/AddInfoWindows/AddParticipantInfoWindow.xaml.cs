@@ -70,15 +70,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             }
         }
 
-        private void PDDViolationTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-
-            textBox.SeparatorTemplate(',', 2);
-
-            textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
-        }
-
         private void ParticipantsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ParticipantsListBox.SelectedIndex >= 0)

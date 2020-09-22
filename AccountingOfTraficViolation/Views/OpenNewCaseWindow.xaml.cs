@@ -228,7 +228,13 @@ namespace AccountingOfTraficViolation.Views
                 return;
             }
 
-            border.BorderBrush = new SolidColorBrush(Colors.Red);
+            LinearGradientBrush borderBrush = new LinearGradientBrush(Colors.Blue, Colors.Red, 0);
+            borderBrush.StartPoint = new Point(0.5, 1);
+            borderBrush.EndPoint = new Point(0.5, 0);
+            borderBrush.RelativeTransform = new RotateTransform(0, 0.5, 0.5);
+
+            border.BorderBrush = borderBrush;
+
             DoubleAnimation widthAnimation = new DoubleAnimation()
             {
                 From = border.Width + 20,
@@ -237,16 +243,16 @@ namespace AccountingOfTraficViolation.Views
             };
             widthAnimation.Completed += (obj, arg) =>
             {
-                ColorAnimation borderBrush = new ColorAnimation()
+                DoubleAnimation animationBorderBrush = new DoubleAnimation()
                 {
-                    From = Colors.Red,
-                    To = Colors.Purple,
+                    From = 0,
+                    To = 360,
                     Duration = TimeSpan.FromSeconds(1.5),
                     AutoReverse = true,
-                    RepeatBehavior = new RepeatBehavior(4)
+                    RepeatBehavior = new RepeatBehavior(new TimeSpan(0, 0, 15))
                 };
 
-                border.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, borderBrush);
+                border.BorderBrush.RelativeTransform.BeginAnimation(RotateTransform.AngleProperty, animationBorderBrush);
             };
 
             DoubleAnimation heightAnimation = new DoubleAnimation()

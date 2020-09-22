@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="using:Microsoft.ToolKit"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
+        xmlns:services="clr-namespace:AccountingOfTraficViolation.Services"
         mc:Ignorable="d"
         Title="Основная информация" Height="450" Width="800" MinHeight="370" MinWidth="450">
     <Grid x:Name="MainGrid">
@@ -21,8 +22,9 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="145">
             <TextBlock Text="Номер карточки" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" Margin="0 0 0 10"/>
-            <TextBox x:Name="CardNumberTextBox" TextChanged="CardNumberTextBox_TextChanged" 
-                     Text="{Binding Path=CardNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=Explicit}"
+            <TextBox x:Name="CardNumberTextBox" 
+                     Text="{Binding Path=CardNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
+                            Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=1 2 10}"
                      MaxLength="12" TextAlignment="Center" Padding="2" Style="{StaticResource TextBoxValidationTemplate}"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="200">

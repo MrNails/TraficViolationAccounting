@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:AccountingOfTraficViolation.Services"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:services="clr-namespace:AccountingOfTraficViolation.Services"
              StartupUri="MainWindow.xaml" Startup="Application_Startup">
     <Application.Resources>
         <Style x:Key="TextBlockTemplateStyle">
@@ -50,9 +51,11 @@
         <ItemsPanelTemplate x:Key="ItemsTemplate">
             <WrapPanel Margin="10 0 0 0" />
         </ItemsPanelTemplate>
+        <services:SeparatorCoverter x:Key="separatorConverter"/>
 
-        <!--Expander style-->
+            <!--Expander style-->
         <!--Original code written by XiaoChuan Yu-->
+        <local:MultiplyConverter x:Key="multiplyConverter" />
         <ControlTemplate x:Key="SimpleExpanderButtonTemp" TargetType="{x:Type ToggleButton}">
             <Border x:Name="ExpanderButtonBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
@@ -104,8 +107,6 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-
-        <local:MultiplyConverter x:Key="multiplyConverter" />
         <ControlTemplate x:Key="RevealExpanderTemp" TargetType="{x:Type Expander}">
             <DockPanel>
                 <ToggleButton x:Name="ExpanderButton" DockPanel.Dock="Top"
@@ -154,6 +155,72 @@
                     </Trigger.ExitActions>
                 </Trigger>
             </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Color x:Key="FocusedColor">#FF3843C4</Color>
+        <Color x:Key="ControlMouseOverColor">#FF3873C4</Color>
+        <Color x:Key="DisabledForegroundColor">#FF888260</Color>
+
+        <ControlTemplate x:Key="TextBoxWithBtn" TargetType="{x:Type TextBox}">
+            <Border x:Name="Border" 
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    Background="{TemplateBinding Background}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="TextBox" Grid.Column="0" BorderThickness="0" 
+                             Style="{x:Null}"
+                             Focusable="True"
+                             Background="Transparent"
+                             IsReadOnly="{TemplateBinding IsReadOnly}"
+                             Padding="1 2 0 0"
+                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                             Text="{TemplateBinding Text}"/>
+                    <Button x:Name="Button" Grid.Column="1" Content="..."
+                            Padding="6 -4 6 3"
+                            Margin="3 2 2 2"
+                            Focusable="False"/>
+                </Grid>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Disabled" />
+                        <VisualState x:Name="ReadOnly">
+                            <Storyboard>
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="TextBox"
+                                                Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)">
+                                    <EasingColorKeyFrame KeyTime="0"
+                                         Value="{StaticResource DisabledForegroundColor}" />
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="MouseOver">
+                            <Storyboard>
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)">
+                                    <EasingColorKeyFrame KeyTime="0"
+                                         Value="{StaticResource ControlMouseOverColor}" />
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Focused">
+                            <Storyboard>
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)">
+                                    <EasingColorKeyFrame KeyTime="0"
+                                         Value="{StaticResource FocusedColor}" />
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Border>
         </ControlTemplate>
     </Application.Resources>
 </Application>

@@ -5,12 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingOfTraficViolation.Views"
         mc:Ignorable="d"
-        Title="AccountSettingsWindow" Height="400" Width="600" MinHeight="250" MinWidth="350"
+        Title="Настройки аккаунта" Height="420" Width="600" MinHeight="420" MinWidth="350"
         Closing="Window_Closing" Loaded="Window_Loaded">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
@@ -18,21 +15,28 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Здесь вы можете настраивать свой аккаунт" FontSize="25" FontWeight="Bold"
-                   VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+                   VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Grid.ColumnSpan="2"/>
 
-        <GroupBox Header="Персональные данные" FontSize="13"  Grid.Row="1" Grid.Column="0">
+        <GroupBox Header="Персональные данные" FontSize="13" Grid.Row="1" >
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <DockPanel Margin="5" Width="230">
+                <DockPanel Margin="5" Width="250">
                     <TextBlock Text="Имя:" Style="{StaticResource TextBlockTemplateStyle}" DockPanel.Dock="Left"
                        TextAlignment="Center" Height="17"/>
                     <TextBox Text="{Binding Path=Name, ValidatesOnDataErrors=True}" MaxLength="15" Width="120"
                      Style="{StaticResource TextBoxValidationTemplate}" DockPanel.Dock="Right" HorizontalAlignment="Right"
                      TextChanged="PersonalTextBox_TextChanged"/>
                 </DockPanel>
-                <DockPanel  Margin="5" Width="230">
+                <DockPanel  Margin="5" Width="250">
                     <TextBlock Text="Фамилия:" Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" Height="17" DockPanel.Dock="Left"/>
                     <TextBox Text="{Binding Path=Surname, ValidatesOnDataErrors=True}" MaxLength="15" Width="120"
+                     Style="{StaticResource TextBoxValidationTemplate}" HorizontalAlignment="Right" DockPanel.Dock="Right"
+                     TextChanged="PersonalTextBox_TextChanged"/>
+                </DockPanel>
+                <DockPanel  Margin="5" Width="250">
+                    <TextBlock Text="Номер телефона:" Style="{StaticResource TextBlockTemplateStyle}" 
+                       TextAlignment="Center" Height="17" DockPanel.Dock="Left"/>
+                    <TextBox Text="{Binding Path=Phone, ValidatesOnDataErrors=True}" MaxLength="15" Width="120"
                      Style="{StaticResource TextBoxValidationTemplate}" HorizontalAlignment="Right" DockPanel.Dock="Right"
                      TextChanged="PersonalTextBox_TextChanged"/>
                 </DockPanel>
@@ -44,7 +48,7 @@
                 </WrapPanel>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="Данные аккаунта" FontSize="13"  Grid.Row="2" Grid.Column="0">
+        <GroupBox Header="Данные аккаунта" FontSize="13"  Grid.Row="2" Grid.Column="0" >
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <DockPanel  Margin="5" Width="300">
                     <TextBlock Text="Новый пароль:" Style="{StaticResource TextBlockTemplateStyle}" 

@@ -118,18 +118,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             DialogResult = false;
         }
 
-        private void RoadIndexAndNumberTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (sender is TextBox)
-            {
-                TextBox textBox = (TextBox)sender;
-
-                textBox.SeparatorTemplate('-', 1, 4, 7);
-
-                textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
-            }
-        }
-
         private void AccidentOnVillageGroup_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (AccidentOnVillageGroup.Content is Grid && AccidentOnHighwayGroup.Content is Grid && isEditable)

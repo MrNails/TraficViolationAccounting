@@ -16,7 +16,6 @@ namespace AccountingOfTraficViolation.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-
         public UserVM()
         {
             TVAContext = new TVAContext();
@@ -79,7 +78,7 @@ namespace AccountingOfTraficViolation.ViewModels
             CurrentUser = null;
             TVAContext.SaveChanges();
         }
-        public void AddNewUser(byte role = 1)
+        public void AddNewUser(byte role = (byte)UserRole.User)
         {
             CurrentUser = new User();
             CurrentUser.Role = role;

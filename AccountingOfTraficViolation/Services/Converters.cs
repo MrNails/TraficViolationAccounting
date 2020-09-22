@@ -56,6 +56,7 @@ namespace AccountingOfTraficViolation.Services
         }
     }
 
+    //parametr's format is { separator, separator's position, separator's position, ... }
     public class SeparatorCoverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -63,17 +64,17 @@ namespace AccountingOfTraficViolation.Services
             string[] parametrs = parameter.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             char separator;
             byte index = 0;
-            List<int> indexes = new List<int>();
+            int[] indexes = new int[parametrs.Length - 1];
 
             for (int i = 1; i < parametrs.Length; i++)
             {
                 if (byte.TryParse(parametrs[i], out index))
                 {
-                    indexes.Add(index);
+                    indexes[i - 1] = index;
                 }
             }
 
-            switch (parametrs[1])
+            switch (parametrs[0])
             {
                 case "1":
                     separator = '-';
@@ -86,12 +87,29 @@ namespace AccountingOfTraficViolation.Services
                     break;
             }
             
-            return ((string)value).AddSeparator(separator, indexes.ToArray());
+            return ((string)value).AddSeparator(separator, indexes);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            string[] parametrs = parameter.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            char separator;
+
+            switch (parametrs[0])
+            {
+                case "1":
+                    separator = '-';
+                    break;
+                case "2":
+                    separator = ',';
+                    break;
+                default:
+                    separator = ' ';
+                    break;
+            }
+
+            string str = ((string)value).GetStrWithoutSeparator(separator);
+            return str;
         }
     }
 

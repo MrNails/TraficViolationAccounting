@@ -51,18 +51,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             DialogResult = false;
         }
 
-        private void CardNumberTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (sender is TextBox)
-            {
-                TextBox textBox = (TextBox)sender;
-
-                textBox.SeparatorTemplate('-', 2, 10);
-
-                textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
-            }
-        }
-
         private void FillTimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (sender is TextBox)

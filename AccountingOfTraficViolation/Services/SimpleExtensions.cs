@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using System.IO;
+using System.Text;
 
 namespace AccountingOfTraficViolation.Services
 {
@@ -35,7 +37,7 @@ namespace AccountingOfTraficViolation.Services
                 return null;
             }
 
-            string tempStr = str;
+            string tempStr = string.Copy(str);
             int count = 0;
 
             if (tempStr.Contains(separator.ToString()))
@@ -62,7 +64,7 @@ namespace AccountingOfTraficViolation.Services
         }
         public static string GetStrWithoutSeparator(this string str, char separator)
         {
-            string tempStr = str;
+            string tempStr = string.Copy(str);
 
             for (int i = 0; i < tempStr.Length; i++)
             {
@@ -82,16 +84,13 @@ namespace AccountingOfTraficViolation.Services
                 return str;
             }
             
-            string tempStr = "";
+            StringBuilder tempStr = new StringBuilder();
 
-            for (int i = 0; i < zerosNumber; i++)
-            {
-                tempStr += "0";
-            }
+            tempStr.Append('0', zerosNumber);
 
-            tempStr += string.Copy(str);
+            tempStr.Append(string.Copy(str));
 
-            return tempStr;
+            return tempStr.ToString();
         }
         public static string RemoveZeroBeforeText(this string str)
         {

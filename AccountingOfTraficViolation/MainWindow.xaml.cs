@@ -36,7 +36,7 @@ namespace AccountingOfTraficViolation
 
         private void InitUser()
         {
-            if (user.Role == 0)
+            if (user.Role == (byte)UserRole.Debug || user.Role == (byte)UserRole.Admin)
             {
                 AdminWindowMenuItem.Visibility = Visibility.Visible;
             }
@@ -79,7 +79,7 @@ namespace AccountingOfTraficViolation
                 return;
             }
 
-            if (this.user.Role != 1)
+            if (this.user.Role != (byte)UserRole.User && this.user.Role != (byte)UserRole.Debug)
             {
                 MessageBox.Show("У вас не хватает привелегий на создание дела.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -187,9 +187,14 @@ namespace AccountingOfTraficViolation
 
             exceptionMessage += "\nСтек трейс:\n" + ex.StackTrace + "\n";
 
-            MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             logger.ErrorMessage = exceptionMessage;
             logger.Log();
+        }
+
+        private void TextBox_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("1111");
         }
     }
 }

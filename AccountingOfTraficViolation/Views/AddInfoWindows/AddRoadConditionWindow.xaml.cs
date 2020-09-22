@@ -61,34 +61,5 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             DialogResult = false;
         }
 
-        private void TemplateTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-
-            int[] indexes = null;
-
-            switch (textBox.Name)
-            {
-                case "TechnicalToolTextBox":
-                    indexes = new int[] { 2, 5, 8, 11 };
-                    break;
-                case "RoadDisadvantagesTextBox":
-                    indexes = new int[] { 2, 5, 8, 11 };
-                    break;
-                case "PlaceElementTextBox":
-                    indexes = new int[] { 2, 5 };
-                    break;
-                case "SurfaceStateTextBox":
-                    indexes = new int[] { 1 };
-                    break;
-                default:
-                    return;
-            }
-
-            textBox.SeparatorTemplate(',', indexes);
-
-            textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
-        }
-
     }
 }

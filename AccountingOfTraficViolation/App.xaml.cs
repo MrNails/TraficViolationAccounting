@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using System.Windows;
 
 namespace AccountingOfTraficViolation
@@ -18,13 +12,13 @@ namespace AccountingOfTraficViolation
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            //bool createdNew;
-            //currentAppInstance = new Mutex(true, "Accounting of trafic violation", out createdNew);
+            bool createdNew;
+            currentAppInstance = new Mutex(true, "Accounting of trafic violation", out createdNew);
 
-            //if (!createdNew)
-            //{
-            //    this.Shutdown();
-            //}
+            if (!createdNew)
+            {
+                this.Shutdown();
+            }
         }
     }
 }

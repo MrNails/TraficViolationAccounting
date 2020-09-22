@@ -51,36 +51,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             }
         }
 
-        private void SeparatorTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-
-            int[] indexes = null;
-            char separator;
-
-            switch (textBox.Tag.ToString())
-            {
-                case "1":
-                    indexes = new int[] { 1 };
-                    separator = ',';
-                    break;
-                case "2":
-                    indexes = new int[] { 2, 5, 8 };
-                    separator = ',';
-                    break;
-                case "3":
-                    indexes = new int[] { 7 };
-                    separator = '-';
-                    break;
-                default:
-                    return;
-            }
-
-            textBox.SeparatorTemplate(separator, indexes);
-
-            textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
-        }
-
         private void VehiclesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (VehiclesListBox.SelectedIndex >= 0)
