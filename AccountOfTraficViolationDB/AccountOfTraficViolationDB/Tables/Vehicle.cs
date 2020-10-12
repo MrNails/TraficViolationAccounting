@@ -552,19 +552,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     activityLicensingInfo = null;
-                    return;
                 }
-
-                if (value.Length <= 2)
-                {
-                    activityLicensingInfo = value;
-                    OnPropertyChanged("ActivityLicensingInfo");
-                    errors["ActivityLicensingInfo"] = null;
-                }
-                else
+                else if (value.Length > 2)
                 {
                     errors["ActivityLicensingInfo"] = "Количество символов в ведомости о лицензировании водителя не может быть больше 2.";
                 }
+                else
+                {
+                    errors["ActivityLicensingInfo"] = null;
+                }
+
+                activityLicensingInfo = value;
+                OnPropertyChanged("ActivityLicensingInfo");
             }
         }
 

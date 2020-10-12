@@ -41,7 +41,8 @@ namespace AccountingOfTraficViolation
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void Assign(MainTable entity)
+        public void Assign<T>(T entity)
+            where T : MainTable
         {
             Type newObject = entity.GetType();
             Type currentObject = this.GetType();
@@ -52,7 +53,10 @@ namespace AccountingOfTraficViolation
                     !property.GetMethod.IsVirtual && property.ReflectedType.IsPublic)
                 {
                     property.SetValue(this, newObject.GetProperty(property.Name).GetValue(entity));
+                    OnPropertyChanged(property.Name);
                 }
+
+
             }
         }
 

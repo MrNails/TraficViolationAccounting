@@ -1,4 +1,4 @@
-﻿using System;
+﻿using AccountingOfTraficViolation.Services;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,7 +11,7 @@ namespace AccountingOfTraficViolation.Models
         private string code;
         private string description;
 
-        
+        [NotAssign]
         public int Id { get; set; }
 
         [Required]
@@ -64,15 +64,15 @@ namespace AccountingOfTraficViolation.Models
             }
         }
 
-        [StringLength(100)]
+        [StringLength(500)]
         public string Description
         {
             get { return description; }
             set
             {
-                if (value.Length > 100)
+                if (value.Length > 500)
                 {
-                    errors["Description"] = "Количество символов в поле \"Описание\" не может быть больше 100";
+                    errors["Description"] = "Количество символов в поле \"Описание\" не может быть больше 500";
                 }
                 else
                 {

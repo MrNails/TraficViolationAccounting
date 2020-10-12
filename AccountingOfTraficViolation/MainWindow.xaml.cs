@@ -46,6 +46,7 @@ namespace AccountingOfTraficViolation
             }
 
             DataContext = user;
+            GC.Collect();
         }
 
         private void Window_Initialized(object sender, EventArgs e)
@@ -58,8 +59,11 @@ namespace AccountingOfTraficViolation
                 {
                     this.Close();
                 }
-
-                user = logInWindow.User;
+                else
+                {
+                    user = logInWindow.User;
+                    InitUser();
+                }
             }
             catch (Exception ex)
             {
@@ -67,8 +71,6 @@ namespace AccountingOfTraficViolation
 
                 this.Close();
             }
-
-            InitUser();
         }
 
         private void OpenCaseClick(object sender, RoutedEventArgs e)
@@ -119,8 +121,9 @@ namespace AccountingOfTraficViolation
                 if (logInWindow.ShowDialog() == true)
                 {
                     user = logInWindow.User;
-                    this.Visibility = Visibility.Visible;
                     InitUser();
+
+                    this.Visibility = Visibility.Visible;
                 }
                 else
                 {

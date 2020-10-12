@@ -56,6 +56,10 @@
     <Compile Include="Migrations\202009221457413_AddCodeInfoMigration.designer.cs">
       <DependentUpon>202009221457413_AddCodeInfoMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202010111305581_FixedLengthCodeInfo.cs" />
+    <Compile Include="Migrations\202010111305581_FixedLengthCodeInfo.designer.cs">
+      <DependentUpon>202010111305581_FixedLengthCodeInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Tables\AccidentOnHighway.cs" />
     <Compile Include="Tables\AccidentOnVillage.cs" />
@@ -79,6 +83,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202009221457413_AddCodeInfoMigration.resx">
       <DependentUpon>202009221457413_AddCodeInfoMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010111305581_FixedLengthCodeInfo.resx">
+      <DependentUpon>202010111305581_FixedLengthCodeInfo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

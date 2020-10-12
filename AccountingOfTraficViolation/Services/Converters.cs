@@ -87,7 +87,8 @@ namespace AccountingOfTraficViolation.Services
                     break;
             }
             
-            return ((string)value).AddSeparator(separator, indexes);
+
+            return ((string)value).GetStrWithoutSeparator(separator).AddSeparator(separator, indexes);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -108,8 +109,7 @@ namespace AccountingOfTraficViolation.Services
                     break;
             }
 
-            string str = ((string)value).GetStrWithoutSeparator(separator);
-            return str;
+            return ((string)value).GetStrWithoutSeparator(separator);
         }
     }
 
@@ -176,6 +176,39 @@ namespace AccountingOfTraficViolation.Services
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class PhoneNumberCoverter : IValueConverter
+    {
+        private static Dictionary<char, int[]> pairs;
+
+        static PhoneNumberCoverter()
+        {
+            pairs = new Dictionary<char, int[]>();
+            pairs.Add('(', new int[] { 0 });
+            pairs.Add(')', new int[] { 4 });
+            pairs.Add(' ', new int[] { 5 });
+            pairs.Add('-', new int[] { 9, 12 });
+        }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string _value = value.ToString();
+
+            if (_value.Length >= 3)
+            {
+                _value = _value.AddSeparator(pairs);
+            }
+
+            return _value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string _value = value.ToString();
+
+            return _value.GetStrWithoutSeparator(pairs);
         }
     }
 }

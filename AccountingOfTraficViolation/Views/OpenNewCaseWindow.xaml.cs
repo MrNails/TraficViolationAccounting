@@ -57,7 +57,7 @@ namespace AccountingOfTraficViolation.Views
         }
         private void AccidentPlaceClick(object sender, RoutedEventArgs e)
         {
-            AddAccidentPlaceWindow accidentPlaceWinow = new AddAccidentPlaceWindow(caseAccidentPlace);
+            AddAccidentPlaceWindow accidentPlaceWinow = new AddAccidentPlaceWindow(caseAccidentPlace, user: user);
             if (accidentPlaceWinow.ShowDialog() == true)
             {
                 AccidentPlaceProgresImage.Source = new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));

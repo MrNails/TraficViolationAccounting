@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AccountingOfTraficViolation.Models;
+using AccountingOfTraficViolation.Views.UserControls;
 
 namespace AccountingOfTraficViolation.Views
 {
@@ -37,11 +38,12 @@ namespace AccountingOfTraficViolation.Views
         {
             try
             {
-                MainGrid.IsEnabled = false;
+                LoadScreen.Visibility = Visibility.Visible;
 
                 User = await CheckCerdentialsAsync();
+                //User = new User() { Name = "Debug", Surname = "Debug", Role = (byte)UserRole.Debug };
 
-                MainGrid.IsEnabled = true;
+                LoadScreen.Visibility = Visibility.Collapsed;
 
                 if (User == null)
                 {
@@ -57,7 +59,7 @@ namespace AccountingOfTraficViolation.Views
             }
             finally
             {
-                MainGrid.IsEnabled = true;
+
             }
         }
         private void RefuseClick(object sender, RoutedEventArgs e)

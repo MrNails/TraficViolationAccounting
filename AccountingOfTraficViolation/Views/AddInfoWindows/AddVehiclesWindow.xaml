@@ -160,16 +160,18 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <WrapPanel Margin="0 0 0 10">
+                    <WrapPanel Margin="0 0 0 10" Width="170">
                         <TextBlock Text="Тех. неисправности ТС:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}"/>
                         <TextBox MaxLength="3" 
+                                 Template="{StaticResource TextBoxWithBtn}" ButtonBase.Click="TextBox_Click"
                                  Text="{Binding Path=CurrentAccidentObject.TechnicalFaults, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
                                         Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=2 1}"
-                                 Style="{StaticResource TextBoxValidationTemplate}" Width="40" Margin="7 0 0 0"/>
+                                 Style="{StaticResource TextBoxValidationTemplate}" Width="70" Margin="60 10 0 0"/>
                     </WrapPanel>
                     <WrapPanel>
                         <TextBlock Text="Код ЕГРПОУ:" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 10 0"/>
                         <TextBox MaxLength="11" 
+                                 Template="{StaticResource TextBoxWithBtn}" ButtonBase.Click="TextBox_Click"
                                  Text="{Binding Path=CurrentAccidentObject.EDRPOU_Code, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
                                         Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=1 7}"
                                  Style="{StaticResource TextBoxValidationTemplate}" Width="110"/>
@@ -180,6 +182,7 @@
                     <TextBlock Text="Код повреждений ТС"  TextAlignment="Center" 
                                    Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
                     <TextBox MaxLength="11" 
+                             Template="{StaticResource TextBoxWithBtn}" ButtonBase.Click="TextBox_Click"
                              Text="{Binding Path=CurrentAccidentObject.CorruptionCode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
                                     Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=2 2 5 8}"
                              Style="{StaticResource TextBoxValidationTemplate}" Width="110" Margin="0 0 0 10"/>

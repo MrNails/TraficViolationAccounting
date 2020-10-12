@@ -115,7 +115,8 @@
                 </StackPanel>
                 <StackPanel Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Нарушение ПДР" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 0 10"/>
-                    <TextBox x:Name="PDDViolationTextBox" Width="70" MaxLength="5" 
+                    <TextBox x:Name="PDDViolationTextBox" Width="100" MaxLength="5" 
+                             Template="{StaticResource TextBoxWithBtn}" ButtonBase.Click="PDDViolationTextBox_Click"
                              Text="{Binding Path=CurrentAccidentObject.PDDViolation, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
                                     Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=2 2}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>

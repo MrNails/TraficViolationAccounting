@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 using AccountingOfTraficViolation.Services;
 
@@ -82,6 +83,7 @@ namespace AccountingOfTraficViolation.Models
 
         public byte Role { get; set; }
 
+
         [StringLength(15)]
         public string Name
         {
@@ -130,16 +132,9 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value != null && !phoneNumberRegex.IsMatch(value))
                 {
-                    errors["Phone"] = "Номер телефона должен соответствовать одному из ниже перечисленных форматов:\n" +
-                                      "\t0123456789" +
-                                      "\t012-345-6789" +
-                                      "\t(012)-345-6789" +
-                                      "\t(012)3456789" +
-                                      "\t012 3456789" +
-                                      "\t012 345 6789" +
-                                      "\t012 345-6789" +
-                                      "\t(012) 345-6789" +
-                                      "\t012.345.6789";
+                    errors["Phone"] = "Номер телефона должен соответствовать формату:\n" +
+                                      "\t0123456789\n" +
+                                      "\t(012) 345-67-89";
                 }
                 else
                 {

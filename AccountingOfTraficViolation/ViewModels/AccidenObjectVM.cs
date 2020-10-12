@@ -40,11 +40,18 @@ namespace AccountingOfTraficViolation.ViewModels
             });
             removeCommand = new RelayCommand(obj =>
             {
-                if (obj != null && obj is T && AccidentObjects.Count > 1)
+                if (obj is T)
                 {
                     AccidentObjects.Remove((T)obj);
                 }
-            });
+                else if (obj.IsIntegerNumber() && Convert.ToInt32(obj) >= 0)
+                {
+                    AccidentObjects.RemoveAt(Convert.ToInt32(obj));
+                }
+                
+
+
+            }, (obj => obj != null && AccidentObjects.Count > 1));
         }
 
 

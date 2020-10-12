@@ -61,5 +61,19 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
             DialogResult = false;
         }
 
+        private void TextBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox)
+            {
+                TextBox textBox = (TextBox)sender;
+
+                CodesWindow codesWindow = new CodesWindow();
+
+                if (codesWindow.ShowDialog() == true)
+                {
+                    textBox.Text = codesWindow.Code;
+                }
+            }
+        }
     }
 }

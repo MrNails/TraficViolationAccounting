@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using AccountingOfTraficViolation.Models;
+using AccountingOfTraficViolation.Views.UserControls;
 
 namespace AccountingOfTraficViolation.Views
 {
@@ -22,7 +23,11 @@ namespace AccountingOfTraficViolation.Views
 
             this.user = user;
 
-            LoadContext();
+            LoadContext(ex => 
+            { 
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+            });
 
             isChanged = false;
 
@@ -31,8 +36,12 @@ namespace AccountingOfTraficViolation.Views
 
         private async void LoadContext(Action<Exception> action = null)
         {
+            LoadView loadView = new LoadView();
             try
             {
+                Grid.SetRowSpan(loadView, 3);
+                MainGrid.Children.Add(loadView);
+
                 TVAContext = await Task.Run<TVAContext>(() =>
                 {
                     TVAContext dbContext = new TVAContext();
@@ -44,6 +53,10 @@ namespace AccountingOfTraficViolation.Views
             catch (Exception ex) when (action != null)
             {
                 action(ex);
+            }
+            finally
+            {
+                MainGrid.Children.Remove(loadView);
             }
         }
 
@@ -91,10 +104,9 @@ namespace AccountingOfTraficViolation.Views
                     await TVAContext.SaveChangesAsync();
                     MessageBox.Show("Данные успешно изменены.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     MessageBox.Show("Произошла ошибка при сохранении данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    throw ex;
                 }
             }
         }
@@ -146,7 +158,10 @@ namespace AccountingOfTraficViolation.Views
                 TVAContext.CancelAllChanges();
             }
 
-            TVAContext.Dispose();
+            if (TVAContext != null)
+            {
+                TVAContext.Dispose();
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

@@ -3,7 +3,6 @@ using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using AccountingOfTraficViolation.Services;
 using System.Diagnostics;
 
 namespace AccountingOfTraficViolation.Models

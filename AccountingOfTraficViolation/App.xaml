@@ -157,6 +157,80 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
+        <ControlTemplate x:Key="RightCollapseExpanderTemp" TargetType="{x:Type Expander}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <ToggleButton Grid.Row="0" Grid.Column="0" x:Name="ExpanderButton" Panel.ZIndex="1"
+                              Template="{StaticResource SimpleExpanderButtonTemp}"
+                              IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                              OverridesDefaultStyle="True" Padding="1.5,0">
+                </ToggleButton>
+                <ScrollViewer Grid.Row="0" Grid.Column="1" x:Name="HeaderContentScrollView" 
+                              HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                              Margin="-24 0 0 0" 
+                              HorizontalContentAlignment="Stretch" VerticalContentAlignment="Bottom" Background="White">
+                    <ScrollViewer.Tag>
+                        <sys:Double>0.0</sys:Double>
+                    </ScrollViewer.Tag>
+                    <ScrollViewer.Width>
+                        <MultiBinding Converter="{StaticResource multiplyConverter}">
+                            <Binding Path="ActualWidth" ElementName="ExpanderContent" />
+                            <Binding Path="Tag" RelativeSource="{RelativeSource Self}" />
+                        </MultiBinding>
+                    </ScrollViewer.Width>
+
+                    <ContentPresenter x:Name="HeaderContent" Content="{TemplateBinding Header}" Margin="24 0 0 0"/>
+                </ScrollViewer>
+
+                <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" x:Name="ExpanderContentScrollView"
+                              HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                              HorizontalContentAlignment="Stretch" VerticalContentAlignment="Bottom" 
+                              Background="White">
+                    <ScrollViewer.Tag>
+                        <sys:Double>0.0</sys:Double>
+                    </ScrollViewer.Tag>
+                    <ScrollViewer.Width>
+                        <MultiBinding Converter="{StaticResource multiplyConverter}">
+                            <Binding Path="ActualWidth" ElementName="ExpanderContent" />
+                            <Binding Path="Tag" RelativeSource="{RelativeSource Self}" />
+                        </MultiBinding>
+                    </ScrollViewer.Width>
+                    <ContentPresenter x:Name="ExpanderContent" ContentSource="Content"/>
+                </ScrollViewer>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsExpanded" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ExpanderContentScrollView" Storyboard.TargetProperty="Tag" 
+                                                 To="1" Duration="0:0:0.4"/>
+                                <DoubleAnimation Storyboard.TargetName="HeaderContentScrollView" Storyboard.TargetProperty="Tag" 
+                                                 To="1" Duration="0:0:0.4"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ExpanderContentScrollView" Storyboard.TargetProperty="Tag" 
+                                                 To="0" Duration="0:0:0.4"/>
+                                <DoubleAnimation Storyboard.TargetName="HeaderContentScrollView" Storyboard.TargetProperty="Tag" 
+                                                 To="0" Duration="0:0:0.4"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        
         <Color x:Key="FocusedColor">#FF3843C4</Color>
         <Color x:Key="ControlMouseOverColor">#FF3873C4</Color>
         <Color x:Key="DisabledForegroundColor">#FF888260</Color>
@@ -175,13 +249,12 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBox x:Name="TextBox" Grid.Column="0" BorderThickness="0" 
-                             Style="{x:Null}"
                              Focusable="True"
                              Background="Transparent"
                              IsReadOnly="{TemplateBinding IsReadOnly}"
                              Padding="1 2 0 0"
                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                             Text="{TemplateBinding Text}"/>
+                             Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button x:Name="Button" Grid.Column="1" Content="..."
                             Padding="6 -4 6 3"
                             Margin="3 2 2 2"

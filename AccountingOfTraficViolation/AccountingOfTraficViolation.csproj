@@ -71,14 +71,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Migrations\202008221624542_AddRowVersionMigration.cs" />
-    <Compile Include="Migrations\202008221624542_AddRowVersionMigration.designer.cs">
-      <DependentUpon>202008221624542_AddRowVersionMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ProgramCore.cs" />
+    <Compile Include="Services\AlignableWrapPanel.cs" />
     <Compile Include="Services\Converters.cs" />
-    <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\SimpleExtensions.cs" />
     <Compile Include="Services\RelayCommand.cs" />
     <Compile Include="Services\VisualObjectExtensions.cs" />
@@ -113,11 +108,17 @@
     <Compile Include="Views\CaseReviewWindow.xaml.cs">
       <DependentUpon>CaseReviewWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CodesWindow.xaml.cs">
+      <DependentUpon>CodesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OpenNewCaseWindow.xaml.cs">
       <DependentUpon>OpenNewCaseWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShowCaseWindow.xaml.cs">
       <DependentUpon>ShowCaseWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\LoadView.xaml.cs">
+      <DependentUpon>LoadView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -171,11 +172,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CodesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\OpenNewCaseWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShowCaseWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\LoadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -194,9 +203,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\202008221624542_AddRowVersionMigration.resx">
-      <DependentUpon>202008221624542_AddRowVersionMigration.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
