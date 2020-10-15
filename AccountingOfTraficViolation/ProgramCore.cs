@@ -1,18 +1,10 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Word;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AccountingOfTraficViolation
 {
-    enum UserRole : byte
-    {
-        Debug = 0,
-        Admin,
-        User
-    }
     public interface ILogger
     {
         string ErrorMessage { get; set; }
@@ -20,6 +12,12 @@ namespace AccountingOfTraficViolation
         void Log();
     }
 
+    enum UserRole : byte
+    {
+        Debug = 0,
+        Admin,
+        User
+    }
 
     public class FileLogger : ILogger
     {

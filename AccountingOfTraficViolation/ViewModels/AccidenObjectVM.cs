@@ -37,7 +37,7 @@ namespace AccountingOfTraficViolation.ViewModels
             {
                 CurrentAccidentObject = new T();
                 AccidentObjects.Add(CurrentAccidentObject);
-            });
+            }, obj => AccidentObjects.Count < 5);
             removeCommand = new RelayCommand(obj =>
             {
                 if (obj is T)

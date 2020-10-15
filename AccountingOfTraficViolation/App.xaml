@@ -53,7 +53,7 @@
         </ItemsPanelTemplate>
         <services:SeparatorCoverter x:Key="separatorConverter"/>
 
-            <!--Expander style-->
+        <!--Expander style-->
         <!--Original code written by XiaoChuan Yu-->
         <local:MultiplyConverter x:Key="multiplyConverter" />
         <ControlTemplate x:Key="SimpleExpanderButtonTemp" TargetType="{x:Type ToggleButton}">
@@ -235,6 +235,7 @@
         <Color x:Key="ControlMouseOverColor">#FF3873C4</Color>
         <Color x:Key="DisabledForegroundColor">#FF888260</Color>
 
+        <!--Text box with button style-->
         <ControlTemplate x:Key="TextBoxWithBtn" TargetType="{x:Type TextBox}">
             <Border x:Name="Border" 
                     BorderThickness="{TemplateBinding BorderThickness}"
