@@ -8,6 +8,12 @@
         xmlns:services="clr-namespace:AccountingOfTraficViolation.Services"
         mc:Ignorable="d"
         Title="Основная информация" Height="450" Width="800" MinHeight="370" MinWidth="450">
+    <Window.Resources>
+        <services:MultiConverters x:Key="ConvertersGroup">
+            <services:SymbolsAddCoverter />
+            <services:SeparatorCoverter />
+        </services:MultiConverters>
+    </Window.Resources>
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -22,10 +28,10 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="145">
             <TextBlock Text="Номер карточки" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" Margin="0 0 0 10"/>
-            <TextBox x:Name="CardNumberTextBox" 
+            <TextBox x:Name="CardNumberTextBox"
                      Text="{Binding Path=CardNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
-                            Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=1 2 10}"
-                     MaxLength="12" TextAlignment="Center" Padding="2" Style="{StaticResource TextBoxValidationTemplate}"/>
+                            Converter={StaticResource ResourceKey=ConvertersGroup}, ConverterParameter=S 3 3 E 0 10 2 1 2 10}"
+                     TextAlignment="Center" Padding="2" Style="{StaticResource TextBoxValidationTemplate}"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="200">
             <TextBlock Text="Дата заполнения" Style="{StaticResource TextBlockTemplateStyle}" 
@@ -64,7 +70,7 @@
         <StackPanel Grid.Row="2" Grid.Column="1" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
             <TextBlock Text="Время заполнения (чч:мм:сс)" Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" Margin="0 0 0 10"/>
-            <TextBox x:Name="FillTimeTextBox" Text="{Binding Path=FillTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MaxLength="8"
+            <TextBox x:Name="FillTimeTextBox" Text="{Binding Path=FillTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=Default}" MaxLength="8"
                      Style="{StaticResource TextBoxValidationTemplate}" TextChanged="FillTimeTextBox_TextChanged"/>
         </StackPanel>
         <Button Grid.Row="4" Grid.Column="0" Content="Применить" Width="100" Margin="0 0 30 0" Click="AcceptClick"

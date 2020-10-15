@@ -106,8 +106,6 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
         private void PDDViolationTextBox_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(sender.ToString());
-
             CodesWindow codesWindow = new CodesWindow();
             if (codesWindow.ShowDialog() == true)
             {

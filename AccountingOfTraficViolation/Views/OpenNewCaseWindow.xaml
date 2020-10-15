@@ -27,6 +27,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Для того, чтобы открыть дело, вам надо заполнить все ниже представленные данные." 
                    FontSize="30" TextAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -94,5 +95,11 @@
         <Button Grid.Row="5" Grid.Column="1" Content="Отменить" Style="{StaticResource ButtonTemplateStyle}"
                 VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30 0 0 0" Width="100"
                 Click="RejectClick"/>
+
+        <TextBox Grid.RowSpan="5" Grid.Column="2" x:Name="WordTest" FontSize="15" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+
+        <Button Grid.Row="5" Grid.Column="2" Content="Тест ворд" Style="{StaticResource ButtonTemplateStyle}"
+                VerticalAlignment="Center" HorizontalAlignment="Center" Width="100"
+                Click="WordSaveButton_Click"/>
     </Grid>
 </Window>

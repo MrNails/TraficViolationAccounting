@@ -17,6 +17,7 @@ using AccountingOfTraficViolation.Models;
 using System.Windows.Media.Animation;
 using System.Data.Entity.Validation;
 using System.Runtime.ExceptionServices;
+using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Views
 {
@@ -338,6 +339,16 @@ namespace AccountingOfTraficViolation.Views
                 }
             }
             
+        }
+
+        private void WordSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (WordSaver wordSaver = new WordSaver(null, null, null, generalInfo, null, null, null, null, null, @"C:\Users\popov\source\repos\AccountingOfTraficViolation\AccountingOfTraficViolation\TestWord\Accounting form.docx"))
+            {
+                WordTest.Text = wordSaver.SaveToDocument();
+
+                wordSaver.Dispose();
+            }
         }
     }
 }

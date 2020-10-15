@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows"
+        xmlns:local="clr-namespace:AccountingOfTraficViolation.Views.AddInfoWindows" 
+        xmlns:services="clr-namespace:AccountingOfTraficViolation.Services"
         mc:Ignorable="d"
         Title="Информация об учавствущих в ДТП" Height="450" Width="800" MinHeight="400" MinWidth="750">
     <Window.Resources>
@@ -35,6 +36,11 @@
                 </Grid>
             </StackPanel>
         </DataTemplate>
+
+        <services:MultiConverters x:Key="ConvertersGroup">
+            <services:SymbolsAddCoverter />
+            <services:SeparatorCoverter />
+        </services:MultiConverters>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -115,10 +121,10 @@
                 </StackPanel>
                 <StackPanel Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Нарушение ПДР" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Height="17" Margin="0 0 0 10"/>
-                    <TextBox x:Name="PDDViolationTextBox" Width="100" MaxLength="5" 
+                    <TextBox x:Name="PDDViolationTextBox" Width="100"
                              Template="{StaticResource TextBoxWithBtn}" ButtonBase.Click="PDDViolationTextBox_Click"
                              Text="{Binding Path=CurrentAccidentObject.PDDViolation, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
-                                    Converter={StaticResource ResourceKey=separatorConverter}, ConverterParameter=2 2}"
+                                    Converter={StaticResource ResourceKey=ConvertersGroup}, ConverterParameter=S 3 2 E 0 4 2 2 2}"
                              Style="{StaticResource TextBoxValidationTemplate}" TextAlignment="Center"/>
                 </StackPanel>
             </Grid>
