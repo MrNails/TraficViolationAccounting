@@ -528,9 +528,9 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    if (value.Length > 10)
+                    if (value.Length > 8)
                     {
-                        errors["CorruptionCode"] = "Количество символов в поле \"код повреждения\" не может превышать 10.";
+                        errors["CorruptionCode"] = "Количество символов в поле \"код повреждения\" не может превышать 8.";
                     }
                     else
                     {
