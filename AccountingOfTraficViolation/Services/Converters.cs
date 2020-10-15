@@ -61,6 +61,12 @@ namespace AccountingOfTraficViolation.Services
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (targetType != typeof(string) || parameter == null || value == null)
+            {
+                return null;
+            }
+
+
             string[] parametrs = parameter.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             char separator;
             byte index = 0;
@@ -86,7 +92,7 @@ namespace AccountingOfTraficViolation.Services
                     separator = ' ';
                     break;
             }
-            
+
 
             return ((string)value).GetStrWithoutSeparator(separator).AddSeparator(separator, indexes);
         }
@@ -110,6 +116,191 @@ namespace AccountingOfTraficViolation.Services
             }
 
             return ((string)value).GetStrWithoutSeparator(separator);
+        }
+    }
+
+    //parametr's format is { smbl, max string size, symbols delete method }
+    //Symbol delete method is a method which delete symbol when their quantity greater than max string size
+    //Type of this method: 0 - not delete, 1 - delete only specified symbol, 2 - delete all symbols
+    public class SymbolsAddCoverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string[] parameters = parameter.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (targetType != typeof(string) || value == null || parameters.Length != 3)
+            {
+                return value;
+            }
+
+            string stringValue = value.ToString();
+            int maxStringLength;
+
+            StringBuilder stringBuilder = new StringBuilder(stringValue);
+
+            if (!int.TryParse(parameters[1], out maxStringLength) || maxStringLength < stringBuilder.Length)
+            {
+                return stringBuilder.ToString();
+            }
+
+            stringBuilder.Insert(stringBuilder.Length, parameters[0], maxStringLength - stringBuilder.Length);
+
+            return stringBuilder.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string[] parameters = parameter.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (targetType != typeof(string) || value == null || parameters.Length != 3 || parameters[2] == "0")
+            {
+                return value;
+            }
+
+            int maxStringLength;
+            string stringValue = value.ToString();
+            
+
+            if (!int.TryParse(parameters[1], out maxStringLength) || maxStringLength >= stringValue.Length)
+            {
+                return value;
+            }
+
+            if (stringValue.Length != 0)
+            {
+                if (parameters[2] == "1")
+                {
+                    int lastInputSymbol = stringValue.LastIndexOf(parameters[0]);
+
+                    stringValue = stringValue.Remove(lastInputSymbol);
+                }
+                else if (parameters[2] == "2")
+                {
+                    stringValue = stringValue.Remove(maxStringLength);
+                }
+            }
+
+            return stringValue;
+        }
+
+    }
+
+    //Format of MultiConverters parameters: {(S)tart, quantity of parameters for each converter, (E)nd }
+    public class MultiConverters : List<IValueConverter>, IValueConverter
+    {
+        private string[] convertersParameter;
+
+        public MultiConverters()
+        {
+            convertersParameter = null;
+        }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int currentConverter = 0;
+
+            if (convertersParameter == null)
+            {
+                FillParameter(parameter);
+            }
+
+            if (convertersParameter.Length == 0)
+            {
+                return this.Aggregate(value, (current, converter) => converter.Convert(current, targetType, null, culture));
+            }
+            else
+            {
+                return this.Aggregate(value, (current, converter) =>
+                {
+                    if (currentConverter < convertersParameter.Length - 1)
+                    {
+                        return converter.Convert(current, targetType, convertersParameter[currentConverter++], culture);
+                    }
+                    else
+                    {
+                        return converter.Convert(current, targetType, convertersParameter[currentConverter], culture);
+                    }
+                });
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int currentConverter = convertersParameter.Length;
+
+            if (convertersParameter.Length == 0)
+            {
+                return this.Reverse<IValueConverter>().Aggregate(value, (current, converter) => converter.ConvertBack(current, targetType, null, culture));
+            }
+            else
+            {
+                return this.Reverse<IValueConverter>().Aggregate(value, (current, converter) =>
+                {
+                    if (currentConverter > 0)
+                    {
+                        return converter.ConvertBack(current, targetType, convertersParameter[--currentConverter], culture);
+                    }
+                    else
+                    {
+                        return converter.ConvertBack(current, targetType, convertersParameter[currentConverter], culture);
+                    }
+                });
+            }
+        }
+
+        private void FillParameter(object parameter)
+        {
+            string[] parameters = parameter.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            StringBuilder parameterBuilder = new StringBuilder();
+            bool isStarted = false;
+            bool isEnded = false;
+            int startIndex = 0;
+
+            List<int> converterParameterAmount = new List<int>();
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                if (parameters[i].ToUpper() == "S")
+                {
+                    isStarted = true;
+                }
+                else if (parameters[i].ToUpper() == "E")
+                {
+                    isEnded = true;
+                    startIndex = i + 1;
+                }
+                else if (isStarted && !isEnded)
+                {
+                    if (int.TryParse(parameters[i], out int res))
+                    {
+                        converterParameterAmount.Add(res);
+                    }
+                    else
+                    {
+                        converterParameterAmount.Add(0);
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            convertersParameter = new string[converterParameterAmount.Count];
+
+            for (int i = 0; i < converterParameterAmount.Count; i++)
+            {
+                parameterBuilder.Clear();
+
+                for (int j = startIndex; j < startIndex + converterParameterAmount[i]; j++)
+                {
+                    parameterBuilder.Append(parameters[j]);
+                    parameterBuilder.Append(' ');
+                }
+
+                startIndex += converterParameterAmount[i];
+                convertersParameter[i] = parameterBuilder.ToString();
+            }
         }
     }
 
@@ -212,3 +403,5 @@ namespace AccountingOfTraficViolation.Services
         }
     }
 }
+
+
