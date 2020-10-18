@@ -82,6 +82,7 @@ namespace AccountingOfTraficViolation.Services
         /// <summary>
         /// Adding separator to string
         /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <param name="separator"></param>
         /// <param name="indexes"></param>
         /// <returns>New string with separators</returns>
@@ -121,6 +122,7 @@ namespace AccountingOfTraficViolation.Services
         /// <summary>
         /// Adding separator to string
         /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <param name="pairs">Separator with their position index</param>
         /// <returns>New string with separators</returns>
         public static string AddSeparator(this string str, Dictionary<char, int[]> pairs)
@@ -218,6 +220,36 @@ namespace AccountingOfTraficViolation.Services
             }
 
             return tempStr;
+        }
+        public static string AddSymbols(this string str, char smbl, int count)
+        {
+            if (count < 0)
+            {
+                return str;
+            }
+
+            StringBuilder stringBuilder = new StringBuilder(str);
+
+            stringBuilder.Append(smbl, count);
+
+            return stringBuilder.ToString();
+        }
+
+        public static string AddSymbols(this string str, char smbl, int start, int count)
+        {
+            if (start < 0 || count < 0 || start > str.Length)
+            {
+                return str;
+            }
+
+            StringBuilder stringBuilder = new StringBuilder(str);
+
+            for (int i = start; i < count; i++)
+            {
+                stringBuilder.Insert(i, smbl);
+            }
+
+            return stringBuilder.ToString();
         }
     }
 
