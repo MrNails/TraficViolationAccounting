@@ -254,6 +254,8 @@
                              Background="Transparent"
                              IsReadOnly="{TemplateBinding IsReadOnly}"
                              Padding="1 2 0 0"
+                             MaxLength="{TemplateBinding MaxLength}"
+                             MaxLines="{TemplateBinding MaxLines}"
                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                              Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button x:Name="Button" Grid.Column="1" Content="..."

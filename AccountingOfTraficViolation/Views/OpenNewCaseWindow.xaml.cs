@@ -18,6 +18,8 @@ using System.Windows.Media.Animation;
 using System.Data.Entity.Validation;
 using System.Runtime.ExceptionServices;
 using AccountingOfTraficViolation.Services;
+using System.Reflection;
+using Microsoft.Win32;
 
 namespace AccountingOfTraficViolation.Views
 {
@@ -338,17 +340,351 @@ namespace AccountingOfTraficViolation.Views
                     MessageBox.Show($"Error: {e.Message}\nStack Trace: {e.StackTrace}\nInner exception: {(e.InnerException != null ? e.InnerException.Message : "")}");
                 }
             }
-            
+
         }
 
         private void WordSaveButton_Click(object sender, RoutedEventArgs e)
         {
-            using (WordSaver wordSaver = new WordSaver(null, null, null, generalInfo, null, null, null, null, null, @"C:\Users\popov\source\repos\AccountingOfTraficViolation\AccountingOfTraficViolation\TestWord\Accounting form.docx"))
-            {
-                WordTest.Text = wordSaver.SaveToDocument();
+            FrameworkElement frameworkElement = sender as FrameworkElement;
 
+            if (frameworkElement == null)
+            {
+                return;
+            }
+
+            string tag = frameworkElement.Tag.ToString();
+            string path = null;
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            DocumentSaveType documentSaveType;
+
+            switch (tag)
+            {
+                case "1":
+                    saveFileDialog.Filter = "Word Files | *.docx";
+                    documentSaveType = DocumentSaveType.DOCX;
+                    break;
+                case "2":
+                    saveFileDialog.Filter = "PDF Files | *.pdf";
+                    documentSaveType = DocumentSaveType.PDF;
+                    break;
+                default:
+                    saveFileDialog.Filter = "Word Files | *.docx";
+                    documentSaveType = DocumentSaveType.DOCX;
+                    break;
+            }
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                path = saveFileDialog.FileName;
+            }
+            else
+            {
+                return;
+            }
+
+            WordSaver wordSaver = new WordSaver(@"C:\Users\popov\source\repos\AccountingOfTraficViolation\AccountingOfTraficViolation\TestWord\Accounting form.docx"); ;
+
+            try
+            {
+                wordSaver.OpenDocument();
+
+                if (generalInfo != null)
+                {
+                    wordSaver.Replace<GeneralInfo>(generalInfo, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                                                   propName => $"%{propName}%",
+                                                   (propName, propValue) =>
+                                                   {
+                                                       if (propValue == null)
+                                                       {
+                                                           return "";
+                                                       }
+
+                                                       string value = ConverToString(propValue);
+
+                                                       if (propName == "CardNumber")
+                                                       {
+                                                           value.AddSeparator('-', 2, 10);
+                                                       }
+
+                                                       return WrapEachSbmlInVerticalLine(value);
+                                                   });
+                }
+
+                if (caseAccidentPlace != null)
+                {
+                    if (caseAccidentPlace.AccidentOnVillage != null)
+                    {
+                        wordSaver.Replace<AccidentOnVillage>(caseAccidentPlace.AccidentOnVillage,
+                                                             Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                                                             propName => $"%{propName}%",
+                                                             (propName, propValue) =>
+                                                             {
+                                                                 if (propValue == null)
+                                                                 {
+                                                                     return "";
+                                                                 }
+
+                                                                 string value = propValue.ToString();
+
+                                                                 if (propName.Contains("Code"))
+                                                                 {
+                                                                     value = value.AddZeroBeforeText(4 - value.Length);
+                                                                 }
+                                                                 else
+                                                                 {
+                                                                     int maxLength = GetAttributeMaxLength(caseAccidentPlace.AccidentOnVillage, propName);
+
+                                                                     if (maxLength != -1)
+                                                                     {
+                                                                         value = value.AddSymbols('_', maxLength - value.Length);
+                                                                     }
+                                                                 }
+
+                                                                 return WrapEachSbmlInVerticalLine(value);
+                                                             });
+
+                        wordSaver.Replace("%HighwayIndexAndNumber%", "|__|-|__|__|-|__|__|-|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%AdditionalInfo%", "_______________________________________________________", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%Kilometer%", "|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%Meter%", "|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%Binding%", "_______________________________________________________" +
+                                                        " _______________________________________________________", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                    }
+                    else if (caseAccidentPlace.AccidentOnHighway != null)
+                    {
+                        wordSaver.Replace<AccidentOnVillage>(new AccidentOnVillage(),
+                                                             Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                                                             propName => $"%{propName}%",
+                                                             (propName, propValue) =>
+                                                             {
+                                                                 if (propName == "Status")
+                                                                 {
+                                                                     return "|__|";
+                                                                 }
+                                                                 else if (propName.Contains("Code"))
+                                                                 {
+                                                                     return "|__|__|__|__|";
+                                                                 }
+                                                                 else if (propName == "VillageBinding")
+                                                                 {
+                                                                     return "|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|" +
+                                                                            " |__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|";
+                                                                 }
+                                                                 else
+                                                                 {
+                                                                     return "|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|";
+                                                                 }
+                                                             });
+
+                        wordSaver.Replace<AccidentOnHighway>(caseAccidentPlace.AccidentOnHighway,
+                                                             Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                                                             propName => $"%{propName}%",
+                                                             (propName, propValue) =>
+                                                             {
+                                                                 if (propValue == null)
+                                                                 {
+                                                                     return "";
+                                                                 }
+
+                                                                 string value = propValue.ToString();
+
+                                                                 if (propName == "AdditionalInfo" || propName == "Binding")
+                                                                 {
+                                                                     return value;
+                                                                 }
+
+                                                                 if (propName == "HighwayIndexAndNumber")
+                                                                 {
+                                                                     value = value.AddSeparator('-', 1, 4, 7);
+                                                                 }
+
+                                                                 return WrapEachSbmlInVerticalLine(value);
+                                                             });
+
+                    }
+                }
+
+                if (roadCondition != null)
+                {
+                    wordSaver.Replace<RoadCondition>(roadCondition,
+                                                     Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                                                     propName => $"%{propName}%",
+                                                     (propName, propValue) =>
+                                                     {
+                                                         if (propValue == null)
+                                                         {
+                                                             return "";
+                                                         }
+
+                                                         string value = propValue.ToString();
+
+                                                         if (propName == "SurfaceState")
+                                                         {
+                                                             value = value.AddSeparator(',', 1);
+                                                         }
+                                                         else if (propName == "PlaceElement")
+                                                         {
+                                                             value = value.AddSeparator(',', 2, 5);
+                                                         }
+                                                         else if (propName == "TechnicalTool" || propName == "RoadDisadvantages")
+                                                         {
+                                                             value = value.AddSeparator(',', 2, 5, 8, 11);
+                                                         }
+
+                                                         return WrapEachSbmlInVerticalLine(value);
+                                                     });
+                }
+
+                if (participantsInformations != null)
+                {
+                    List<ParticipantsInformation> tempList = null;
+
+                    if (participantsInformations.Count < 5)
+                    {
+                        tempList = new List<ParticipantsInformation>();
+
+                        tempList.AddRange(participantsInformations);
+                        ParticipantsInformation participantsInformation = new ParticipantsInformation() { Id = -1 };
+
+                        for (int i = tempList.Count; i < 5; i++)
+                        {
+                            tempList.Add(participantsInformation);
+                        }
+                    }
+
+                    string qualification = null;
+                    string age = null;
+                    string gender = null;
+                    string citizenship = null;
+                    string driveExpirience = null;
+                    string drivingTimeBeforeAccident = null;
+                    string pddViolation = null;
+
+                    for (int i = 0; i < tempList.Count; i++)
+                    {
+                        if (tempList[i].Id != -1)
+                        {
+                            qualification = tempList[i].Qualification.ToString();
+                            age = tempList[i].Age.ToString();
+                            gender = tempList[i].Gender.ToString();
+                            citizenship = tempList[i].Citizenship.ToString();
+                            driveExpirience = tempList[i].DriveExpirience.ToString();
+                            drivingTimeBeforeAccident = tempList[i].DrivingTimeBeforeAccident.ToString();
+                            pddViolation = tempList[i].PDDViolation.AddSeparator(',', 2);
+
+                            qualification = WrapEachSbmlInVerticalLine(qualification.AddZeroBeforeText(2 - qualification.Length));
+                            age = WrapEachSbmlInVerticalLine(age.AddZeroBeforeText(3 - age.Length));
+                            citizenship = WrapEachSbmlInVerticalLine(citizenship.AddZeroBeforeText(GetAttributeMaxLength(tempList[i], "Citizenship") - citizenship.Length));
+                            driveExpirience = WrapEachSbmlInVerticalLine(driveExpirience.AddZeroBeforeText(2 - driveExpirience.Length));
+                            drivingTimeBeforeAccident = WrapEachSbmlInVerticalLine(drivingTimeBeforeAccident.AddZeroBeforeText(2 - drivingTimeBeforeAccident.Length));
+                            pddViolation = WrapEachSbmlInVerticalLine(pddViolation);
+
+                            if (gender != "True")
+                            {
+                                gender = "| М |";
+                            }
+                            else
+                            {
+                                gender = "| Ж |";
+                            }
+                        }
+                        else
+                        {
+                            qualification = "|__|__|";
+                            age = "|__|__|__|";
+                            gender = "|__|";
+                            citizenship = age;
+                            driveExpirience = qualification;
+                            drivingTimeBeforeAccident = qualification;
+                            pddViolation = "|__|__|,|__|__|";
+                        }
+
+                        wordSaver.Replace($"%Surname{i + 1}%", tempList[i].Surname, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Name{i + 1}%", tempList[i].Name, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Patronymic{i + 1}%", tempList[i].Patronymic, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Address{i + 1}%", tempList[i].Address, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Qualification{i + 1}%", qualification, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Age{i + 1}%", age, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Gender{i + 1}%", gender, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Citizenship{i + 1}%", citizenship, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%DriveExpirience{i + 1}%", driveExpirience, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%DrivingTimeBeforeAccident{i + 1}%", drivingTimeBeforeAccident, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%PDDViolation{i + 1}%", pddViolation, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                    }
+                }
+
+                wordSaver.SaveDocumentAs(path, documentSaveType);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
                 wordSaver.Dispose();
             }
+
+        }
+
+        private string WrapEachSbmlInVerticalLine(string textToWrap)
+        {
+            StringBuilder wrapedString = new StringBuilder();
+
+            foreach (var smbl in textToWrap)
+            {
+                wrapedString.Append("| ");
+                wrapedString.Append(smbl);
+                wrapedString.Append(' ');
+            }
+
+            wrapedString.Append('|');
+
+            return wrapedString.ToString();
+        }
+
+        private string ConverToString(object _object)
+        {
+            string formattedValue = null;
+
+            switch (_object.GetType().Name)
+            {
+                case "DateTime":
+                    formattedValue = ((DateTime)_object).ToString("d").GetStrWithoutSeparator('.').AddSeparator('-', 2, 5);
+                    break;
+                case "TimeSpan":
+                    formattedValue = ((TimeSpan)_object).ToString(@"hh\:mm").Remove(2, 1).AddSeparator('-', 2);
+                    break;
+                case "Boolean":
+
+                    break;
+                default:
+                    formattedValue = _object.ToString();
+                    break;
+            }
+
+            return formattedValue;
+        }
+
+        private int GetAttributeMaxLength<T>(T _object, string propertyName)
+        {
+            int length = -1;
+
+            if (_object == null || string.IsNullOrEmpty(propertyName))
+            {
+                return length;
+            }
+
+            Type objectType = _object.GetType();
+
+            Attribute attr = objectType.GetProperty(propertyName).GetCustomAttribute(typeof(System.ComponentModel.DataAnnotations.StringLengthAttribute), false);
+
+            if (attr != null)
+            {
+                length = ((System.ComponentModel.DataAnnotations.StringLengthAttribute)attr).MaximumLength;
+            }
+
+            return length;
         }
     }
 }
