@@ -60,6 +60,10 @@
     <Compile Include="Migrations\202010111305581_FixedLengthCodeInfo.designer.cs">
       <DependentUpon>202010111305581_FixedLengthCodeInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202010191513002_Vehicle-Surname-MaxLengthChanged.cs" />
+    <Compile Include="Migrations\202010191513002_Vehicle-Surname-MaxLengthChanged.designer.cs">
+      <DependentUpon>202010191513002_Vehicle-Surname-MaxLengthChanged.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Tables\AccidentOnHighway.cs" />
     <Compile Include="Tables\AccidentOnVillage.cs" />
@@ -86,6 +90,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202010111305581_FixedLengthCodeInfo.resx">
       <DependentUpon>202010111305581_FixedLengthCodeInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010191513002_Vehicle-Surname-MaxLengthChanged.resx">
+      <DependentUpon>202010191513002_Vehicle-Surname-MaxLengthChanged.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -43,20 +43,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["IsDied"] = "Не правльный ввод поля погиб(травмироварн).";
-                    isDied = null;
-                    return;
                 }
-
-                if (value.Length <= 2)
+                else if (value.Length <= 2)
                 {
-                    isDied = value;
-                    OnPropertyChanged("IsDied");
                     errors["IsDied"] = null;
                 }
                 else
                 {
                     errors["IsDied"] = "Количество символов в поле погиб(травмироварн) не может быть больше 2.";
                 }
+
+                isDied = value;
+                OnPropertyChanged("IsDied");
             }
         }
 
@@ -67,14 +65,15 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value >= 0 && value < 100)
                 {
-                    category = value;
-                    OnPropertyChanged("Category");
                     errors["Category"] = null;
                 }
                 else
                 {
                     errors["Category"] = "Не правилный ввод категории.";
                 }
+
+                category = value;
+                OnPropertyChanged("Category");
             }
         }
 
@@ -105,14 +104,15 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value >= 0 && value < 100)
                 {
-                    _TORSerialNumber = value;
-                    OnPropertyChanged("TORSerialNumber");
                     errors["TORSerialNumber"] = null;
                 }
                 else
                 {
                     errors["TORSerialNumber"] = "Не правилный ввод порядкового номера ТЗ.";
                 }
+
+                _TORSerialNumber = value;
+                OnPropertyChanged("TORSerialNumber");
             }
         }
 
@@ -133,14 +133,15 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value >= 0 && value < 10)
                 {
-                    medicalResult = value;
-                    OnPropertyChanged("MedicalResult");
                     errors["MedicalResult"] = null;
                 }
                 else
                 {
                     errors["MedicalResult"] = "Не правилный ввод результатов мет. обследования.";
                 }
+
+                medicalResult = value;
+                OnPropertyChanged("MedicalResult");
             }
         }
 
@@ -154,20 +155,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Name"] = "Имя не может отсутствовать.";
-                    name = null;
-                    return;
                 }
-
-                if (value.Length <= 15)
+                else if (value.Length <= 15)
                 {
-                    name = value;
-                    OnPropertyChanged("Name");
                     errors["Name"] = null;
                 }
                 else
                 {
                     errors["Name"] = "Количество символов в имени не может быть больше 15.";
                 }
+
+                name = value;
+                OnPropertyChanged("Name");
             }
         }
 
@@ -181,20 +180,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Surname"] = "Фамилия не может отсутствовать.";
-                    surname = null;
-                    return;
                 }
-
-                if (value.Length <= 15)
+                else if (value.Length <= 15)
                 {
-                    surname = value;
-                    OnPropertyChanged("Surname");
                     errors["Surname"] = null;
                 }
                 else
                 {
                     errors["Surname"] = "Количество символов в фамилии не может быть больше 15.";
                 }
+
+                surname = value;
+                OnPropertyChanged("Surname");
             }
         }
 
@@ -208,20 +205,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Patronymic"] = "Отчество не может отсутствовать.";
-                    patronymic = null;
-                    return;
                 }
-
-                if (value.Length <= 15)
+                else if (value.Length <= 15)
                 {
-                    patronymic = value;
-                    OnPropertyChanged("Patronymic");
                     errors["Patronymic"] = null;
                 }
                 else
                 {
                     errors["Patronymic"] = "Количество символов в отчестве не может быть больше 15.";
                 }
+
+                patronymic = value;
+                OnPropertyChanged("Patronymic");
             }
         }
 
@@ -235,20 +230,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Citizenship"] = "Гражданство не может отсутствовать.";
-                    citizenship = null;
-                    return;
                 }
-
-                if (value.Length <= 3)
+                else if (value.Length <= 3)
                 {
-                    citizenship = value;
-                    OnPropertyChanged("Citizenship");
                     errors["Citizenship"] = null;
                 }
                 else
                 {
                     errors["Citizenship"] = "Количество символов в гражданстве не может быть больше 3.";
                 }
+
+                citizenship = value;
+                OnPropertyChanged("Citizenship");
             }
         }
 

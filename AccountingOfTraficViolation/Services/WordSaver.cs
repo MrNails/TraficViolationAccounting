@@ -259,7 +259,7 @@ namespace AccountingOfTraficViolation.Services
 
             if (path.LastIndexOf('.') != -1)
             {
-                docNameWithoutExtension = path.Remove(path.LastIndexOf('.') - 1);
+                docNameWithoutExtension = path.Remove(path.LastIndexOf('.'));
             }
             else
             {
@@ -296,13 +296,24 @@ namespace AccountingOfTraficViolation.Services
         private bool FileIsOpen(string filePath)
         {
             System.IO.FileStream fileStream = null;
+            bool isNotSharedException = true;
 
             try
             {
                 fileStream = System.IO.File.Open(filePath,
                 System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None);
             }
-            catch (System.IO.IOException ex)
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                isNotSharedException = false;
+                throw;
+            }
+            catch (System.IO.FileNotFoundException ex)
+            {
+                isNotSharedException = false;
+                throw;
+            }
+            catch (System.IO.IOException ex) when (isNotSharedException)
             {
                 return true;
             }

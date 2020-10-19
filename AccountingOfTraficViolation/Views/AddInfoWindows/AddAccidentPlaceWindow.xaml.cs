@@ -26,17 +26,14 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
         private AccidentOnHighway AccidentOnHighway;
         private AccidentOnVillage AccidentOnVillage;
         private bool isEditable;
-        private User user;
 
         public CaseAccidentPlace CaseAccidentPlace { get; private set; }
 
         public AddAccidentPlaceWindow() : this(null)
         { }
-        public AddAccidentPlaceWindow(CaseAccidentPlace caseAccidentPlace, bool isEditable = true, User user = null)
+        public AddAccidentPlaceWindow(CaseAccidentPlace caseAccidentPlace, bool isEditable = true)
         {
             InitializeComponent();
-
-            this.user = user;
 
             if (caseAccidentPlace == null)
             {
@@ -161,7 +158,7 @@ namespace AccountingOfTraficViolation.Views.AddInfoWindows
 
         private void OpenCodesWindowClick(object sender, RoutedEventArgs e)
         {
-            CodesWindow codesWindow = new CodesWindow(user);
+            CodesWindow codesWindow = new CodesWindow();
             
             if (codesWindow.ShowDialog() == true)
             {

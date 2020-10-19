@@ -65,20 +65,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["PlateNumber"] = "Номерной знак машины не может быть пустым.";
-                    plateNumber = null;
-                    return;
                 }
-
-                if (value.Length <= 8)
+                else if (value.Length <= 8)
                 {
-                    plateNumber = value;
-                    OnPropertyChanged("PlateNumber");
                     errors["PlateNumber"] = null;
                 }
                 else
                 {
                     errors["PlateNumber"] = "Количество символов в номерном знаке не может быть больше 8.";
                 }
+
+                plateNumber = value;
+                OnPropertyChanged("PlateNumber");
             }
         }
 
@@ -92,20 +90,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["FrameNumber"] = "Номер рамы не может быть пустым.";
-                    frameNumber = null;
-                    return;
                 }
-
-                if (value.Length <= 8)
+                else if (value.Length <= 8)
                 {
-                    frameNumber = value;
-                    OnPropertyChanged("FrameNumber");
                     errors["FrameNumber"] = null;
                 }
                 else
                 {
                     errors["FrameNumber"] = "Количество символов в номере рамы не может быть больше 8.";
                 }
+
+                frameNumber = value;
+                OnPropertyChanged("FrameNumber");
             }
         }
 
@@ -119,20 +115,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["ChasisNumber"] = "Номер шасси не может быть пустым.";
-                    chasisNumber = null;
-                    return;
                 }
-
-                if (value.Length <= 9)
+                else if (value.Length <= 9)
                 {
-                    chasisNumber = value;
-                    OnPropertyChanged("ChasisNumber");
                     errors["ChasisNumber"] = null;
                 }
                 else
                 {
                     errors["ChasisNumber"] = "Количество символов в номере шасси не может быть больше 9.";
                 }
+
+                chasisNumber = value;
+                OnPropertyChanged("ChasisNumber");
             }
         }
 
@@ -146,20 +140,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Make"] = "Марка машини не может быть пустой.";
-                    make = null;
-                    return;
                 }
-
-                if (value.Length <= 10)
+                else if (value.Length <= 10)
                 {
-                    make = value;
-                    OnPropertyChanged("Make");
                     errors["Make"] = null;
                 }
                 else
                 {
                     errors["Make"] = "Количество символов в марке машины не может быть больше 10.";
                 }
+
+                make = value;
+                OnPropertyChanged("Make");
             }
         }
 
@@ -173,20 +165,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Model"] = "Модель машины не может быть пустой.";
-                    model = null;
-                    return;
                 }
-
-                if (value.Length <= 10)
+                else if (value.Length <= 10)
                 {
-                    model = value;
-                    OnPropertyChanged("Model");
                     errors["Model"] = null;
                 }
                 else
                 {
                     errors["Model"] = "Количество символов в моделе машины не может быть больше 10.";
                 }
+
+                model = value;
+                OnPropertyChanged("Model");
             }
         }
 
@@ -197,14 +187,15 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value >= 0 && value < 1000)
                 {
-                    type = value;
-                    OnPropertyChanged("Type");
                     errors["Type"] = null;
                 }
                 else
                 {
                     errors["Type"] = "Не правилный ввод типа.";
                 }
+
+                type = value;
+                OnPropertyChanged("Type");
             }
         }
 
@@ -218,20 +209,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["SeriesOfRegistrationSertificate"] = "Cерия свидетельства о регистрации не может быть пустой.";
-                    seriesOfRegistrationSertificate = null;
-                    return;
                 }
-
-                if (value.Length <= 3)
+                else if (value.Length <= 3)
                 {
-                    seriesOfRegistrationSertificate = value;
-                    OnPropertyChanged("SeriesOfRegistrationSertificate");
                     errors["SeriesOfRegistrationSertificate"] = null;
                 }
                 else
                 {
                     errors["SeriesOfRegistrationSertificate"] = "Количество символов в серии свидетельства о регистрации не может быть больше 3.";
                 }
+
+                seriesOfRegistrationSertificate = value;
+                OnPropertyChanged("SeriesOfRegistrationSertificate");
             }
         }
 
@@ -245,20 +234,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["RegistrationSertificate"] = "Cвидетельство о регистрации не может быть пустым.";
-                    registrationSertificate = null;
-                    return;
                 }
-
-                if (value.Length <= 6)
+                else if (value.Length <= 6)
                 {
-                    registrationSertificate = value;
-                    OnPropertyChanged("RegistrationSertificate");
                     errors["RegistrationSertificate"] = null;
                 }
                 else
                 {
                     errors["RegistrationSertificate"] = "Количество символов в свидетельстве о регистрации не может быть больше 6.";
                 }
+
+                registrationSertificate = value;
+                OnPropertyChanged("RegistrationSertificate");
             }
         }
 
@@ -279,14 +266,15 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value >= 0 && value < 1000)
                 {
-                    insurerCode = value;
-                    OnPropertyChanged("InsurerCode");
                     errors["InsurerCode"] = null;
                 }
                 else
                 {
                     errors["InsurerCode"] = "Не правилный ввод кода страховки.";
                 }
+
+                insurerCode = value;
+                OnPropertyChanged("InsurerCode");
             }
         }
 
@@ -300,20 +288,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["PolicySeries"] = "Серия полиса не может быть пустым.";
-                    policySeries = null;
-                    return;
                 }
-
-                if (value.Length <= 3)
+                else if (value.Length <= 3)
                 {
-                    policySeries = value;
-                    OnPropertyChanged("PolicySeries");
                     errors["PolicySeries"] = null;
                 }
                 else
                 {
                     errors["PolicySeries"] = "Количество символов в серии полиса не может быть больше 3.";
                 }
+
+                policySeries = value;
+                OnPropertyChanged("PolicySeries");
             }
         }
 
@@ -327,20 +313,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["PolicyNumber"] = "Полис не может быть пустым.";
-                    policyNumber = null;
-                    return;
                 }
-
-                if (value.Length <= 10)
+                else if (value.Length <= 10)
                 {
-                    policyNumber = value;
-                    OnPropertyChanged("PolicyNumber");
                     errors["PolicyNumber"] = null;
                 }
                 else
                 {
                     errors["PolicyNumber"] = "Количество символов в полисе не может быть больше 10.d";
                 }
+
+                policyNumber = value;
+                OnPropertyChanged("PolicyNumber");
             }
         }
 
@@ -363,7 +347,7 @@ namespace AccountingOfTraficViolation.Models
         }
 
         [Required]
-        [StringLength(15)]
+        [StringLength(10)]
         public string Surname
         {
             get { return surname; }
@@ -372,20 +356,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Surname"] = "Фамилия водителя не может быть пустой.";
-                    surname = null;
-                    return;
                 }
-
-                if (value.Length <= 15)
+                else if (value.Length > 10)
                 {
-                    surname = value;
-                    OnPropertyChanged("Surname");
-                    errors["Surname"] = null;
+                    errors["Surname"] = "Количество символов в фамилии водителя не может быть больше 10.";
                 }
                 else
                 {
-                    errors["Surname"] = "Количество символов в фамилии водителя не может быть больше 15.";
+                    errors["Surname"] = null;
                 }
+
+                surname = value;
+                OnPropertyChanged("Surname");
             }
         }
 
@@ -399,20 +381,19 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["LicenceSeries"] = "Серия удостоверения водителя не может быть пустой.";
-                    licenceSeries = null;
-                    return;
                 }
-
-                if (value.Length <= 3)
+                else if (value.Length <= 3)
                 {
-                    licenceSeries = value;
-                    OnPropertyChanged("LicenceSeries");
+
                     errors["LicenceSeries"] = null;
                 }
                 else
                 {
                     errors["LicenceSeries"] = "Количество символов в серии удостовирении водителя не может быть больше 3.";
                 }
+
+                licenceSeries = value;
+                OnPropertyChanged("LicenceSeries");
             }
         }
 
@@ -426,20 +407,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["LicenceNumber"] = "Удостоверения водителя не может быть пустым.";
-                    licenceNumber = null;
-                    return;
                 }
-
-                if (value.Length <= 6)
+                else if (value.Length <= 6)
                 {
-                    licenceNumber = value;
-                    OnPropertyChanged("LicenceNumber");
                     errors["LicenceNumber"] = null;
                 }
                 else
                 {
                     errors["LicenceNumber"] = "Количество символов в удостовирении водителя не может быть больше 6.";
                 }
+
+                licenceNumber = value;
+                OnPropertyChanged("LicenceNumber");
             }
         }
 
@@ -453,20 +432,18 @@ namespace AccountingOfTraficViolation.Models
                 if (string.IsNullOrEmpty(value))
                 {
                     errors["Owner"] = "Владелец не может быть пустым.";
-                    owner = null;
-                    return;
                 }
-
-                if (value.Length <= 20)
+                else if (value.Length <= 20)
                 {
-                    owner = value;
-                    OnPropertyChanged("Owner");
                     errors["Owner"] = null;
                 }
                 else
                 {
                     errors["Owner"] = "Количество символов в поле \"владелец\" не может быть больше 20.";
                 }
+
+                owner = value;
+                OnPropertyChanged("Owner");
             }
         }
 
