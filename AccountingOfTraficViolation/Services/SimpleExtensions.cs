@@ -152,6 +152,7 @@ namespace AccountingOfTraficViolation.Services
 
             return tempStr.ToString();
         }
+
         public static string GetStrWithoutSeparator(this string str, char separator)
         {
             string tempStr = string.Copy(str);
@@ -182,6 +183,7 @@ namespace AccountingOfTraficViolation.Services
 
             return tempStr.ToString();
         }
+
         public static string AddZeroBeforeText(this string str, int zerosNumber)
         {
             if (string.IsNullOrEmpty(str) || zerosNumber < 0)
@@ -197,6 +199,7 @@ namespace AccountingOfTraficViolation.Services
 
             return tempStr.ToString();
         }
+
         public static string RemoveZeroBeforeText(this string str)
         {
             if (string.IsNullOrEmpty(str))
@@ -221,6 +224,7 @@ namespace AccountingOfTraficViolation.Services
 
             return tempStr;
         }
+
         public static string AddSymbols(this string str, char smbl, int count)
         {
             if (count < 0)
@@ -234,7 +238,6 @@ namespace AccountingOfTraficViolation.Services
 
             return stringBuilder.ToString();
         }
-
         public static string AddSymbols(this string str, char smbl, int start, int count)
         {
             if (start < 0 || count < 0 || start > str.Length)
@@ -250,6 +253,21 @@ namespace AccountingOfTraficViolation.Services
             }
 
             return stringBuilder.ToString();
+        }
+
+        public static string GetStringWithUpperSymbols(this string str)
+        {
+            StringBuilder newString = new StringBuilder();
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (char.IsUpper(str[i]))
+                {
+                    newString.Append(str[i]);
+                }
+            }
+
+            return newString.ToString();
         }
     }
 
