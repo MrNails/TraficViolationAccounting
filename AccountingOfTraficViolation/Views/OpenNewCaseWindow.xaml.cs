@@ -60,7 +60,7 @@ namespace AccountingOfTraficViolation.Views
         }
         private void AccidentPlaceClick(object sender, RoutedEventArgs e)
         {
-            AddAccidentPlaceWindow accidentPlaceWinow = new AddAccidentPlaceWindow(caseAccidentPlace, user: user);
+            AddAccidentPlaceWindow accidentPlaceWinow = new AddAccidentPlaceWindow(caseAccidentPlace);
             if (accidentPlaceWinow.ShowDialog() == true)
             {
                 AccidentPlaceProgresImage.Source = new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));
@@ -111,67 +111,7 @@ namespace AccountingOfTraficViolation.Views
 
         private void AcceptClick(object sender, RoutedEventArgs e)
         {
-            bool isValid = true;
-
-            if (generalInfo == null)
-            {
-                SetBorderAnimation(GeneralInfoBorder);
-                isValid = false;
-            }
-            else
-            {
-                StopBorderAnimation(GeneralInfoBorder);
-            }
-
-            if (caseAccidentPlace == null)
-            {
-                SetBorderAnimation(AccidentPlaceBorder);
-                isValid = false;
-            }
-            else
-            {
-                StopBorderAnimation(AccidentPlaceBorder);
-            }
-
-            if (roadCondition == null)
-            {
-                SetBorderAnimation(RoadConditionBorder);
-                isValid = false;
-            }
-            else
-            {
-                StopBorderAnimation(RoadConditionBorder);
-            }
-
-            if (participantsInformations == null)
-            {
-                SetBorderAnimation(ParticipanInfoBorder);
-                isValid = false;
-            }
-            else
-            {
-                StopBorderAnimation(ParticipanInfoBorder);
-            }
-
-            if (vehicles == null)
-            {
-                SetBorderAnimation(VehicleBorder);
-                isValid = false;
-            }
-            else
-            {
-                StopBorderAnimation(VehicleBorder);
-            }
-
-            if (victims == null)
-            {
-                SetBorderAnimation(VictimBorder);
-                isValid = false;
-            }
-            else
-            {
-                StopBorderAnimation(VictimBorder);
-            }
+            bool isValid = CheckValidationAndSetAnimation();
 
             if (isValid)
             {
@@ -343,54 +283,136 @@ namespace AccountingOfTraficViolation.Views
 
         }
 
-        private void WordSaveButton_Click(object sender, RoutedEventArgs e)
+        private bool CheckValidationAndSetAnimation()
         {
-            FrameworkElement frameworkElement = sender as FrameworkElement;
+            bool isValid = true;
 
-            if (frameworkElement == null)
+            if (generalInfo == null)
             {
-                return;
-            }
-
-            string tag = frameworkElement.Tag.ToString();
-            string path = null;
-
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            DocumentSaveType documentSaveType;
-
-            switch (tag)
-            {
-                case "1":
-                    saveFileDialog.Filter = "Word Files | *.docx";
-                    documentSaveType = DocumentSaveType.DOCX;
-                    break;
-                case "2":
-                    saveFileDialog.Filter = "PDF Files | *.pdf";
-                    documentSaveType = DocumentSaveType.PDF;
-                    break;
-                default:
-                    saveFileDialog.Filter = "Word Files | *.docx";
-                    documentSaveType = DocumentSaveType.DOCX;
-                    break;
-            }
-
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                path = saveFileDialog.FileName;
+                SetBorderAnimation(GeneralInfoBorder);
+                isValid = false;
             }
             else
             {
+                StopBorderAnimation(GeneralInfoBorder);
+            }
+
+            if (caseAccidentPlace == null)
+            {
+                SetBorderAnimation(AccidentPlaceBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(AccidentPlaceBorder);
+            }
+
+            if (roadCondition == null)
+            {
+                SetBorderAnimation(RoadConditionBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(RoadConditionBorder);
+            }
+
+            if (participantsInformations == null)
+            {
+                SetBorderAnimation(ParticipanInfoBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(ParticipanInfoBorder);
+            }
+
+            if (vehicles == null)
+            {
+                SetBorderAnimation(VehicleBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(VehicleBorder);
+            }
+
+            if (victims == null)
+            {
+                SetBorderAnimation(VictimBorder);
+                isValid = false;
+            }
+            else
+            {
+                StopBorderAnimation(VictimBorder);
+            }
+
+            return isValid;
+        }
+
+        #region WordSaver Region
+        private async void WordSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!CheckValidationAndSetAnimation())
+            {
                 return;
             }
 
-            WordSaver wordSaver = new WordSaver(@"C:\Users\popov\source\repos\AccountingOfTraficViolation\AccountingOfTraficViolation\TestWord\Accounting form.docx"); ;
+            GeneralInfo generalInfo = this.generalInfo.Clone();
+            CaseAccidentPlace caseAccidentPlace = this.caseAccidentPlace.Clone();
+            RoadCondition roadCondition = this.roadCondition.Clone();
+            List<ParticipantsInformation> participantsInformations = new List<ParticipantsInformation>(this.participantsInformations);
+            List<Vehicle> vehicles = new List<Vehicle>(this.vehicles);
+            List<Victim> victims = new List<Victim>(this.victims);
 
-            try
+            FrameworkElement frameworkElement = sender as FrameworkElement;
+
+            await Task.Run(() =>
             {
-                wordSaver.OpenDocument();
 
-                if (generalInfo != null)
+                if (frameworkElement == null)
                 {
+                    return;
+                }
+
+                string tag = this.Dispatcher.Invoke(() => frameworkElement.Tag.ToString());
+
+                string path = null;
+
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                DocumentSaveType documentSaveType;
+
+                switch (tag)
+                {
+                    case "1":
+                        saveFileDialog.Filter = "Word Files | *.docx";
+                        documentSaveType = DocumentSaveType.DOCX;
+                        break;
+                    case "2":
+                        saveFileDialog.Filter = "PDF Files | *.pdf";
+                        documentSaveType = DocumentSaveType.PDF;
+                        break;
+                    default:
+                        saveFileDialog.Filter = "Word Files | *.docx";
+                        documentSaveType = DocumentSaveType.DOCX;
+                        break;
+                }
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    path = saveFileDialog.FileName;
+                }
+                else
+                {
+                    return;
+                }
+
+                WordSaver wordSaver = new WordSaver($@"{Environment.CurrentDirectory}\WordPattern\Accounting form.docx");
+
+                try
+                {
+                    wordSaver.OpenDocument();
+
                     wordSaver.Replace<GeneralInfo>(generalInfo, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
                                                    propName => $"%{propName}%",
                                                    (propName, propValue) =>
@@ -409,10 +431,7 @@ namespace AccountingOfTraficViolation.Views
 
                                                        return WrapEachSbmlInVerticalLine(value);
                                                    });
-                }
 
-                if (caseAccidentPlace != null)
-                {
                     if (caseAccidentPlace.AccidentOnVillage != null)
                     {
                         wordSaver.Replace<AccidentOnVillage>(caseAccidentPlace.AccidentOnVillage,
@@ -503,13 +522,19 @@ namespace AccountingOfTraficViolation.Views
                                                              });
 
                     }
-                }
 
-                if (roadCondition != null)
-                {
                     wordSaver.Replace<RoadCondition>(roadCondition,
                                                      Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
-                                                     propName => $"%{propName}%",
+                                                     propName =>
+                                                     {
+                                                         StringBuilder propNameBuilder = new StringBuilder();
+
+                                                         propNameBuilder.Append('%');
+                                                         propNameBuilder.Append(propName.GetStringWithUpperSymbols());
+                                                         propNameBuilder.Append('%');
+
+                                                         return propNameBuilder.ToString();
+                                                     },
                                                      (propName, propValue) =>
                                                      {
                                                          if (propValue == null)
@@ -534,10 +559,7 @@ namespace AccountingOfTraficViolation.Views
 
                                                          return WrapEachSbmlInVerticalLine(value);
                                                      });
-                }
 
-                if (participantsInformations != null)
-                {
                     List<ParticipantsInformation> tempList = null;
 
                     if (participantsInformations.Count < 5)
@@ -609,22 +631,215 @@ namespace AccountingOfTraficViolation.Views
                         wordSaver.Replace($"%Gender{i + 1}%", gender, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                         wordSaver.Replace($"%Citizenship{i + 1}%", citizenship, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                         wordSaver.Replace($"%DriveExpirience{i + 1}%", driveExpirience, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%DrivingTimeBeforeAccident{i + 1}%", drivingTimeBeforeAccident, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%DTBA{i + 1}%", drivingTimeBeforeAccident, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                         wordSaver.Replace($"%PDDViolation{i + 1}%", pddViolation, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                     }
+
+
+                    for (int i = 0; i < vehicles.Count; i++)
+                    {
+                        wordSaver.Replace<Vehicle>(vehicles[i],
+                                                   Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                                                         propName =>
+                                                         {
+                                                             StringBuilder propNameBuilder = new StringBuilder();
+
+                                                             propNameBuilder.Append('%');
+
+                                                             if (propName == "SeriesOfRegistrationSertificate" ||
+                                                                 propName == "RegistrationSertificate" ||
+                                                                 propName == "TrailerAvailability" ||
+                                                                 propName == "LicenceSeries" ||
+                                                                 propName == "LicenceNumber")
+                                                             {
+                                                                 propNameBuilder.Append(propName.GetStringWithUpperSymbols() + (i + 1));
+                                                             }
+                                                             else if (propName == "Surname")
+                                                             {
+                                                                 propNameBuilder.Append("v" + propName + (i + 1));
+                                                             }
+                                                             else
+                                                             {
+                                                                 propNameBuilder.Append(propName + (i + 1));
+                                                             }
+
+                                                             propNameBuilder.Append('%');
+
+                                                             return propNameBuilder.ToString();
+                                                         },
+                                                         (propName, propValue) =>
+                                                         {
+                                                             if (propValue == null)
+                                                             {
+                                                                 return "";
+                                                             }
+
+                                                             string value = ConverToString(propValue);
+
+                                                             if (propName == "TechnicalFaults")
+                                                             {
+                                                                 value = value.AddSeparator(',', 1);
+                                                             }
+                                                             else if (propName == "EDRPOU_Code1")
+                                                             {
+                                                                 value = value.AddSeparator('-', 7);
+                                                             }
+                                                             else if (propName == "CorruptionCode")
+                                                             {
+                                                                 value = value.AddSeparator(',', 2, 5, 8);
+                                                             }
+
+                                                             int maxLength = GetAttributeMaxLength<Vehicle>(vehicles[i], propName);
+
+                                                             if (maxLength != -1)
+                                                             {
+                                                                 value = value.AddSymbols('_', maxLength - value.Length);
+                                                             }
+
+                                                             value = WrapEachSbmlInVerticalLine(value);
+
+                                                             if (propName == "CorruptionCode")
+                                                             {
+                                                                 for (int j = 0; j < 3; j++)
+                                                                 {
+                                                                     value = value.Replace(" , ", ",");
+                                                                 }
+                                                             }
+
+                                                             return value;
+                                                         });
+                    }
+
+                    Vehicle vehicle = new Vehicle();
+
+                    for (int i = vehicles.Count; i <= 5; i++)
+                    {
+                        wordSaver.Replace($"%PlateNumber{i}%", "|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%FrameNumber{i}%", "|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%ChasisNumber{i}%", "|__|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Make{i}%", "|__|__|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Model{i}%", "|__|__|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Type{i}%", "|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%SORS{i}%", "|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%RS{i}%", "|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%TA{i}%", "|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%InsurerCode{i}%", "|__||__||__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%PolicySeries{i}%", "|__|__|__|__|__|__|__|__|__||__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%PolicyNumber{i}%", "|__|__|__|__|__|__|__|__|__||__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%PolicyEndDate{i}%", "|__|__|-|__|__|-|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%vSurname{i}%", "|__|__|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%LS{i}%", "|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%LN{i}%", "|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Owner{i}%", "|__|__|__|__|__|__|__|__|__|__| |__|__|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%TechnicalFaults{i}%", "|__|,|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%EDRPOU_Code{i}%", "|__|__|__|__|__|__|__| -|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%CorruptionCode{i}%", "|__|__|,|__|__|,|__|__|,|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%ActivityLicensingInfo{i}%", "|__||__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                    }
+
+                    List<Victim> victimTempList = null;
+
+                    if (victims.Count < 10)
+                    {
+                        victimTempList = new List<Victim>();
+
+                        victimTempList.AddRange(victims);
+                        Victim victim = new Victim() { Id = -1 };
+
+                        for (int i = victimTempList.Count; i < 10; i++)
+                        {
+                            victimTempList.Add(victim);
+                        }
+                    }
+
+                    string victimIsDied = null;
+                    string victimCategory = null;
+                    string victimGender = null;
+                    string victimAge = null;
+                    string victimTORSerialNumber = null;
+                    string victimSeatBelt = null;
+                    string victimMedicalResult = null;
+                    string victimCitizenship = null;
+
+                    for (int i = 0; i < victimTempList.Count; i++)
+                    {
+                        if (victimTempList[i].Id != -1)
+                        {
+                            victimIsDied = victimTempList[i].IsDied.AddSymbols('_', GetAttributeMaxLength(victims[i], "IsDied") - victims[i].IsDied.Length);
+                            victimCategory = victimTempList[i].Category.ToString();
+                            victimGender = victimTempList[i].Gender.ToString();
+                            victimAge = victimTempList[i].Age.ToString();
+                            victimTORSerialNumber = victimTempList[i].TORSerialNumber.ToString();
+                            victimSeatBelt = ConverToString(victimTempList[i].SeatBelt);
+                            victimMedicalResult = victimTempList[i].MedicalResult.ToString();
+                            victimCitizenship = victimTempList[i].Citizenship;
+
+                            victimIsDied = WrapEachSbmlInVerticalLine(victimIsDied);
+                            victimCategory = WrapEachSbmlInVerticalLine(victimCategory.AddZeroBeforeText(2 - victimCategory.Length));
+                            victimAge = WrapEachSbmlInVerticalLine(victimAge.AddZeroBeforeText(3 - victimAge.Length));
+                            victimTORSerialNumber = WrapEachSbmlInVerticalLine(victimTORSerialNumber.AddZeroBeforeText(2 - victimTORSerialNumber.Length));
+                            victimSeatBelt = WrapEachSbmlInVerticalLine(victimSeatBelt);
+                            victimMedicalResult = WrapEachSbmlInVerticalLine(victimMedicalResult);
+                            victimCitizenship = WrapEachSbmlInVerticalLine(victimCitizenship.AddZeroBeforeText(GetAttributeMaxLength(victims[i], "Citizenship") - victimCitizenship.Length));
+
+                            if (victimGender != "True")
+                            {
+                                victimGender = "| М |";
+                            }
+                            else
+                            {
+                                victimGender = "| Ж |";
+                            }
+                        }
+                        else
+                        {
+                            victimIsDied = "|__|__|";
+                            victimCategory = "|__|__|";
+                            victimGender = "|__|";
+                            victimAge = "|__|__|__|";
+                            victimTORSerialNumber = "|__|__|";
+                            victimSeatBelt = "|__|";
+                            victimMedicalResult = "|__|";
+                            victimCitizenship = "|__|__|__|";
+                        }
+
+                        wordSaver.Replace($"%IsDied{i + 1}%", victimIsDied, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Cy{i + 1}%", victimCategory, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Age{i + 1}%", victimAge, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%TOR{i + 1}%", victimTORSerialNumber, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%G{i + 1}%", victimGender, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%SB{i + 1}%", victimSeatBelt, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%MR{i + 1}%", victimMedicalResult, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%S{i + 1}%", victimTempList[i].Surname, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%N{i + 1}%", victimTempList[i].Name, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%P{i + 1}%", victimTempList[i].Patronymic, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%C{i + 1}%", victimCitizenship, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                    }
+
+                    string allVictims = victims.Count.ToString();
+                    allVictims = WrapEachSbmlInVerticalLine(allVictims.AddZeroBeforeText(3 - allVictims.Length));
+
+                    wordSaver.Replace($"%AV%", allVictims, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+
+                    if (user != null)
+                    {
+                        wordSaver.Replace("%UserFullName%", $"{user.Name} {user.Surname}", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%UserPhone%", user.Phone, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                    }
+
+                    wordSaver.SaveDocumentAs(path, documentSaveType);
+
+                    MessageBox.Show($"Файл {saveFileDialog.SafeFileName} успешно сохранён.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-
-                wordSaver.SaveDocumentAs(path, documentSaveType);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                wordSaver.Dispose();
-            }
-
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    wordSaver.Dispose();
+                }
+            });
         }
 
         private string WrapEachSbmlInVerticalLine(string textToWrap)
@@ -656,7 +871,14 @@ namespace AccountingOfTraficViolation.Views
                     formattedValue = ((TimeSpan)_object).ToString(@"hh\:mm").Remove(2, 1).AddSeparator('-', 2);
                     break;
                 case "Boolean":
-
+                    if ((bool)_object)
+                    {
+                        formattedValue = "+";
+                    }
+                    else
+                    {
+                        formattedValue = "-";
+                    }
                     break;
                 default:
                     formattedValue = _object.ToString();
@@ -686,5 +908,6 @@ namespace AccountingOfTraficViolation.Views
 
             return length;
         }
+        #endregion
     }
 }
