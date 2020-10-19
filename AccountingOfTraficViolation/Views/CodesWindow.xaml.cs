@@ -22,7 +22,6 @@ namespace AccountingOfTraficViolation.Views
         private TVAContext _TVAContext;
         private User user;
         private CodeInfo unchengedCodeInfo;
-        private CancellationTokenSource cancellationTokenSource;
         private ObservableCollection<CodeInfo> codeInfos;
         private CodeInfo CodeInfo;
 
