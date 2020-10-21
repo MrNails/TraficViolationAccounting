@@ -124,33 +124,42 @@ namespace AccountingOfTraficViolation.Services
     //Type of this method: 0 - not delete, 1 - delete only specified symbol, 2 - delete all symbols
     public class SymbolsAddCoverter : IValueConverter
     {
+        private StringBuilder convertString;
+        private StringBuilder convertBackString;
+
+        public SymbolsAddCoverter()
+        {
+            convertString = new StringBuilder();
+            convertBackString = new StringBuilder();
+        }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string[] parameters = parameter.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            convertString.Clear();
 
             if (targetType != typeof(string) || value == null || parameters.Length != 3)
             {
                 return value;
             }
 
-            string stringValue = value.ToString();
             int maxStringLength;
+            convertString.Append(value);
 
-            StringBuilder stringBuilder = new StringBuilder(stringValue);
-
-            if (!int.TryParse(parameters[1], out maxStringLength) || maxStringLength < stringBuilder.Length)
+            if (!int.TryParse(parameters[1], out maxStringLength) || maxStringLength < convertString.Length)
             {
-                return stringBuilder.ToString();
+                return convertString.ToString();
             }
 
-            stringBuilder.Insert(stringBuilder.Length, parameters[0], maxStringLength - stringBuilder.Length);
+            convertString.Insert(convertString.Length, parameters[0], maxStringLength - convertString.Length);
 
-            return stringBuilder.ToString();
+            return convertString.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string[] parameters = parameter.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            convertBackString.Clear();
 
             if (targetType != typeof(string) || value == null || parameters.Length != 3 || parameters[2] == "0")
             {
@@ -158,29 +167,46 @@ namespace AccountingOfTraficViolation.Services
             }
 
             int maxStringLength;
-            string stringValue = value.ToString();
-            
+            convertBackString.Append(value);
 
-            if (!int.TryParse(parameters[1], out maxStringLength) || maxStringLength >= stringValue.Length)
+            if (!int.TryParse(parameters[1], out maxStringLength) || maxStringLength >= convertBackString.Length)
             {
-                return value;
+                if (maxStringLength != 0)
+                {
+                    convertBackString.Insert(convertBackString.Length, parameters[0], maxStringLength - convertBackString.Length);
+                    return convertBackString.ToString();
+                }
+                else
+                {
+                    return value;
+                }
             }
 
-            if (stringValue.Length != 0)
+            if (convertBackString.Length != 0)
             {
                 if (parameters[2] == "1")
                 {
-                    int lastInputSymbol = stringValue.LastIndexOf(parameters[0]);
+                    int lastInputSymbol = -1;
+                    for (int i = 0; i < convertBackString.Length; i++)
+                    {
+                        if (convertBackString[i] != parameters[0][0])
+                        {
+                            lastInputSymbol = i;
+                        }
+                    }
 
-                    stringValue = stringValue.Remove(lastInputSymbol);
+                    if (lastInputSymbol != -1)
+                    {
+                        convertBackString.Remove(lastInputSymbol + 1, convertBackString.Length - maxStringLength);
+                    }
                 }
                 else if (parameters[2] == "2")
                 {
-                    stringValue = stringValue.Remove(maxStringLength);
+                    convertBackString.Remove(maxStringLength, convertBackString.Length - maxStringLength);
                 }
             }
 
-            return stringValue;
+            return convertBackString.ToString();
         }
 
     }

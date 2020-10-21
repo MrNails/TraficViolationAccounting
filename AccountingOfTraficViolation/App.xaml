@@ -171,6 +171,9 @@
                               Template="{StaticResource SimpleExpanderButtonTemp}"
                               IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
                               OverridesDefaultStyle="True" Padding="1.5,0">
+                    <ToggleButton.RenderTransform>
+                        <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
+                    </ToggleButton.RenderTransform>
                 </ToggleButton>
                 <ScrollViewer Grid.Row="0" Grid.Column="1" x:Name="HeaderContentScrollView" 
                               HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"

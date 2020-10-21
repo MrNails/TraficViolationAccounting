@@ -83,6 +83,7 @@
     <Compile Include="Services\VisualObjectExtensions.cs" />
     <Compile Include="ViewModels\AccidenObjectVM.cs" />
     <Compile Include="ViewModels\CasesVM.cs" />
+    <Compile Include="ViewModels\SaveCaseToWordVM.cs" />
     <Compile Include="ViewModels\UserVM.cs" />
     <Compile Include="Services\WordSaver.cs" />
     <Compile Include="Views\AccountSettingsWindow.xaml.cs">
