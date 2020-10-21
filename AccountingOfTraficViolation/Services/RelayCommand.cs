@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace AccountingOfTraficViolation
 {
-    public class RelayCommand : ICommand
+    public class RelayCommand : ICommand 
     {
         private Action<object> execute;
         private Func<object, bool> canExecute;
@@ -30,4 +31,5 @@ namespace AccountingOfTraficViolation
         }
     }
 
+    
 }
