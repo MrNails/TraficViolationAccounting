@@ -238,12 +238,21 @@ namespace AccountingOfTraficViolation.Services
                 Document = application.Documents.Open(path, Missing.Value, false, Missing.Value, Missing.Value,
                                                       Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
                                                       Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+                documentIsClose = false;
             }
             else
             {
                 throw new Exception("Текущий документ используеться другим пользователем.");
             }
 
+        }
+
+        public void ReloadDocument()
+        {
+            if (!documentIsClose && Document != null)
+            {
+                Document.Reload();
+            }
         }
 
         public void SaveDocument()
@@ -289,7 +298,6 @@ namespace AccountingOfTraficViolation.Services
                 documentIsClose = true;
 
                 Document.Close(SaveChanges: WdSaveOptions.wdDoNotSaveChanges, Missing.Value, Missing.Value);
-                application.Quit(SaveChanges: WdSaveOptions.wdDoNotSaveChanges, Missing.Value, Missing.Value);
             }
         }
 
@@ -303,17 +311,17 @@ namespace AccountingOfTraficViolation.Services
                 fileStream = System.IO.File.Open(filePath,
                 System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None);
             }
-            catch (System.IO.DirectoryNotFoundException ex)
+            catch (System.IO.DirectoryNotFoundException)
             {
                 isNotSharedException = false;
                 throw;
             }
-            catch (System.IO.FileNotFoundException ex)
+            catch (System.IO.FileNotFoundException)
             {
                 isNotSharedException = false;
                 throw;
             }
-            catch (System.IO.IOException ex) when (isNotSharedException)
+            catch (System.IO.IOException) when (isNotSharedException)
             {
                 return true;
             }
@@ -342,6 +350,7 @@ namespace AccountingOfTraficViolation.Services
                 if (disposing)
                 {
                     CloseDocument();
+                    application.Quit(SaveChanges: WdSaveOptions.wdDoNotSaveChanges, Missing.Value, Missing.Value);
                 }
 
                 if (document != null && application != null)
