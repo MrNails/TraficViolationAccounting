@@ -383,7 +383,7 @@ namespace AccountingOfTraficViolation.Views
             }
             else if (DataContext == null)
             {
-                CodeInfo = new CodeInfo() { Code = "" };
+                CodeInfo = new CodeInfo() { Code = null };
             }
 
             this.DialogResult = true;
