@@ -25,7 +25,10 @@ namespace AccountingOfTraficViolation.ViewModels
         private List<Case> cases;
         private RelayCommand showCaseInfo;
         private RelayCommand doubleClickCaseInfo;
+
         private bool caseChanged;
+
+        private SaveCaseToWordVM saveCaseToWordVM;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -46,19 +49,32 @@ namespace AccountingOfTraficViolation.ViewModels
 
             showCaseInfo = new RelayCommand(obj =>
             {
-                if (CurrentCase != null && CurrentCase.Id == ((Case)obj).Id ||
+                Case internalCase = (Case)obj;
+
+                if (CurrentCase != null && CurrentCase.Id == internalCase.Id ||
                     CaseChanged &&
                     MessageBox.Show("Данные были изменены. При просмотре другого дела " +
                                     "данные будут возвращены в начальное состояние. " +
-                                    "Вы уверены, что хотите продолжить?", "Внимание", 
+                                    "Вы уверены, что хотите продолжить?", "Внимание",
                                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
                     return;
                 }
-                CaseChanged = false;
-                TVAContext.Entry(obj).Reload();
 
-                CurrentCase = (Case)obj;
+
+                CaseChanged = false;
+
+                TVAContext.Entry(internalCase).Reload();
+
+                CurrentCase = internalCase;
+
+                ReloadCollection(CurrentGeneralInfo);
+                ReloadCollection(CurrentRoadCondition);
+                ReloadCollection(CurrentParticipantsInformation);
+                ReloadCollection(CurrentVehicles);
+                ReloadCollection(CurrentVictims);
+                ReloadCollection(CurrentAccidentOnHighway);
+                ReloadCollection(CurrentAccidentOnVillage);
 
                 ClearCollections();
 
@@ -70,6 +86,7 @@ namespace AccountingOfTraficViolation.ViewModels
 
                 if (CurrentCase.CaseAccidentPlace.AccidentOnHighway != null)
                 {
+
                     CurrentAccidentOnHighway.Add(CurrentCase.CaseAccidentPlace.AccidentOnHighway);
                 }
                 else if (CurrentCase.CaseAccidentPlace.AccidentOnVillage != null)
@@ -88,7 +105,7 @@ namespace AccountingOfTraficViolation.ViewModels
                     }
 
                     CaseReviewWindow caseReviewWindow = new CaseReviewWindow((Case)obj, user);
-                    if (caseReviewWindow.ShowDialog() == true && caseReviewWindow.Case.State != "CLOSE")
+                    if (caseReviewWindow.ShowDialog() == true)
                     {
                         currentCase.Assign(caseReviewWindow.Case);
                         CaseChanged = true;
@@ -198,10 +215,15 @@ namespace AccountingOfTraficViolation.ViewModels
                     TVAContext.Entry(CurrentCase).State = System.Data.Entity.EntityState.Modified;
                 }
             }, (o) => o != null);
+
+            saveCaseToWordVM = new SaveCaseToWordVM($@"{Environment.CurrentDirectory}\WordPattern\Accounting form.docx");
+            saveCaseToWordVM.Saved += SavedDocumentMessage;
+            saveCaseToWordVM.ExceptionCaptured += ErrorDocumentMessage;
         }
 
         public RelayCommand ShowCaseInfo => showCaseInfo;
         public RelayCommand DoubleClickCaseInfo => doubleClickCaseInfo;
+        public SaveCaseToWordVM SaveCaseToWordVM => saveCaseToWordVM;
 
         public List<Case> FoundCases
         {
@@ -251,6 +273,20 @@ namespace AccountingOfTraficViolation.ViewModels
 
             return FoundCases.Count != 0;
         }
+        public User GetCurrentCaseCreator()
+        {
+            if (CurrentCase == null)
+            {
+                throw new Exception("Выбранное дело не может быть пустым.");
+            }
+
+            return TVAContext.Users.Where(u => u.Login == CurrentCase.CreaterLogin)
+                                   .AsNoTracking()
+                                   .ToArray()
+                                   .Where(u => u.Login == CurrentCase.CreaterLogin)
+                                   .FirstOrDefault();
+
+        }
 
         public async Task<bool> FindCaseAsync(Func<IQueryable<Case>, IQueryable<Case>> predicate, CancellationToken cancellationToken)
         {
@@ -280,6 +316,36 @@ namespace AccountingOfTraficViolation.ViewModels
                 }
             }
         }
+        public async Task<User> GetCurrentCaseCreatorAsync()
+        {
+            if (CurrentCase == null)
+            {
+                throw new Exception("Выбранное дело не может быть пустым.");
+            }
+
+            return (await TVAContext.Users.Where(u => u.Login == CurrentCase.CreaterLogin)
+                                          .AsNoTracking()
+                                          .ToArrayAsync())
+                                          .Where(u => u.Login == CurrentCase.CreaterLogin)
+                                          .FirstOrDefault();
+
+        }
+
+        public Task SaveToDocument(string path, DocumentSaveType documentSaveType)
+        {
+            if (CurrentCase == null)
+            {
+                throw new Exception("Выбранное дело не может быть пустым.");
+            }
+
+            Task[] tasks = new Task[2];
+
+            saveCaseToWordVM.SaveFilePath = path;
+            saveCaseToWordVM.Case = CurrentCase;
+            saveCaseToWordVM.User = GetCurrentCaseCreator();
+
+            return saveCaseToWordVM.SaveAsync(documentSaveType);
+        }
 
         public void DiscardChanges()
         {
@@ -294,6 +360,16 @@ namespace AccountingOfTraficViolation.ViewModels
         public void Dispose()
         {
             TVAContext.Dispose();
+            saveCaseToWordVM.Dispose();
+        }
+
+        private void SavedDocumentMessage(WordSaveActionArgs args)
+        {
+            MessageBox.Show("Файл успешно сохранён.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        private void ErrorDocumentMessage(Exception ex, WordSaveActionArgs args)
+        {
+            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void ClearCollections()
@@ -305,6 +381,14 @@ namespace AccountingOfTraficViolation.ViewModels
             CurrentParticipantsInformation.Clear();
             CurrentVehicles.Clear();
             CurrentVictims.Clear();
+        }
+
+        private void ReloadCollection<T>(IEnumerable<T> collection)
+        {
+            foreach (var entity in collection)
+            {
+                TVAContext.Entry(entity).Reload();
+            }
         }
     }
 }
