@@ -30,6 +30,4 @@ namespace AccountingOfTraficViolation
             this.execute(parameter);
         }
     }
-
-    
 }
