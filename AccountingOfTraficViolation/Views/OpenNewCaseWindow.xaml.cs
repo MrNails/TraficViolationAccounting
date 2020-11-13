@@ -152,8 +152,8 @@ namespace AccountingOfTraficViolation.Views
             {
                 try
                 {
-                    isStarted = true;
                     AddCaseToDB();
+                    isStarted = false;
                     MessageBox.Show("Дело успешно добавлено.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
@@ -485,6 +485,9 @@ namespace AccountingOfTraficViolation.Views
                                 "Вы уверены, что хотите выйти?", 
                                 "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
+                e.Cancel = true;
+                DialogResult = null;
+
                 return;
             }
 

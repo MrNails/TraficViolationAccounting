@@ -22,6 +22,7 @@ namespace AccountingOfTraficViolation.ViewModels
 
         private TVAContext TVAContext;
         private Case currentCase;
+        private Case oldCase;
         private List<Case> cases;
         private RelayCommand showCaseInfo;
         private RelayCommand doubleClickCaseInfo;
@@ -49,9 +50,8 @@ namespace AccountingOfTraficViolation.ViewModels
 
             showCaseInfo = new RelayCommand(obj =>
             {
-                Case internalCase = (Case)obj;
-
-                if (CurrentCase != null && CurrentCase.Id == internalCase.Id ||
+                if (CurrentCase != null && oldCase != null &&
+                    CurrentCase.Id == oldCase.Id ||
                     CaseChanged &&
                     MessageBox.Show("Данные были изменены. При просмотре другого дела " +
                                     "данные будут возвращены в начальное состояние. " +
@@ -64,9 +64,12 @@ namespace AccountingOfTraficViolation.ViewModels
 
                 CaseChanged = false;
 
-                TVAContext.Entry(internalCase).Reload();
+                if (oldCase != null)
+                {
+                    TVAContext.Entry(oldCase).Reload();
+                }
 
-                CurrentCase = internalCase;
+                oldCase = CurrentCase;
 
                 ReloadCollection(CurrentGeneralInfo);
                 ReloadCollection(CurrentRoadCondition);
