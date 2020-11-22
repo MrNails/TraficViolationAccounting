@@ -7,7 +7,7 @@ namespace AccountingOfTraficViolation.Models
 {
     public partial class User : MainTable
     {
-        private static Regex phoneNumberRegex;
+        private static readonly Regex phoneNumberRegex;
 
         private string login;
         private string password;

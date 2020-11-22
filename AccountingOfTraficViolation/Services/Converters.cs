@@ -411,6 +411,11 @@ namespace AccountingOfTraficViolation.Services
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null || targetType != typeof(string))
+            {
+                return value;
+            }
+
             string _value = value.ToString();
 
             if (_value.Length >= 3)
@@ -423,6 +428,11 @@ namespace AccountingOfTraficViolation.Services
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null || targetType != typeof(string))
+            {
+                return value;
+            }
+
             string _value = value.ToString();
 
             return _value.GetStrWithoutSeparator(pairs);

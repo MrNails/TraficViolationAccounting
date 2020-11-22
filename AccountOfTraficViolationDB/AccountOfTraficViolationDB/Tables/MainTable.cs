@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Reflection;
 using AccountingOfTraficViolation.Services;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace AccountingOfTraficViolation
 {
@@ -37,7 +38,7 @@ namespace AccountingOfTraficViolation
         public byte[] RowVersion { get; set; }
 
 
-        public delegate void ErrorHandler(string errorMessage);
+        protected delegate void ErrorHandler(string errorMessage);
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -55,8 +56,6 @@ namespace AccountingOfTraficViolation
                     property.SetValue(this, newObject.GetProperty(property.Name).GetValue(entity));
                     OnPropertyChanged(property.Name);
                 }
-
-
             }
         }
 

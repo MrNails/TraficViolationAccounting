@@ -28,8 +28,9 @@ namespace AccountingOfTraficViolation
 
         public MainWindow()
         {
-            InitializeComponent();
             logger = new FileLogger("Errors.txt");
+
+            InitializeComponent();
 
             DataContext = user;
         }
@@ -70,6 +71,7 @@ namespace AccountingOfTraficViolation
                 CatchError(ex);
 
                 this.Close();
+                logInWindow.Close();
             }
         }
 
@@ -193,11 +195,6 @@ namespace AccountingOfTraficViolation
             MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             logger.ErrorMessage = exceptionMessage;
             logger.Log();
-        }
-
-        private void TextBox_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("1111");
         }
     }
 }
