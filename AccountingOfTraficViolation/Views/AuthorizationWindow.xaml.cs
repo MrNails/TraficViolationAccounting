@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -31,7 +29,6 @@ namespace AccountingOfTraficViolation.Views
         public AuthorizationWindow()
         {
             InitializeComponent();
-            User = new User();
         }
 
         private async void AcceptClick(object sender, RoutedEventArgs e)
@@ -40,8 +37,11 @@ namespace AccountingOfTraficViolation.Views
             {
                 LoadScreen.Visibility = Visibility.Visible;
 
+#if DEBUG
+                User = new User() { Name = "Debug", Surname = "Debug", Role = (byte)UserRole.Debug };
+#else
                 User = await CheckCerdentialsAsync();
-                //User = new User() { Name = "Debug", Surname = "Debug", Role = (byte)UserRole.Debug };
+#endif
 
                 LoadScreen.Visibility = Visibility.Collapsed;
 
@@ -56,10 +56,6 @@ namespace AccountingOfTraficViolation.Views
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-
             }
         }
         private void RefuseClick(object sender, RoutedEventArgs e)

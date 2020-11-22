@@ -27,6 +27,7 @@ namespace AccountingOfTraficViolation.Views
         public AdminWindow()
         {
             InitializeComponent();
+            
             userVM = new UserVM();
 
             DataContext = userVM;

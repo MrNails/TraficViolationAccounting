@@ -112,10 +112,10 @@ namespace AccountingOfTraficViolation.Views
                 loadResult = await casesVM.FindCaseAsync(_case =>
                 {
                     return _case.Where(c => (string.IsNullOrEmpty(login) || c.CreaterLogin == login || c.CreaterLogin.Contains(login)) &&
-                          (string.IsNullOrEmpty(status) || c.State == status) &&
-                          (exactDate == default(DateTime) || exactDate < MainTable.MinimumDate || c.OpenAt == exactDate) &&
-                          (startDate == default(DateTime) || startDate < MainTable.MinimumDate || c.OpenAt >= startDate) &&
-                          (endDate == default(DateTime) || c.OpenAt <= endDate));
+                                            (string.IsNullOrEmpty(status) || c.State == status) &&
+                                            (exactDate == default(DateTime) || exactDate < MainTable.MinimumDate || c.OpenAt == exactDate) &&
+                                            (startDate == default(DateTime) || startDate < MainTable.MinimumDate || c.OpenAt >= startDate) &&
+                                            (endDate == default(DateTime) || c.OpenAt <= endDate));
                 }, cancellationTokenSource.Token);
             }
             catch (OperationCanceledException ex)
