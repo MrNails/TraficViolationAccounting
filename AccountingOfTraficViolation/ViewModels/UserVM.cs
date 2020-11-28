@@ -23,7 +23,18 @@ namespace AccountingOfTraficViolation.ViewModels
 
         public bool IsCurrentUserChanged
         {
-            get { return CurrentUser != null && TVAContext.Entry(CurrentUser).State == System.Data.Entity.EntityState.Modified; }
+            get 
+            {
+                if (CurrentUser == null)
+                {
+                    return false;
+                }
+
+                System.Data.Entity.EntityState state = TVAContext.Entry(CurrentUser).State;
+
+                return state == System.Data.Entity.EntityState.Modified ||
+                       state == System.Data.Entity.EntityState.Added; 
+            }
         } 
 
         public User CurrentUser
@@ -49,16 +60,14 @@ namespace AccountingOfTraficViolation.ViewModels
 
         public void ConfirmChange()
         {
-            if (CurrentUser == null)
+            if (CurrentUser != null)
             {
-                return;
-            }
+                User user = TVAContext.Users.FirstOrDefault(u => u.Id == CurrentUser.Id);
 
-            User user = TVAContext.Users.FirstOrDefault(u => u.Id == CurrentUser.Id);
-
-            if (user == null)
-            {
-                TVAContext.Users.Add(CurrentUser);
+                if (user == null)
+                {
+                    TVAContext.Users.Add(CurrentUser);
+                }
             }
 
             TVAContext.SaveChanges();
@@ -76,12 +85,15 @@ namespace AccountingOfTraficViolation.ViewModels
 
             TVAContext.Users.Remove(CurrentUser);
             CurrentUser = null;
-            TVAContext.SaveChanges();
         }
         public void AddNewUser(byte role = (byte)UserRole.User)
         {
-            CurrentUser = new User();
-            CurrentUser.Role = role;
+            CurrentUser = new User
+            {
+                Role = role
+            };
+
+            TVAContext.Users.Add(CurrentUser);
         }
         public void SetCurrentUser(string login)
         {

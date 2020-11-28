@@ -22,6 +22,8 @@ namespace AccountingOfTraficViolation.Views
     /// </summary>
     public partial class AdminWindow : Window
     {
+        private bool isAddMode;
+
         private UserVM userVM;
 
         public AdminWindow()
@@ -36,24 +38,48 @@ namespace AccountingOfTraficViolation.Views
             DiscardChangeButton.IsEnabled = false;
             SaveChangeButton.IsEnabled = false;
             DeleteUserButton.IsEnabled = false;
+
+            isAddMode = false;
         }
 
         private void AcceptClick(object sender, RoutedEventArgs e)
         {
             if (UserGroupBox.CheckIfExistValidationError())
             {
+                MessageBox.Show("Необходимые поля не заполнены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (userVM.CheckIfCurrenUserLoginExist())
+            if (isAddMode && userVM.CheckIfCurrenUserLoginExist())
             {
                 MessageBox.Show("Аккаунт с таким логином существует.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
+            if (isAddMode)
+            {
+                CreateButton.Content = "Создать";
+
+                SaveChangeButton.IsEnabled = true;
+                DiscardChangeButton.IsEnabled = true;
+                DeleteUserButton.IsEnabled = true;
+            }
+
             userVM.ConfirmChange();
 
-            MessageBox.Show("Пользователь был успешно добавлен.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+            string message = string.Empty;
+
+            if (isAddMode)
+            {
+                message = "Пользователь был успешно добавлен.";
+            }
+            else
+            {
+                message = "Данные пользователя были успешно изменены.";
+            }
+
+            MessageBox.Show(message, "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+
         }
         private void RejectClick(object sender, RoutedEventArgs e)
         {
@@ -104,18 +130,40 @@ namespace AccountingOfTraficViolation.Views
             DiscardChangeButton.IsEnabled = false;
             SaveChangeButton.IsEnabled = false;
             DeleteUserButton.IsEnabled = false;
+
+            userVM.ConfirmChange();
         }
         private void CreateNewUserClick(object sender, RoutedEventArgs e)
         {
-            userVM.AddNewUser();
+            isAddMode = !isAddMode;
 
-            UserGroupBox.Header = "Новый пользователь";
+            if (isAddMode)
+            {
 
-            FindUserLoginTextBox.Text = "";
+                UserGroupBox.Header = "Новый пользователь";
 
-            SaveChangeButton.IsEnabled = true;
-            DiscardChangeButton.IsEnabled = false;
-            DeleteUserButton.IsEnabled = false;
+                userVM.AddNewUser();
+
+                CreateButton.Content = "Отменить";
+
+                FindUserLoginTextBox.Text = "";
+
+                SaveChangeButton.IsEnabled = true;
+                DiscardChangeButton.IsEnabled = false;
+                DeleteUserButton.IsEnabled = false;
+            }
+            else
+            {
+                UserGroupBox.Header = "Пользователь отсутствует";
+
+                CreateButton.Content = "Создать";
+
+                userVM.DeleteCurrentUser();
+
+                SaveChangeButton.IsEnabled = true;
+                DiscardChangeButton.IsEnabled = true;
+                DeleteUserButton.IsEnabled = true;
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -124,9 +172,11 @@ namespace AccountingOfTraficViolation.Views
             {
                 if (MessageBox.Show("Изменение не сохранены, продолжить?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
+                    e.Cancel = true;
                     return;
                 }
                 userVM.DiscardChange();
+                
             }
 
             userVM.DiscardChange();

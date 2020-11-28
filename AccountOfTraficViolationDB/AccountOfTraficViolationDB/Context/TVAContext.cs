@@ -35,6 +35,7 @@ namespace AccountingOfTraficViolation.Models
         {
             Database.CreateIfNotExists();
         }
+
         public virtual DbSet<AccidentOnHighway> AccidentOnHighways { get; set; }
         public virtual DbSet<AccidentOnVillage> AccidentOnVillages { get; set; }
         public virtual DbSet<Case> Cases { get; set; }

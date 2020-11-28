@@ -158,6 +158,13 @@ namespace AccountingOfTraficViolation.Views
                 return;
             }
 
+            if (isSaving)
+            {
+                MessageBox.Show("Не возможно выйти, пока идёт сохранение файла.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
+                e.Cancel = true;
+                return;
+            }
+
             casesVM.Dispose();
         }
 

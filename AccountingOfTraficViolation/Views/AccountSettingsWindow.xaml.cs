@@ -23,8 +23,8 @@ namespace AccountingOfTraficViolation.Views
 
             this.user = user;
 
-            LoadContext(ex => 
-            { 
+            LoadContext(ex =>
+            {
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
             });

@@ -38,7 +38,7 @@ namespace AccountingOfTraficViolation.Views
                 LoadScreen.Visibility = Visibility.Visible;
 
 #if DEBUG
-                User = new User() { Name = "Debug", Surname = "Debug", Role = (byte)UserRole.Debug };
+                User = new User { Name = "Debug", Surname = "Debug", Role = (byte)UserRole.Debug };
 #else
                 User = await CheckCerdentialsAsync();
 #endif

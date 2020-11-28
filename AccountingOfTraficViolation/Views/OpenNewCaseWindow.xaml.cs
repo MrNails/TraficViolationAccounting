@@ -51,9 +51,6 @@ namespace AccountingOfTraficViolation.Views
             _case = new Case();
 
             DataContext = _case;
-            saveCaseToWordVM = new SaveCaseToWordVM($@"{Environment.CurrentDirectory}\WordPattern\Accounting form.docx");
-            saveCaseToWordVM.Saved += SavedDocumentMessage;
-            saveCaseToWordVM.ExceptionCaptured += ErrorDocumentMessage;
 
             isStarted = false;
         }
@@ -383,6 +380,26 @@ namespace AccountingOfTraficViolation.Views
                 return;
             }
 
+            if (saveCaseToWordVM == null)
+            {
+                string filePath = $@"{Environment.CurrentDirectory}\WordPattern\Accounting form.docx";
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    saveCaseToWordVM = new SaveCaseToWordVM(filePath);
+                    saveCaseToWordVM.Saved += SavedDocumentMessage;
+                    saveCaseToWordVM.ExceptionCaptured += ErrorDocumentMessage;
+                }
+                else
+                {
+                    MessageBox.Show("Не найден файл-шаблон для сохранения дела в на устройство." +
+                                    "\nПоследующее сохранение не возможно без файла.",
+                             "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+            }
+
             if (isSaving)
             {
                 MessageBox.Show("Операция не возможна, так как на " +
@@ -491,7 +508,17 @@ namespace AccountingOfTraficViolation.Views
                 return;
             }
 
-            saveCaseToWordVM.Dispose();
+            if (isSaving)
+            {
+                MessageBox.Show("Идёт сохранение файла. Не возможно закрыть окно.",
+                                "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
+                e.Cancel = true;
+                DialogResult = null;
+
+                return;
+            }
+
+            saveCaseToWordVM?.Dispose();
         }
     }
 }
