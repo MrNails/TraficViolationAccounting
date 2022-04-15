@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Spatial;
 using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
@@ -42,7 +38,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["IsDied"] = "Не правльный ввод поля погиб(травмироварн).";
+                    errors["IsDied"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ).";
                 }
                 else if (value.Length <= 2)
                 {
@@ -50,7 +46,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["IsDied"] = "Количество символов в поле погиб(травмироварн) не может быть больше 2.";
+                    errors["IsDied"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 2.";
                 }
 
                 isDied = value;
@@ -69,7 +65,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Category"] = "Не правилный ввод категории.";
+                    errors["Category"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
 
                 category = value;
@@ -108,7 +104,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["TORSerialNumber"] = "Не правилный ввод порядкового номера ТЗ.";
+                    errors["TORSerialNumber"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ.";
                 }
 
                 _TORSerialNumber = value;
@@ -137,7 +133,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["MedicalResult"] = "Не правилный ввод результатов мет. обследования.";
+                    errors["MedicalResult"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
 
                 medicalResult = value;
@@ -154,7 +150,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Name"] = "Имя не может отсутствовать.";
+                    errors["Name"] = "пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length <= 15)
                 {
@@ -162,7 +158,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Name"] = "Количество символов в имени не может быть больше 15.";
+                    errors["Name"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 15.";
                 }
 
                 name = value;
@@ -179,7 +175,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Surname"] = "Фамилия не может отсутствовать.";
+                    errors["Surname"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length <= 15)
                 {
@@ -187,7 +183,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Surname"] = "Количество символов в фамилии не может быть больше 15.";
+                    errors["Surname"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 15.";
                 }
 
                 surname = value;
@@ -204,7 +200,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Patronymic"] = "Отчество не может отсутствовать.";
+                    errors["Patronymic"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length <= 15)
                 {
@@ -212,7 +208,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Patronymic"] = "Количество символов в отчестве не может быть больше 15.";
+                    errors["Patronymic"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 15.";
                 }
 
                 patronymic = value;
@@ -229,7 +225,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Citizenship"] = "Гражданство не может отсутствовать.";
+                    errors["Citizenship"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length <= 3)
                 {
@@ -237,7 +233,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Citizenship"] = "Количество символов в гражданстве не может быть больше 3.";
+                    errors["Citizenship"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 3.";
                 }
 
                 citizenship = value;

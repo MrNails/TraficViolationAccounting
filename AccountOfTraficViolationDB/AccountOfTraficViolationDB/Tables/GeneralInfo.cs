@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Spatial;
 using System.Text.RegularExpressions;
 using AccountingOfTraficViolation.Services;
 
@@ -12,7 +11,7 @@ namespace AccountingOfTraficViolation.Models
     [Table("GeneralInfos")]
     public partial class GeneralInfo : MainTable
     {
-        private byte сardType;
+        private byte cardType;
         private byte incidentType;
         private byte dayOfWeek;
         private string cardNumber;
@@ -43,11 +42,11 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["CardNumber"] = "Номер карты не может быть пустым.";
+                    errors["CardNumber"] = "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length > 10)
                 {
-                    errors["CardNumber"] = "Длина номера карты не может превышать 10 символов.";
+                    errors["CardNumber"] = "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 10 пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else
                 {
@@ -61,7 +60,7 @@ namespace AccountingOfTraficViolation.Models
 
         public byte CardType
         {
-            get { return сardType; }
+            get { return cardType; }
             set
             {
                 if (value <= 10)
@@ -70,10 +69,10 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["CardType"] = "Не правильный ввод типа карты. Значение должно находиться в пределах от 0 до 11.";
+                    errors["CardType"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 0 пїЅпїЅ 11.";
                 }
 
-                сardType = value;
+                cardType = value;
                 OnPropertyChanged("CardType");
             }
         }
@@ -125,7 +124,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["DayOfWeek"] = "Не правильный ввод дня недели. Значение должно находиться в пределах от 1 до 7 (1 - Понедельник, 7 - Воскресенье).";
+                    errors["DayOfWeek"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 1 пїЅпїЅ 7 (1 - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, 7 - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ).";
                 }
 
                 dayOfWeek = value;
@@ -155,7 +154,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["IncidentType"] = "Не правильный ввод типа проишествия. Значение должно находиться в пределах от 0 до 100.";
+                    errors["IncidentType"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 0 пїЅпїЅ 100.";
                 }
 
                 incidentType = value;

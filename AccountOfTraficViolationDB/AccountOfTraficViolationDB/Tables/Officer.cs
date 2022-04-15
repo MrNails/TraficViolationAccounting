@@ -5,7 +5,7 @@ using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
 {
-    public partial class User : MainTable
+    public partial class Officer : MainTable
     {
         private static readonly Regex phoneNumberRegex;
 
@@ -15,12 +15,12 @@ namespace AccountingOfTraficViolation.Models
         private string surname;
         private string phone;
 
-        static User()
+        static Officer()
         {
             phoneNumberRegex = new Regex(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$");
         }
 
-        public User()
+        public Officer()
         {
             Login = "";
             Password = "";
@@ -40,11 +40,11 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Login"] = "Поле \"логин\" не может отсутствовать.";
+                    errors["Login"] = "РџРѕР»Рµ \"Р»РѕРіРёРЅ\" РЅРµ РјРѕР¶РµС‚ РѕС‚СЃСѓС‚СЃС‚РІРѕРІР°С‚СЊ.";
                 }
                 else if (value.Length > 20)
                 {
-                    errors["Login"] = "Количество символов в поле \"логин\" не может превышать 20.";
+                    errors["Login"] = "РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РІ РїРѕР»Рµ \"Р»РѕРіРёРЅ\" РЅРµ РјРѕР¶РµС‚ РїСЂРµРІС‹С€Р°С‚СЊ 20.";
                 }
                 else
                 {
@@ -65,11 +65,11 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Password"] = "Поле \"пароль\" не может отсутствовать.";
+                    errors["Password"] = "РџРѕР»Рµ \"РїР°СЂРѕР»СЊ\" РЅРµ РјРѕР¶РµС‚ РѕС‚СЃСѓС‚СЃС‚РІРѕРІР°С‚СЊ.";
                 }
                 else if (value.Length > 20)
                 {
-                    errors["Password"] = "Количество символов в поле \"пароль\" не может превышать 20.";
+                    errors["Password"] = "РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РІ РїРѕР»Рµ \"РїР°СЂРѕР»СЊ\" РЅРµ РјРѕР¶РµС‚ РїСЂРµРІС‹С€Р°С‚СЊ 20.";
                 }
                 else
                 {
@@ -92,7 +92,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value?.Length > 20)
                 {
-                    errors["Name"] = "Количество символов в поле \"имя\" не может превышать 15.";
+                    errors["Name"] = "РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РІ РїРѕР»Рµ \"РёРјСЏ\" РЅРµ РјРѕР¶РµС‚ РїСЂРµРІС‹С€Р°С‚СЊ 15.";
                 }
                 else
                 {
@@ -112,7 +112,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value?.Length > 20)
                 {
-                    errors["Surname"] = "Количество символов в поле \"фамилия\" не может превышать 15.";
+                    errors["Surname"] = "РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РІ РїРѕР»Рµ \"С„Р°РјРёР»РёСЏ\" РЅРµ РјРѕР¶РµС‚ РїСЂРµРІС‹С€Р°С‚СЊ 15.";
                 }
                 else
                 {
@@ -132,7 +132,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value != null && !phoneNumberRegex.IsMatch(value))
                 {
-                    errors["Phone"] = "Номер телефона должен соответствовать формату:\n" +
+                    errors["Phone"] = "РќРѕРјРµСЂ С‚РµР»РµС„РѕРЅР° РґРѕР»Р¶РµРЅ СЃРѕРѕС‚РІРµС‚СЃС‚РІРѕРІР°С‚СЊ С„РѕСЂРјР°С‚Сѓ:\n" +
                                       "\t0123456789\n" +
                                       "\t(012) 345-67-89";
                 }

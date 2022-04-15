@@ -27,20 +27,20 @@ namespace AccountingOfTraficViolation.Views
         private bool isSaving;
 
         private CasesVM casesVM;
-        private User user;
+        private Officer officer;
 
         private CancellationTokenSource cancellationTokenSource;
 
-        public ShowCaseWindow(User user)
+        public ShowCaseWindow(Officer officer)
         {
             InitializeComponent();
 
-            casesVM = new CasesVM(user);
-            this.user = user;
+            casesVM = new CasesVM(officer);
+            this.officer = officer;
 
-            if (user.Role == (byte)UserRole.User)
+            if (officer.Role == (byte)UserRole.User)
             {
-                FindLoginTextBox.Text = user.Login;
+                FindLoginTextBox.Text = officer.Login;
             }
 
             DataContext = casesVM;

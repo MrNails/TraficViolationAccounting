@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using AccountingOfTraficViolation.Models;
+using AccountingOfTraficViolation.Services;
 using AccountingOfTraficViolation.Views.UserControls;
 
 namespace AccountingOfTraficViolation.Views
@@ -14,14 +15,14 @@ namespace AccountingOfTraficViolation.Views
     public partial class AccountSettingsWindow : Window
     {
         private TVAContext TVAContext;
-        private User user;
+        private Officer officer;
         private bool isChanged;
 
-        public AccountSettingsWindow(User user)
+        public AccountSettingsWindow(Officer officer)
         {
             InitializeComponent();
 
-            this.user = user;
+            this.officer = officer;
 
             LoadContext(ex =>
             {
@@ -31,7 +32,7 @@ namespace AccountingOfTraficViolation.Views
 
             isChanged = false;
 
-            DataContext = this.user;
+            DataContext = this.officer;
         }
 
         private async void LoadContext(Action<Exception> action = null)
@@ -44,11 +45,11 @@ namespace AccountingOfTraficViolation.Views
 
                 TVAContext = await Task.Run<TVAContext>(() =>
                 {
-                    TVAContext dbContext = new TVAContext();
+                    TVAContext dbContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB]);
                     return dbContext;
                 });
 
-                TVAContext.Users.Attach(user);
+                TVAContext.Officers.Attach(officer);
             }
             catch (Exception ex) when (action != null)
             {
@@ -93,7 +94,7 @@ namespace AccountingOfTraficViolation.Views
                             return;
                         }
 
-                        user.Password = FirstPasswordTextBox.Password;
+                        officer.Password = FirstPasswordTextBox.Password;
                         break;
                     default:
                         break;

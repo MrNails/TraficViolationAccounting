@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Spatial;
 using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
@@ -40,7 +38,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value > 10)
                 {
-                    errors["Status"] = "Ошибка ввода статуса. Статус не может быть больше 10.";
+                    errors["Status"] = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 10.";
                 }
                 else
                 {
@@ -61,13 +59,13 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Name"] = "Название населённого пункта не может быть пустым.";
+                    errors["Name"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     name = null;
                     return;
                 }
                 else if (value.Length > 22)
                 {
-                    errors["Name"] = "Количество символов в названии населённого пункта не может быть больше 22.";
+                    errors["Name"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 22.";
                 }
                 else
                 {
@@ -86,7 +84,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value < 0 && value > 10000)
                 {
-                    errors["ReginalCodeOfName"] = "Ошибка ввода региоанального кода.";
+                    errors["ReginalCodeOfName"] = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.";
                 }
                 else
                 {
@@ -107,7 +105,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["District"] = "Название района не может быть пустым.";
+                    errors["District"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     district = null;
                     return;
                 }
@@ -120,7 +118,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["District"] = "Количество символов в названии района не может быть больше 22.";
+                    errors["District"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 22.";
                 }
             }
         }
@@ -138,7 +136,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["ReginalCodeOfDistrict"] = "Ошибка ввода региоанального кода.";
+                    errors["ReginalCodeOfDistrict"] = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.";
                 }
             }
         }
@@ -152,7 +150,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Street"] = "Название улицы не может быть пустым.";
+                    errors["Street"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     street = null;
                     return;
                 }
@@ -165,7 +163,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Street"] = "Количество символов в названии улицы не может быть больше 22.";
+                    errors["Street"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 22.";
                 }
             }
         }
@@ -183,7 +181,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["ReginalCodeOfStreet"] = "Ошибка ввода региоанального кода.";
+                    errors["ReginalCodeOfStreet"] = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.";
                 }
             }
         }
@@ -198,7 +196,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["VillageBinding"] = "Привязка не может быть пустой.";
+                    errors["VillageBinding"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     binding = null;
                     return;
                 }
@@ -211,7 +209,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["VillageBinding"] = "Количество символов в привязке не может быть больше 47.";
+                    errors["VillageBinding"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 47.";
                 }
             }
         }
@@ -229,7 +227,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["ReginalCodeOfBinding"] = "Ошибка ввода региоанального кода.";
+                    errors["ReginalCodeOfBinding"] = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.";
                 }
             }
         }

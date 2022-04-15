@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Spatial;
 using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
@@ -27,7 +24,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value < 0)
                 {
-                    errors["CaseId"] = "Не правильно установлен ид дела.";
+                    errors["CaseId"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ.";
                     return;
                 }
 
@@ -49,7 +46,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value < 0)
                 {
-                    errors["AccidentOnHighwayId"] = "Не правильно установлен Id ДТП на автодороге.";
+                    errors["AccidentOnHighwayId"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Id пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                     return;
                 }
 
@@ -59,7 +56,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else if (AccidentOnVillageId == null && value == null)
                 {
-                    errors["AccidentOnHighwayId"] = "Вы не можете сделать Id места ДТП в населённом пункте пустым, пока пустой Id места ДТП на автодороге.";
+                    errors["AccidentOnHighwayId"] = "пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ Id пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Id пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                     return;
                 }
 
@@ -76,7 +73,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["AccidentOnHighwayId"] = "Ид проишествия на автодороге не может быть меньше 0.";
+                    errors["AccidentOnHighwayId"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 0.";
                 }
             }
         } 
@@ -87,7 +84,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value < 0)
                 {
-                    errors["AccidentOnVillageId"] = "Не правильно установлен Id ДТП в населённом пункте.";
+                    errors["AccidentOnVillageId"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Id пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     return;
                 }
 
@@ -97,7 +94,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else if (AccidentOnHighwayId == null && value == null)
                 {
-                    errors["AccidentOnVillageId"] = "Вы не можете сделать Id места ДТП на автодороге пустым, пока пустой Id места ДТП в населённом пункте.";
+                    errors["AccidentOnVillageId"] = "пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ Id пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Id пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     return;
                 }
 
@@ -115,7 +112,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["AccidentOnVillageId"] = "Ид проишествия в населённом пункте не может быть меньше 0.";
+                    errors["AccidentOnVillageId"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 0.";
                 }
             }
         }
@@ -131,7 +128,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else if (AccidentOnVillage == null && value == null)
                 {
-                    errors["AccidentOnHighway"] = "Вы не можете сделать место ДТП на автодороге пустым, пока пустое место ДТП в населённом пункте.";
+                    errors["AccidentOnHighway"] = "пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     return;
                 }
 
@@ -160,7 +157,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else if (AccidentOnHighway == null && value == null)
                 {
-                    errors["AccidentOnVillage"] = "Вы не можете сделать место ДТП в населённом пункте пустым, пока пустое место ДТП на автодороге.";
+                    errors["AccidentOnVillage"] = "пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                     return;
                 }
 
@@ -187,7 +184,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value == null)
                 {
-                    errors["Case"] = "Дело не может отсутствовать.";
+                    errors["Case"] = "пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                     return;
                 }
                 else

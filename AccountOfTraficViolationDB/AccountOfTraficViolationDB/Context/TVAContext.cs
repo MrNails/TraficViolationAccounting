@@ -1,39 +1,23 @@
 using System;
-using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountingOfTraficViolation.Models
 {
-    class ContextInitializer : CreateDatabaseIfNotExists<TVAContext>
-    {
-        protected override void Seed(TVAContext context)
-        {
-            User user = new User()
-            {
-                Login = "admin",
-                Password = "12345",
-                Role = 0
-            };
-
-            context.Users.Add(user);
-            context.SaveChanges();
-        }
-    }
-
     public partial class TVAContext : DbContext
     {
-        static TVAContext()
+        private readonly string m_connectionString;
+        
+        public TVAContext(string connectionString)
         {
-            Database.SetInitializer<TVAContext>(new ContextInitializer());
-        }
-
-        public TVAContext()
-            : base("name=TraficViolationAccounting")
-        {
-            Database.CreateIfNotExists();
+            if (string.IsNullOrEmpty(connectionString))
+                throw new ArgumentException("Connection string cannot be empty.");
+            
+            m_connectionString = connectionString;
         }
 
         public virtual DbSet<AccidentOnHighway> AccidentOnHighways { get; set; }
@@ -42,11 +26,19 @@ namespace AccountingOfTraficViolation.Models
         public virtual DbSet<GeneralInfo> GeneralInfos { get; set; }
         public virtual DbSet<ParticipantsInformation> ParticipantsInformations { get; set; }
         public virtual DbSet<RoadCondition> RoadConditions { get; set; }
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Officer> Officers { get; set; }
         public virtual DbSet<Vehicle> Vehicles { get; set; }
         public virtual DbSet<Victim> Victims { get; set; }
         public virtual DbSet<CaseAccidentPlace> CaseAccidentPlaces { get; set; }
         public virtual DbSet<CodeInfo> CodeInfos { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(m_connectionString);
+            optionsBuilder.LogTo(str => Debug.WriteLine(str));
+            
+            base.OnConfiguring(optionsBuilder);
+        }
 
         public override int SaveChanges()
         {
@@ -54,10 +46,10 @@ namespace AccountingOfTraficViolation.Models
             return base.SaveChanges();
         }
 
-        public override Task<int> SaveChangesAsync()
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             SetDateTime();
-            return base.SaveChangesAsync();
+            return base.SaveChangesAsync(cancellationToken);
         }
 
         public void CancelAllChanges()
@@ -65,46 +57,44 @@ namespace AccountingOfTraficViolation.Models
             var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Modified);
 
             foreach (var entry in entries)
-            {
                 entry.Reload();
-            }
         }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Case>()
-                .HasOptional(e => e.CaseAccidentPlace)
-                .WithRequired(e => e.Case);
-
-            modelBuilder.Entity<Case>()
-                .HasMany(e => e.ParticipantsInformations)
-                .WithRequired(e => e.Case)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Case>()
-                .HasMany(e => e.Vehicles)
-                .WithRequired(e => e.Case)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Case>()
-                .HasMany(e => e.Victims)
-                .WithRequired(e => e.Case)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<GeneralInfo>()
-                .Property(e => e.FillTime)
-                .HasPrecision(0);
-
-            modelBuilder.Entity<GeneralInfo>()
-                .HasMany(e => e.Cases)
-                .WithRequired(e => e.GeneralInfo)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<RoadCondition>()
-                .HasMany(e => e.Cases)
-                .WithRequired(e => e.RoadCondition)
-                .WillCascadeOnDelete(false);
-        }
+        // protected override void OnModelCreating(ModelBuilder modelBuilder)
+        // {
+        //     modelBuilder.Entity<Case>()
+        //         .HasOptional(e => e.CaseAccidentPlace)
+        //         .WithRequired(e => e.Case);
+        //
+        //     modelBuilder.Entity<Case>()
+        //         .HasMany(e => e.ParticipantsInformations)
+        //         .WithRequired(e => e.Case)
+        //         .WillCascadeOnDelete(false);
+        //
+        //     modelBuilder.Entity<Case>()
+        //         .HasMany(e => e.Vehicles)
+        //         .WithRequired(e => e.Case)
+        //         .WillCascadeOnDelete(false);
+        //
+        //     modelBuilder.Entity<Case>()
+        //         .HasMany(e => e.Victims)
+        //         .WithRequired(e => e.Case)
+        //         .WillCascadeOnDelete(false);
+        //
+        //     modelBuilder.Entity<GeneralInfo>()
+        //         .Property(e => e.FillTime)
+        //         .HasPrecision(0);
+        //
+        //     modelBuilder.Entity<GeneralInfo>()
+        //         .HasMany(e => e.Cases)
+        //         .WithRequired(e => e.GeneralInfo)
+        //         .WillCascadeOnDelete(false);
+        //
+        //     modelBuilder.Entity<RoadCondition>()
+        //         .HasMany(e => e.Cases)
+        //         .WithRequired(e => e.RoadCondition)
+        //         .WillCascadeOnDelete(false);
+        // }
 
         protected void SetDateTime()
         {

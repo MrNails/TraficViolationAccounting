@@ -70,13 +70,13 @@ namespace AccountingOfTraficViolation.ViewModels
         {}
         public SaveCaseToWordVM(string filePath, string saveFilePath) : this (filePath, saveFilePath, null, null)
         { }
-        public SaveCaseToWordVM(string filePath, string saveFilePath, Case _case, User user)
+        public SaveCaseToWordVM(string filePath, string saveFilePath, Case _case, Officer officer)
         {
             FilePath = filePath;
             SaveFilePath = saveFilePath;
 
             Case = _case;
-            User = user;
+            Officer = officer;
 
             wordSaver = new WordSaver(filePath);
 
@@ -107,7 +107,7 @@ namespace AccountingOfTraficViolation.ViewModels
         public string FilePath { get; private set; }
 
         public Case Case { get; set; }
-        public User User { get; set; }
+        public Officer Officer { get; set; }
 
 
         #region WordSaver Region
@@ -565,10 +565,10 @@ namespace AccountingOfTraficViolation.ViewModels
 
                     wordSaver.Replace($"%AV%", allVictims, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
 
-                    if (User != null)
+                    if (Officer != null)
                     {
-                        wordSaver.Replace("%UserFullName%", $"{User.Name} {User.Surname}", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace("%UserPhone%", User.Phone, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%UserFullName%", $"{Officer.Name} {Officer.Surname}", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%UserPhone%", Officer.Phone, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                     }
 
                     dispatcher.Invoke(() => SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);

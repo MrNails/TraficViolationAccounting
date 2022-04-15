@@ -21,18 +21,18 @@ namespace AccountingOfTraficViolation.Views
     /// </summary>
     public partial class CaseReviewWindow : Window
     {
-        private readonly User user;
+        private readonly Officer officer;
 
         public Case Case { get; private set; }
 
-        public CaseReviewWindow(Case @case, User user)
+        public CaseReviewWindow(Case @case, Officer officer)
         {
-            this.user = user;
+            this.officer = officer;
 
             Case = @case.Clone();
             InitializeComponent();
 
-            if (Case.State == "CLOSE" || Case.CreaterLogin != user.Login)
+            if (Case.State == "CLOSE" || Case.CreaterLogin != officer.Login)
             {
                 CloseCaseButton.IsEnabled = false;
             }

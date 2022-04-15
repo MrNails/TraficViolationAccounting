@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Spatial;
-using System.Text.RegularExpressions;
 using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
@@ -40,12 +36,12 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["HighwayIndexAndNumber"] = "Индекс и номер дороги не могут отсутствовать.";
+                    errors["HighwayIndexAndNumber"] = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                     
                 }
                 else if (value.Length > 6)
                 {
-                    errors["HighwayIndexAndNumber"] = "Количество символов в индексе и номере дороги не может превышать 6.";
+                    errors["HighwayIndexAndNumber"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 6.";
                 }
                 else
                 {
@@ -69,7 +65,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else if (value.Length > 20)
                 {
-                    errors["AdditionalInfo"] = "Количество символов в поле с километрами не может быть больше 20.";
+                    errors["AdditionalInfo"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 20.";
                 }
                 else
                 {
@@ -90,15 +86,15 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Kilometer"] = "Поле с количеством километров не может быть пустым.";
+                    errors["Kilometer"] = "пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (!int.TryParse(value, out int km))
                 {
-                    errors["Kilometer"] = $"Невозможно преобразовать значение '{value}'.";
+                    errors["Kilometer"] = $"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ '{value}'.";
                 }
                 else if (value.Length > 4)
                 {
-                    errors["Kilometer"] = "Количество символов в поле с километрами не может быть больше 4.";
+                    errors["Kilometer"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 4.";
                 }
                 else
                 {
@@ -119,15 +115,15 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Meter"] = "Поле с количеством метров не может быть пустым.";
+                    errors["Meter"] = "пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (!int.TryParse(value, out int m))
                 {
-                    errors["Kilometer"] = $"Невозможно преобразовать значение '{value}'.";
+                    errors["Kilometer"] = $"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ '{value}'.";
                 }
                 else if (value.Length > 3)
                 {
-                    errors["Meter"] = "Количество символов в поле с метрами не может быть больше 3.";
+                    errors["Meter"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 3.";
                 }
                 else
                 {
@@ -148,11 +144,11 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Binding"] = "Поле 'Привязка' не может быть пустым.";
+                    errors["Binding"] = "пїЅпїЅпїЅпїЅ 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length > 47)
                 {
-                    errors["Binding"] = "Количество символов в поле 'Привязка' не может быть больше 47.";
+                    errors["Binding"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ' пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 47.";
                 }
                 else
                 {

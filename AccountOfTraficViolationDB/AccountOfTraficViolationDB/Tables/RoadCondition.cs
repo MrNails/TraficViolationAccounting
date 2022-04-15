@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Spatial;
-using System.Text.RegularExpressions;
 using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
@@ -48,7 +44,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["SurfaceType"] = "Не правилный ввод типа покрытия.";
+                    errors["SurfaceType"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
             }
         }
@@ -62,11 +58,11 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["SurfaceState"] = "Состояние дороги не может быть пустым.";
+                    errors["SurfaceState"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length > 2)
                 {
-                    errors["SurfaceState"] = "Количество символов в состоянии дороги не может превышать 2.";
+                    errors["SurfaceState"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 2.";
                 }
                 else
                 {
@@ -91,7 +87,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Illumination"] = "Не правилный ввод освещённости.";
+                    errors["Illumination"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
             }
         }
@@ -109,7 +105,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["ArtificialConstructions"] = "Не правилный ввод кода исскуственных сооружений.";
+                    errors["ArtificialConstructions"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
             }
         }
@@ -123,11 +119,11 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["PlaceElement"] = "Элемент местности не может быть пустым.";
+                    errors["PlaceElement"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length > 6)
                 {
-                    errors["PlaceElement"] = "Количество символов в элементе местности не может превышать 6.";
+                    errors["PlaceElement"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 6.";
                 }
                 else
                 {
@@ -152,7 +148,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["EngineeringTranpsortEquipment"] = "Не правилный ввод кода инженерно-транспортного оборудования.";
+                    errors["EngineeringTranpsortEquipment"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
             }
         }
@@ -166,11 +162,11 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["TechnicalTool"] = "Поле с техническими приспособлениями не может быть пустым.";
+                    errors["TechnicalTool"] = "пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length > 10)
                 {
-                    errors["TechnicalTool"] = "Количество символов в поле техническими приспособлениями не может превышать 10.";
+                    errors["TechnicalTool"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 10.";
                 }
                 else
                 {
@@ -195,7 +191,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["WeatherCondition"] = "Не правилный ввод кода погодных условий.";
+                    errors["WeatherCondition"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
             }
         }
@@ -209,11 +205,11 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["RoadDisadvantages"] = "Поле с неисправностями дороги не может быть пустым.";
+                    errors["RoadDisadvantages"] = "пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length > 10)
                 {
-                    errors["RoadDisadvantages"] = "Количество символов в поле с неисправностями дороги не может превышать 10.";
+                    errors["RoadDisadvantages"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 10.";
                 }
                 else
                 {
@@ -237,7 +233,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["IncidentPlace"] = "Не правилный ввод кода места концентрации ДТП.";
+                    errors["IncidentPlace"] = "пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.";
                 }
             }
         }

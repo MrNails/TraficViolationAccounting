@@ -1,5 +1,9 @@
-﻿using System.Threading;
+﻿using System;
+using System.IO;
+using System.Text.Json.Nodes;
+using System.Threading;
 using System.Windows;
+using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation
 {
@@ -17,17 +21,34 @@ namespace AccountingOfTraficViolation
             currentAppInstance = new Mutex(true, "Accounting of trafic violation", out createdNew);
 
             if (!createdNew)
-            {
                 this.Shutdown();
-            }
-
-            
 
             logger = new FileLogger("Errors.txt");
 
             DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
+        private void LoadSettings()
+        {
+            var fPath = Path.Combine(Environment.CurrentDirectory, "appsetings.json");
+            if (!File.Exists(fPath))
+            {
+                MessageBox.Show("Отсутствует файл appsetings.json", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                
+                Shutdown();
+                
+                return;
+            }
+            
+            var jObj = JsonObject.Parse(File.ReadAllText(fPath));
+
+            var connectionStrings = jObj["ConnectionStrings"].AsObject();
+
+            foreach (var connectionString in connectionStrings)
+                GlobalSettings.ConnectionStrings[connectionString.Key] = connectionString.Value.GetValue<string>();
+            
+        }
+        
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);

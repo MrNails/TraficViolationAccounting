@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Spatial;
-using System.Text.RegularExpressions;
 using AccountingOfTraficViolation.Services;
 
 namespace AccountingOfTraficViolation.Models
@@ -46,7 +41,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Name"] = "Имя не может быть пустым.";
+                    errors["Name"] = "пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     name = null;
                     return;
                 }
@@ -59,7 +54,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Name"] = "Количество символов в имени не может быть больше 15.";
+                    errors["Name"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 15.";
                 }
             }
         }
@@ -73,7 +68,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Surname"] = "Фамилия не может быть пустой.";
+                    errors["Surname"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     surname = null;
                     return;
                 }
@@ -86,7 +81,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Surname"] = "Количество символов в фамилии не может быть больше 15.";
+                    errors["Surname"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 15.";
                 }
             }
         }
@@ -100,7 +95,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Patronymic"] = "Отчество не может быть пустым.";
+                    errors["Patronymic"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     patronymic = null;
                     return;
                 }
@@ -113,7 +108,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Patronymic"] = "Количество символов в отчестве не может быть больше 15.";
+                    errors["Patronymic"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 15.";
                 }
             }
         }
@@ -127,7 +122,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Address"] = "Адрес не может быть пустым.";
+                    errors["Address"] = "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     address = null;
                     return;
                 }
@@ -140,7 +135,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Address"] = "Количество символов в адресе не может быть больше 50.";
+                    errors["Address"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 50.";
                 }
             }
         }
@@ -152,7 +147,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (value < 1)
                 {
-                    errors["Qualification"] = "Квалификация не может быть 0.";
+                    errors["Qualification"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ 0.";
                 }
                 else
                 {
@@ -175,7 +170,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Age"] = "Возраст не может быть меньше 1 года и превышать 100 лет.";
+                    errors["Age"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 1 пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 100 пїЅпїЅпїЅ.";
                 }
 
                 age = value;
@@ -202,7 +197,7 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["Citizenship"] = "Гражданство не может быть пустым.";
+                    errors["Citizenship"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                     citizenship = null;
                     return;
                 }
@@ -215,7 +210,7 @@ namespace AccountingOfTraficViolation.Models
                 }
                 else
                 {
-                    errors["Citizenship"] = "Количество символов в гражданстве не может быть больше 3.";
+                    errors["Citizenship"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 3.";
                 }
             }
         }
@@ -249,11 +244,11 @@ namespace AccountingOfTraficViolation.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    errors["PDDViolation"] = "Нарушение ПДР не может быть пустым.";
+                    errors["PDDViolation"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.";
                 }
                 else if (value.Length > 4)
                 {
-                    errors["PDDViolation"] = "Количество символов в нарушение ПДР не может превышать 4.";
+                    errors["PDDViolation"] = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 4.";
                 }
                 else
                 {

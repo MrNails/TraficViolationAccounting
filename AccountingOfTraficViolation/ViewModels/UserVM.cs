@@ -6,53 +6,54 @@ using System.Text;
 using System.Threading.Tasks;
 using AccountingOfTraficViolation.Models;
 using AccountingOfTraficViolation.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountingOfTraficViolation.ViewModels
 {
     public class UserVM : IDisposable, INotifyPropertyChanged
     {
         private TVAContext TVAContext;
-        private User currentFindUser;
+        private Officer currentFindOfficer;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public UserVM()
         {
-            TVAContext = new TVAContext();
+            TVAContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB]);
         }
 
         public bool IsCurrentUserChanged
         {
             get 
             {
-                if (CurrentUser == null)
+                if (CurrentOfficer == null)
                 {
                     return false;
                 }
 
-                System.Data.Entity.EntityState state = TVAContext.Entry(CurrentUser).State;
+                var state = TVAContext.Entry(CurrentOfficer).State;
 
-                return state == System.Data.Entity.EntityState.Modified ||
-                       state == System.Data.Entity.EntityState.Added; 
+                return state == EntityState.Modified ||
+                       state == EntityState.Added; 
             }
         } 
 
-        public User CurrentUser
+        public Officer CurrentOfficer
         {
-            get { return currentFindUser; }
+            get { return currentFindOfficer; }
             private set
             {
-                currentFindUser = value;
+                currentFindOfficer = value;
                 OnPropertyChanged("CurrentUser");
             }
         }
 
         public bool CheckIfCurrenUserLoginExist()
         {
-            var res = TVAContext.Users.
-                                     Where(u => u.Login == CurrentUser.Login).
+            var res = TVAContext.Officers.
+                                     Where(u => u.Login == CurrentOfficer.Login).
                                      AsEnumerable().
-                                     Where(u => u.Login == CurrentUser.Login).
+                                     Where(u => u.Login == CurrentOfficer.Login).
                                      ToArray().
                                      FirstOrDefault();
             return res != null;
@@ -60,13 +61,13 @@ namespace AccountingOfTraficViolation.ViewModels
 
         public void ConfirmChange()
         {
-            if (CurrentUser != null)
+            if (CurrentOfficer != null)
             {
-                User user = TVAContext.Users.FirstOrDefault(u => u.Id == CurrentUser.Id);
+                Officer officer = TVAContext.Officers.FirstOrDefault(u => u.Id == CurrentOfficer.Id);
 
-                if (user == null)
+                if (officer == null)
                 {
-                    TVAContext.Users.Add(CurrentUser);
+                    TVAContext.Officers.Add(CurrentOfficer);
                 }
             }
 
@@ -78,22 +79,22 @@ namespace AccountingOfTraficViolation.ViewModels
         }
         public void DeleteCurrentUser()
         {
-            if (CurrentUser == null)
+            if (CurrentOfficer == null)
             {
                 return;
             }
 
-            TVAContext.Users.Remove(CurrentUser);
-            CurrentUser = null;
+            TVAContext.Officers.Remove(CurrentOfficer);
+            CurrentOfficer = null;
         }
         public void AddNewUser(byte role = (byte)UserRole.User)
         {
-            CurrentUser = new User
+            CurrentOfficer = new Officer
             {
                 Role = role
             };
 
-            TVAContext.Users.Add(CurrentUser);
+            TVAContext.Officers.Add(CurrentOfficer);
         }
         public void SetCurrentUser(string login)
         {
@@ -102,7 +103,7 @@ namespace AccountingOfTraficViolation.ViewModels
                 throw new ArgumentException("Логин не может отсутствовать.", "login");
             }
 
-            CurrentUser = TVAContext.Users.
+            CurrentOfficer = TVAContext.Officers.
                                      Where(u => u.Login == login).
                                      AsEnumerable().
                                      Where(u => u.Login == login).

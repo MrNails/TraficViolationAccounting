@@ -102,7 +102,7 @@ namespace AccountingOfTraficViolation.Views
 
             userVM.SetCurrentUser(FindUserLoginTextBox.Text);
 
-            if (userVM.CurrentUser != null)
+            if (userVM.CurrentOfficer != null)
             {
                 UserGroupBox.Header = "Найденный пользователь";
                 DiscardChangeButton.IsEnabled = true;

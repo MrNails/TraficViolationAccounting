@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows;
 using System.Linq;
-using System.Data.Entity;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AccountingOfTraficViolation.Services
 {
@@ -22,9 +22,7 @@ namespace AccountingOfTraficViolation.Services
                 throw new ArgumentNullException("obj");
             }
 
-            var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, ReferenceLoopHandling = ReferenceLoopHandling.Ignore};
-
-            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj, deserializeSettings), deserializeSettings);
+            return JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(obj));
         }
     }
 

@@ -22,7 +22,7 @@ namespace AccountingOfTraficViolation
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Models.User user;
+        private Models.Officer officer;
         private ILogger logger;
         private AccountSettingsWindow accountSettingsWindow;
 
@@ -32,12 +32,12 @@ namespace AccountingOfTraficViolation
 
             InitializeComponent();
 
-            DataContext = user;
+            DataContext = officer;
         }
 
         private void InitUser()
         {
-            if (user.Role == (byte)UserRole.Debug || user.Role == (byte)UserRole.Admin)
+            if (officer.Role == (byte)UserRole.Debug || officer.Role == (byte)UserRole.Admin)
             {
                 AdminWindowMenuItem.Visibility = Visibility.Visible;
             }
@@ -46,7 +46,7 @@ namespace AccountingOfTraficViolation
                 AdminWindowMenuItem.Visibility = Visibility.Hidden;
             }
 
-            DataContext = user;
+            DataContext = officer;
             GC.Collect();
         }
 
@@ -62,7 +62,7 @@ namespace AccountingOfTraficViolation
                 }
                 else
                 {
-                    user = logInWindow.User;
+                    officer = logInWindow.Officer;
                     InitUser();
                 }
             }
@@ -77,18 +77,18 @@ namespace AccountingOfTraficViolation
 
         private void OpenCaseClick(object sender, RoutedEventArgs e)
         {
-            if (user == null)
+            if (officer == null)
             {
                 MessageBox.Show("Вы не вошли в аккаунт и не можете открывать дело.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (this.user.Role != (byte)UserRole.User && this.user.Role != (byte)UserRole.Debug)
+            if (this.officer.Role != (byte)UserRole.User && this.officer.Role != (byte)UserRole.Debug)
             {
                 MessageBox.Show("У вас не хватает привелегий на создание дела.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            OpenNewCaseWindow caseWindow = new OpenNewCaseWindow(user);
+            OpenNewCaseWindow caseWindow = new OpenNewCaseWindow(officer);
 
             try
             {
@@ -101,7 +101,7 @@ namespace AccountingOfTraficViolation
         }
         private void ShowCaseClick(object sender, RoutedEventArgs e)
         {
-            ShowCaseWindow showCaseWindow = new ShowCaseWindow(user);
+            ShowCaseWindow showCaseWindow = new ShowCaseWindow(officer);
 
             try
             {
@@ -122,7 +122,7 @@ namespace AccountingOfTraficViolation
             {
                 if (logInWindow.ShowDialog() == true)
                 {
-                    user = logInWindow.User;
+                    officer = logInWindow.Officer;
                     InitUser();
 
                     this.Visibility = Visibility.Visible;
@@ -160,7 +160,7 @@ namespace AccountingOfTraficViolation
             {
                 try
                 {
-                    accountSettingsWindow = new AccountSettingsWindow(user);
+                    accountSettingsWindow = new AccountSettingsWindow(officer);
                     accountSettingsWindow.Show();
                     accountSettingsWindow.Closed += (obj, arg) =>
                     {

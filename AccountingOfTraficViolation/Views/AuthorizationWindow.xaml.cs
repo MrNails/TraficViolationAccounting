@@ -1,21 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using AccountingOfTraficViolation.Models;
-using AccountingOfTraficViolation.Views.UserControls;
+using AccountingOfTraficViolation.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountingOfTraficViolation.Views
 {
@@ -24,7 +13,7 @@ namespace AccountingOfTraficViolation.Views
     /// </summary>
     public partial class AuthorizationWindow : Window
     {
-        public User User { get; set; }
+        public Officer Officer { get; set; }
 
         public AuthorizationWindow()
         {
@@ -38,14 +27,14 @@ namespace AccountingOfTraficViolation.Views
                 LoadScreen.Visibility = Visibility.Visible;
 
 #if DEBUG
-                User = new User { Name = "Debug", Surname = "Debug", Role = (byte)UserRole.Debug };
+                Officer = new Officer { Name = "Debug", Surname = "Debug", Role = (byte)UserRole.Debug };
 #else
                 User = await CheckCerdentialsAsync();
 #endif
 
                 LoadScreen.Visibility = Visibility.Collapsed;
 
-                if (User == null)
+                if (Officer == null)
                 {
                     MessageBox.Show("Пользователь не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -63,14 +52,14 @@ namespace AccountingOfTraficViolation.Views
             DialogResult = false;
         }
 
-        private async Task<User> CheckCerdentialsAsync()
+        private async Task<Officer> CheckCerdentialsAsync()
         {
-            return await Task<User>.Run(() =>
+            return await Task<Officer>.Run(() =>
             {
-                User _user = null;
-                using (TVAContext context = new TVAContext())
+                Officer officer = null;
+                using (TVAContext context = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB]))
                 {
-                    var res = context.Users
+                    var res = context.Officers
                                      .AsNoTracking()
                                      .Where(user => user.Login == LoginTextBox.Text && user.Password == PwdBox.Password)
                                      .AsEnumerable()
@@ -78,12 +67,12 @@ namespace AccountingOfTraficViolation.Views
 
                     this.Dispatcher.Invoke(() =>
                     {
-                        _user = res.FirstOrDefault();
+                        officer = res.FirstOrDefault();
                     });
 
                 }
 
-                return _user;
+                return officer;
             });
         }
     }

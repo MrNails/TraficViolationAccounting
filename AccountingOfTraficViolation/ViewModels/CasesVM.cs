@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,12 +10,13 @@ using AccountingOfTraficViolation.Models;
 using AccountingOfTraficViolation.Services;
 using AccountingOfTraficViolation.Views;
 using AccountingOfTraficViolation.Views.AddInfoWindows;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountingOfTraficViolation.ViewModels
 {
     public class CasesVM : INotifyPropertyChanged, IDisposable
     {
-        private readonly User user;
+        private readonly Officer officer;
 
         private TVAContext TVAContext;
         private Case currentCase;
@@ -33,10 +31,10 @@ namespace AccountingOfTraficViolation.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public CasesVM(User user)
+        public CasesVM(Officer officer)
         {
-            TVAContext = new TVAContext();
-            this.user = user;
+            TVAContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB]);
+            this.officer = officer;
 
             CurrentGeneralInfo = new ObservableCollection<GeneralInfo>();
             CurrentRoadCondition = new ObservableCollection<RoadCondition>();
@@ -107,7 +105,7 @@ namespace AccountingOfTraficViolation.ViewModels
                         currentCase = (Case)obj;
                     }
 
-                    CaseReviewWindow caseReviewWindow = new CaseReviewWindow((Case)obj, user);
+                    CaseReviewWindow caseReviewWindow = new CaseReviewWindow((Case)obj, officer);
                     if (caseReviewWindow.ShowDialog() == true)
                     {
                         currentCase.Assign(caseReviewWindow.Case);
@@ -123,7 +121,7 @@ namespace AccountingOfTraficViolation.ViewModels
                     return;
                 }
 
-                if (currentCase != null && currentCase.CreaterLogin != user.Login)
+                if (currentCase != null && currentCase.CreaterLogin != officer.Login)
                 {
                     MessageBox.Show("Вы не можете изменять подробности в чужом деле.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -215,7 +213,7 @@ namespace AccountingOfTraficViolation.ViewModels
 
                 if (CaseChanged)
                 {
-                    TVAContext.Entry(CurrentCase).State = System.Data.Entity.EntityState.Modified;
+                    TVAContext.Entry(CurrentCase).State = EntityState.Modified;
                 }
             }, (o) => o != null);
 
@@ -276,14 +274,14 @@ namespace AccountingOfTraficViolation.ViewModels
 
             return FoundCases.Count != 0;
         }
-        public User GetCurrentCaseCreator()
+        public Officer GetCurrentCaseCreator()
         {
             if (CurrentCase == null)
             {
                 throw new Exception("Выбранное дело не может быть пустым.");
             }
 
-            return TVAContext.Users.Where(u => u.Login == CurrentCase.CreaterLogin)
+            return TVAContext.Officers.Where(u => u.Login == CurrentCase.CreaterLogin)
                                    .AsNoTracking()
                                    .ToArray()
                                    .Where(u => u.Login == CurrentCase.CreaterLogin)
@@ -319,14 +317,14 @@ namespace AccountingOfTraficViolation.ViewModels
                 }
             }
         }
-        public async Task<User> GetCurrentCaseCreatorAsync()
+        public async Task<Officer> GetCurrentCaseCreatorAsync()
         {
             if (CurrentCase == null)
             {
                 throw new Exception("Выбранное дело не может быть пустым.");
             }
 
-            return (await TVAContext.Users.Where(u => u.Login == CurrentCase.CreaterLogin)
+            return (await TVAContext.Officers.Where(u => u.Login == CurrentCase.CreaterLogin)
                                           .AsNoTracking()
                                           .ToArrayAsync())
                                           .Where(u => u.Login == CurrentCase.CreaterLogin)
@@ -345,7 +343,7 @@ namespace AccountingOfTraficViolation.ViewModels
 
             saveCaseToWordVM.SaveFilePath = path;
             saveCaseToWordVM.Case = CurrentCase;
-            saveCaseToWordVM.User = GetCurrentCaseCreator();
+            saveCaseToWordVM.Officer = GetCurrentCaseCreator();
 
             return saveCaseToWordVM.SaveAsync(documentSaveType);
         }

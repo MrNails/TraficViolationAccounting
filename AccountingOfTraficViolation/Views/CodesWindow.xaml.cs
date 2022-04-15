@@ -3,14 +3,13 @@ using AccountingOfTraficViolation.Views.UserControls;
 using AccountingOfTraficViolation.Services;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Linq;
-using System.Threading;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountingOfTraficViolation.Views
 {
@@ -20,7 +19,7 @@ namespace AccountingOfTraficViolation.Views
     public partial class CodesWindow : Window
     {
         private TVAContext _TVAContext;
-        private User user;
+        private Officer officer;
         private CodeInfo unchengedCodeInfo;
         private ObservableCollection<CodeInfo> codeInfos;
         private CodeInfo CodeInfo;
@@ -40,11 +39,11 @@ namespace AccountingOfTraficViolation.Views
 
         public CodesWindow() : this(null)
         { }
-        public CodesWindow(User user)
+        public CodesWindow(Officer officer)
         {
             InitializeComponent();
 
-            this.user = user;
+            this.officer = officer;
 
             SelectButton = new Button();
             DiscardButton = new Button();
@@ -52,7 +51,7 @@ namespace AccountingOfTraficViolation.Views
             SelectButton.Content = "Выбрать";
             DiscardButton.Content = "Отменить";
 
-            if (user != null && (user.Role == (byte)UserRole.Debug || user.Role == (byte)UserRole.Admin)) 
+            if (officer != null && (officer.Role == (byte)UserRole.Debug || officer.Role == (byte)UserRole.Admin)) 
             {
                 AddButton = new Button();
                 EditButton = new Button();
@@ -282,7 +281,7 @@ namespace AccountingOfTraficViolation.Views
 
                 _TVAContext = await Task.Run<TVAContext>(() =>
                 {
-                    TVAContext dbContext = new TVAContext();
+                    TVAContext dbContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB]);
                     return dbContext;
                 });
 

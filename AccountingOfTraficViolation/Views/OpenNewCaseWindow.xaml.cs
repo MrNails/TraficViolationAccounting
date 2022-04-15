@@ -7,18 +7,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using AccountingOfTraficViolation.Views.AddInfoWindows;
 using AccountingOfTraficViolation.Models;
 using System.Windows.Media.Animation;
-using System.Data.Entity.Validation;
-using System.Runtime.ExceptionServices;
 using AccountingOfTraficViolation.Services;
-using System.Reflection;
 using Microsoft.Win32;
 using AccountingOfTraficViolation.ViewModels;
 
@@ -32,7 +26,7 @@ namespace AccountingOfTraficViolation.Views
         private bool isStarted;
         private bool isSaving;
 
-        private User user;
+        private Officer officer;
         private GeneralInfo generalInfo;
         private CaseAccidentPlace caseAccidentPlace;
         private RoadCondition roadCondition;
@@ -43,11 +37,11 @@ namespace AccountingOfTraficViolation.Views
 
         private SaveCaseToWordVM saveCaseToWordVM;
 
-        public OpenNewCaseWindow(User user)
+        public OpenNewCaseWindow(Officer officer)
         {
             InitializeComponent();
 
-            this.user = user;
+            this.officer = officer;
             _case = new Case();
 
             DataContext = _case;
@@ -70,7 +64,7 @@ namespace AccountingOfTraficViolation.Views
             _case.Victims = victims;
             _case.State = "PROCESSING";
             _case.CaseAccidentPlace = caseAccidentPlace;
-            _case.CreaterLogin = user.Login;
+            _case.CreaterLogin = officer.Login;
         }
 
         private void GeneralInfoClick(object sender, RoutedEventArgs e)
@@ -260,7 +254,7 @@ namespace AccountingOfTraficViolation.Views
 
         private async void AddCaseToDB()
         {
-            using (TVAContext context = new TVAContext())
+            using (TVAContext context = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB]))
             {
                 context.GeneralInfos.Add(generalInfo);
                 context.RoadConditions.Add(roadCondition);
@@ -465,7 +459,7 @@ namespace AccountingOfTraficViolation.Views
 
             saveCaseToWordVM.SaveFilePath = path;
             saveCaseToWordVM.Case = _case;
-            saveCaseToWordVM.User = user;
+            saveCaseToWordVM.Officer = officer;
 
             try
             {
