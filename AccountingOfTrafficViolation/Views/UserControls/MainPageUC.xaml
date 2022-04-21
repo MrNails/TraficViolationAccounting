@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="AccountingOfTrafficViolation.Views.UserControls.MainPageUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AccountingOfTrafficViolation.Views.UserControls"
+             mc:Ignorable="d"
+             Height="200" Width="500" 
+             MinHeight="200" MinWidth="370" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Menu VerticalAlignment="Top" Grid.Row="0" Grid.ColumnSpan="2">
+            <MenuItem Header="Меню">
+                <MenuItem Header="Настройки аккаунта" Click="AccountSettings_Click"/>
+                <MenuItem Header="Выйти из аккаунта" Click="ExitAccountClick"/>
+            </MenuItem>
+            <MenuItem x:Name="AdminWindowMenuItem" Header="Для администратора" Click="AdminWindowMenuItem_Click"/>
+        </Menu>
+        <WrapPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock FontSize="30" TextAlignment="Center" TextWrapping="Wrap">
+                <Run Text="Добро пожаловать,"/>
+                <Run Text="{Binding Path=Name}"/>
+                <Run Text="{Binding Path=Surname}"/>
+            </TextBlock>
+        </WrapPanel>
+
+        <Button Grid.Row="2"  Grid.Column="0" Content="Открыть дело" Width="150" Click="OpenCaseClick"
+                VerticalAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonTemplateStyle}" />
+        <Button Grid.Row="2"  Grid.Column="1" Content="Просмотреть дела" Width="150" Click="ShowCaseClick"
+                VerticalAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonTemplateStyle}"/>
+    </Grid>
+</UserControl>
