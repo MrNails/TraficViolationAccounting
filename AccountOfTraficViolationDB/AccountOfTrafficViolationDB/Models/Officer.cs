@@ -30,7 +30,7 @@ namespace AccountOfTrafficViolationDB.Models
         }
 
         [NotAssign, Column("OfficerId")]
-        public int Id { get; init; }
+        public string Id { get; init; }
         
         public string Name
         {

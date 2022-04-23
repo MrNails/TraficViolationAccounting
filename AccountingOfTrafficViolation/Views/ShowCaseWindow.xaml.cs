@@ -36,12 +36,9 @@ namespace AccountingOfTrafficViolation.Views
             InitializeComponent();
 
             m_casesVM = new CasesVM();
-
-            if (GlobalSettings.ActiveOfficer.Role == (byte)UserRole.User)
-            {
-                FindLoginTextBox.Text = GlobalSettings.ActiveOfficer.Name;
-            }
-
+            
+            FindLoginTextBox.Text = GlobalSettings.ActiveOfficer.Id;
+            
             DataContext = m_casesVM;
         }
 
@@ -98,12 +95,10 @@ namespace AccountingOfTrafficViolation.Views
                         endDate = MainTable.MinimumDate;
                 }
 
-
-                loadResult = await m_casesVM.FindCaseAsync(_case =>
+                loadResult = await m_casesVM.FillCasesAsync(_case =>
                 {
-                    return _case.Where(c => 
-                                            // (string.IsNullOrEmpty(login) || c.CreaterLogin == login || c.CreaterLogin.Contains(login)) &&
-                                            // (string.IsNullOrEmpty(status) || c.State == status) &&
+                    return _case.Where(c => (string.IsNullOrEmpty(login) || c.OfficerId == login || c.OfficerId.Contains(login)) &&
+                                            (string.IsNullOrEmpty(status) || c.State == status) &&
                                             (exactDate == default(DateTime) || exactDate < MainTable.MinimumDate || c.OpenAt == exactDate) &&
                                             (startDate == default(DateTime) || startDate < MainTable.MinimumDate || c.OpenAt >= startDate) &&
                                             (endDate == default(DateTime) || c.OpenAt <= endDate));
@@ -115,7 +110,7 @@ namespace AccountingOfTrafficViolation.Views
             }
             catch (Exception ex) when (ex.InnerException != null)
             {
-                MessageBox.Show(ex.InnerException.Message.Split('\n')[1], "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(ex.InnerException.Message, "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -136,8 +131,6 @@ namespace AccountingOfTrafficViolation.Views
                 ActionProgress.IsIndeterminate = false;
                 ActionProgress.Visibility = Visibility.Hidden;
             }
-
-
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

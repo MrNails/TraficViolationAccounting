@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AccountOfTrafficViolationDB.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountOfTrafficViolationDB.Context
@@ -11,14 +12,21 @@ namespace AccountOfTrafficViolationDB.Context
     public class TVAContext : DbContext
     {
         private readonly string m_connectionString;
+        private readonly SqlCredential m_credential;
         
-        public TVAContext(string connectionString)
+        public TVAContext(string connectionString, SqlCredential credential)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException("Connection string cannot be empty.");
+
+            if (credential == null)
+                throw new ArgumentNullException(nameof(credential));
             
-            m_connectionString = connectionString;
+            m_connectionString = connectionString + $"Login={credential.UserId};Password={credential.Password}";
+            m_credential = credential;
         }
+
+        public SqlCredential Credential => m_credential;
 
         public virtual DbSet<AccidentOnHighway> AccidentOnHighways { get; set; }
         public virtual DbSet<AccidentOnVillage> AccidentOnVillages { get; set; }

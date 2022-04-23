@@ -29,7 +29,7 @@ namespace AccountingOfTrafficViolation.Views
 
             m_isChanged = false;
 
-            m_officer = GlobalSettings.ActiveOfficer.ToOfficer();
+            m_officer = GlobalSettings.ActiveOfficer;
             DataContext = m_officer;
             m_loadView = new LoadView();
         }

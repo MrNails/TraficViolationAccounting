@@ -10,13 +10,11 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Animation;
-using AccountingOfTrafficViolation.Models;
 using AccountingOfTrafficViolation.Services;
 using AccountingOfTrafficViolation.ViewModels;
 using AccountingOfTrafficViolation.Views.AddInfoWindows;
 using AccountOfTrafficViolationDB.Context;
 using AccountOfTrafficViolationDB.Models;
-using AccountOfTrafficViolationDB.ProxyModels;
 using Microsoft.Win32;
 
 namespace AccountingOfTrafficViolation.Views
@@ -62,8 +60,7 @@ namespace AccountingOfTrafficViolation.Views
             _case.CaseVehicles = vehicles;
             _case.Victims = victims;
             _case.State = "PROCESSING";
-            _case.CaseAccidentPlace = caseAccidentPlace;
-            _case.OfficerId = GlobalSettings.ActiveOfficer.OfficerId;
+            _case.OfficerId = GlobalSettings.ActiveOfficer.Id;
         }
 
         private void GeneralInfoClick(object sender, RoutedEventArgs e)
@@ -253,7 +250,7 @@ namespace AccountingOfTrafficViolation.Views
 
         private async void AddCaseToDB()
         {
-            using (TVAContext context = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB]))
+            using (TVAContext context = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.GlobalContext.Credential))
             {
                 context.GeneralInfos.Add(generalInfo);
                 context.RoadConditions.Add(roadCondition);

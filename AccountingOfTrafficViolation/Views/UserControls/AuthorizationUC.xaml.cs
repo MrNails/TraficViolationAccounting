@@ -1,13 +1,12 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Data;
+using System.Linq;
+using System.Security;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using AccountingOfTrafficViolation;
 using AccountingOfTrafficViolation.Services;
 using AccountOfTrafficViolationDB.Models;
-using AccountOfTrafficViolationDB.ProxyModels;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
@@ -24,7 +23,7 @@ public partial class AuthorizationUC : UserControl
         m_connection = new SqlConnection(GlobalSettings.ConnectionStrings[Constants.DefaultDB]);
     }
 
-    public Action<UserInfo>? AcceptAction { get; set; }
+    public Action<Officer, SqlCredential>? AcceptAction { get; set; }
     public Action? CancelAction { get; set; }
 
     private async void AcceptClick(object sender, RoutedEventArgs e)
@@ -32,56 +31,66 @@ public partial class AuthorizationUC : UserControl
         try
         {
             LoadScreen.Visibility = Visibility.Visible;
-            UserInfo? currentOfficer = null;
-#if DEBUG
-            currentOfficer = new UserInfo { Name = "Debug", Surname = "Debug", Role = (byte)UserRole.Debug };
-#else
-            currentOfficer = await CheckCerdentialsAsync();
-#endif
-
+            Officer? currentOfficer = null;
+            
+            currentOfficer = await CheckCredentialsAsync(LoginTextBox.Text, PwdBox.SecurePassword);
+            
             LoadScreen.Visibility = Visibility.Collapsed;
 
             if (currentOfficer == null)
-            {
-                MessageBox.Show("Пользователь не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
-            }
+            
+            var pwd = PwdBox.SecurePassword;
+            pwd.MakeReadOnly();
 
-            AcceptAction?.Invoke(currentOfficer);
+            AcceptAction?.Invoke(currentOfficer, new SqlCredential(LoginTextBox.Text, pwd));
         }
         catch (Exception ex)
         {
             MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+        finally
+        {
+            LoadScreen.Visibility = Visibility.Collapsed;
+        }
     }
 
     private void RefuseClick(object sender, RoutedEventArgs e) => CancelAction?.Invoke();
 
-    private Task<UserInfo?> CheckCerdentialsAsync(string login, string password)
+    private async Task<Officer?> CheckCredentialsAsync(string login, SecureString password)
     {
         if (m_connection.State == ConnectionState.Broken)
+            throw new Exception("Cannot connect to database");
+        
+        password.MakeReadOnly();
+
+        m_connection.Credential = new SqlCredential(login, password);
+
+        try
         {
-            return Task.FromException<UserInfo?>(new Exception("Cannot connect to database"));
+            if (m_connection.State == ConnectionState.Closed)
+                await m_connection.OpenAsync();
+
+            return (await m_connection.QueryAsync<Officer?>("SELECT * FROM Officers (nolock) WHERE OfficerId = @Login",
+                    new { Login = login }))
+                .FirstOrDefault();
+        }
+        catch (SqlException e) when (e.ErrorCode == -2146232060)
+        {
+            MessageBox.Show("Не правильный логин или пароль. Попробуйте снова.", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        catch (Exception e)
+        {
+            GlobalSettings.Logger.Log(e.Message + Environment.NewLine + e.StackTrace);
+            MessageBox.Show("Возникла непредвиденная ошибка.", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            await m_connection.CloseAsync();
         }
 
-        if (m_connection.State == ConnectionState.Closed)
-            m_connection.OpenAsync();
-
-        var _pars = new
-        {
-            Login = login,
-            Password = password
-        };
-
-        return m_connection.QueryFirstAsync<UserInfo?>(@"
-DECLARE @officerId int,
-        @role tinyint;
-
-EXEC AccountOfTrafficViolation.dbo.AuthorizeUser @Login, @User, @officerId out, @role out
-
-SELECT OfficerId, @role as Role, Name, Surname, Phone  
-FROM AccountOfTrafficViolation.dbo.Officers (nolock)
-WHERE OfficerId = @officerId
-", _pars);
+        return null;
     }
 }

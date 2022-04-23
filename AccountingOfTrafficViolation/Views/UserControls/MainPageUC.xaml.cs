@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using AccountingOfTrafficViolation.Services;
+using AccountOfTrafficViolationDB.Context;
+using AccountOfTrafficViolationDB.Models;
 
 namespace AccountingOfTrafficViolation.Views.UserControls;
 
@@ -24,26 +26,15 @@ public partial class MainPageUC : UserControl
         get => m_logOutAction;
         set => m_logOutAction = value ?? throw new ArgumentNullException(nameof(value));
     }
-    
-    private void InitUser()
+
+    public void ChangeCurrentUser(Officer officer)
     {
-        if (GlobalSettings.ActiveOfficer.Role == (byte)UserRole.Debug || GlobalSettings.ActiveOfficer.Role == (byte)UserRole.Admin)
-            AdminWindowMenuItem.Visibility = Visibility.Visible;
-        else
-            AdminWindowMenuItem.Visibility = Visibility.Hidden;
-
-        DataContext = GlobalSettings.ActiveOfficer;
+        DataContext = null;
+        DataContext = officer;
     }
-
+    
     private void OpenCaseClick(object sender, RoutedEventArgs e)
     {
-        if (GlobalSettings.ActiveOfficer.Role != (byte)UserRole.User && GlobalSettings.ActiveOfficer.Role != (byte)UserRole.Debug)
-        {
-            MessageBox.Show("У вас не хватает привелегий на создание дела.", "Ошибка", MessageBoxButton.OK,
-                MessageBoxImage.Error);
-            return;
-        }
-
         OpenNewCaseWindow caseWindow = new OpenNewCaseWindow();
 
         try
@@ -117,7 +108,6 @@ public partial class MainPageUC : UserControl
 
         MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения.", "Ошибка",
             MessageBoxButton.OK, MessageBoxImage.Error);
-        GlobalSettings.Logger.ErrorMessage = exceptionMessage;
-        GlobalSettings.Logger.Log();
+        GlobalSettings.Logger.Log(exceptionMessage);
     }
 }

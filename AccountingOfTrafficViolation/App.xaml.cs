@@ -54,10 +54,10 @@ namespace AccountingOfTrafficViolation
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            logger.ErrorMessage = $"Сообщение: {e.Exception.Message}\nВнутренняя ошибка: " +
+            var errorMsg = $"Сообщение: {e.Exception.Message}\nВнутренняя ошибка: " +
                                   $"{(e.Exception.InnerException != null ? e.Exception.InnerException.Message : string.Empty)}" +
                                   $"\nStackTrace: {e.Exception.StackTrace}";
-            logger.Log();
+            logger.Log(errorMsg);
 
             e.Handled = true;
         }

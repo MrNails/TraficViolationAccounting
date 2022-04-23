@@ -19,5 +19,8 @@ public class CaseConfiguration : IEntityTypeConfiguration<Case>
             .HasForeignKey(d => d.OfficerId)
             .OnDelete(DeleteBehavior.ClientSetNull)
             .HasConstraintName("FK_CaseOfficer_OfficerId");
+
+        // builder.HasOne(d => d.CaseAccidentPlace)
+        //     .WithOne(d => d.Case);
     }
 }

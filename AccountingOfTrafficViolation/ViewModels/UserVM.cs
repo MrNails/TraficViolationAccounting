@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using AccountingOfTrafficViolation.Models;
 using AccountingOfTrafficViolation.Services;
 using AccountOfTrafficViolationDB.Context;
 using AccountOfTrafficViolationDB.Models;
-using AccountOfTrafficViolationDB.ProxyModels;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,13 +15,13 @@ namespace AccountingOfTrafficViolation.ViewModels
     public class UserVM : IDisposable, INotifyPropertyChanged
     {
         private TVAContext m_TVAContext;
-        private UserInfo m_currentFindOfficer;
+        private Officer m_currentFindOfficer;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public UserVM()
         {
-            m_TVAContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB]);
+            m_TVAContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.GlobalContext.Credential);
         }
 
         public bool IsCurrentUserChanged
@@ -43,7 +40,7 @@ namespace AccountingOfTrafficViolation.ViewModels
             }
         } 
 
-        public UserInfo? CurrentOfficer
+        public Officer? CurrentOfficer
         {
             get { return m_currentFindOfficer; }
             private set
@@ -56,10 +53,7 @@ namespace AccountingOfTrafficViolation.ViewModels
         //TODO: Fix user finding
         public async Task<bool> CheckIfCurrenUserLoginExistAsync()
         {
-            var res = await m_TVAContext.Officers.FromSqlRaw(@"
-            SELECT * FROM AccountOfTrafficViolation.dbo.Officers o (nolock) 
-            WHERE OfficerId IN (SELECT OfficerId FROM AccountOfTrafficViolation.dbo.ProfileInfo pi (nolock) WHERE o.OfficerId = pi.OfficerId AND pi.Login = {0})", CurrentOfficer.UserProfile)
-                .FirstOrDefaultAsync();
+            var res = await m_TVAContext.Officers.FirstOrDefaultAsync(o => o.Id == CurrentOfficer.Id);
             
             return res != null;
         }
@@ -68,18 +62,18 @@ namespace AccountingOfTrafficViolation.ViewModels
         {
             if (CurrentOfficer != null)
             {
-                var officer = await m_TVAContext.Officers.FirstOrDefaultAsync(u => u.Id == CurrentOfficer.OfficerId);
+                var officer = await m_TVAContext.Officers.FirstOrDefaultAsync(u => u.Id == CurrentOfficer.Id);
 
-                if (officer == null)
-                {
-                    var salt = RandomNumberGenerator.GetBytes(16);
-                    var pwd = CryptoHelper.EncryptData(Encoding.UTF8.GetBytes(CurrentOfficer.UserProfile.Password), salt);
-                    
-                    await m_TVAContext.Database.ExecuteSqlRawAsync(
-                        "exec AccountOfTrafficViolation.dbo.CreateOfficer {0}, {1}, {2}, {3}, {4}, {5}", 
-                        CurrentOfficer.UserProfile.Login, Encoding.UTF8.GetString(pwd), Encoding.UTF8.GetString(salt), 
-                        CurrentOfficer.Role, CurrentOfficer.Name, CurrentOfficer.Surname);
-                }
+                // if (officer == null)
+                // {
+                //     var salt = RandomNumberGenerator.GetBytes(16);
+                //     var pwd = CryptoHelper.EncryptData(Encoding.UTF8.GetBytes(CurrentOfficer.UserProfile.Password), salt);
+                //     
+                //     await m_TVAContext.Database.ExecuteSqlRawAsync(
+                //         "exec AccountOfTrafficViolation.dbo.CreateOfficer {0}, {1}, {2}, {3}, {4}, {5}", 
+                //         CurrentOfficer.UserProfile.Login, Encoding.UTF8.GetString(pwd), Encoding.UTF8.GetString(salt), 
+                //         CurrentOfficer.Role, CurrentOfficer.Name, CurrentOfficer.Surname);
+                // }
             }
 
             await m_TVAContext.SaveChangesAsync();
@@ -88,28 +82,28 @@ namespace AccountingOfTrafficViolation.ViewModels
         {
             m_TVAContext.CancelAllChanges();
         }
-        public Task DeleteCurrentUserAsync()
+        public async Task DeleteCurrentUserAsync()
         {
             if (CurrentOfficer == null)
-                return Task.CompletedTask;
+                return;
 
             CurrentOfficer = null;
 
-            return m_TVAContext.Database.ExecuteSqlRawAsync("exec AccountOfTrafficViolation.dbo.DeleteUser {0}", CurrentOfficer.OfficerId);
+            m_TVAContext.Officers.Remove(await m_TVAContext.Officers.FirstOrDefaultAsync(o => o.Id == CurrentOfficer.Id));
+
+            await m_TVAContext.SaveChangesAsync();
         }
         public void AddNewUser(byte role = (byte)UserRole.User)
         {
-            CurrentOfficer = new UserInfo
-            {
-                Role = role
-            };
+            CurrentOfficer = new Officer();
+            //Add new officer to context
         }
         public async Task SetCurrentUserAsync(string login)
         {
             if (string.IsNullOrEmpty(login))
                 throw new ArgumentException("Логин не может отсутствовать.", nameof(login));
 
-            CurrentOfficer = (await m_TVAContext.Database.GetDbConnection().QueryAsync<UserInfo?>(@"
+            CurrentOfficer = (await m_TVAContext.Database.GetDbConnection().QueryAsync<Officer?>(@"
             SELECT o.OfficerId, o.Name, o.Surname, o.Role, pi.Login 
             FROM AccountOfTrafficViolation.dbo.Officers o (nolock) 
                 INNER JOIN

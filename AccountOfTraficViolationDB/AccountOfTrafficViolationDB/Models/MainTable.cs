@@ -28,12 +28,7 @@ namespace AccountOfTrafficViolationDB.Models
 
         public string Error => error;
 
-
         public string this[string columnName] => errors.ContainsKey(columnName) ? errors[columnName] : null;
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
-
 
         protected delegate void ErrorHandler(string errorMessage);
 

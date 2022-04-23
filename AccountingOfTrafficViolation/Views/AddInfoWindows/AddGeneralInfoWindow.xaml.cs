@@ -28,10 +28,12 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
             else
             {
                 GeneralInfo = new GeneralInfo();
-                GeneralInfo.DayOfWeek = 1;
+                GeneralInfo.FillDate = DateTime.Now;
+
             }
 
-            DayOfWeekComboBox.SelectedIndex = GeneralInfo.DayOfWeek - 1;
+            var dayOfWeek = (int)GeneralInfo.FillDate.DayOfWeek;
+            DayOfWeekComboBox.SelectedIndex = dayOfWeek - 1 < 0 ? 6 : dayOfWeek - 1;
 
             DataContext = GeneralInfo;
         }
@@ -39,11 +41,9 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
         private void AcceptClick(object sender, RoutedEventArgs e)
         {
             if (MainGrid.CheckIfExistValidationError())
-            {
                 return;
-            }
 
-            GeneralInfo.DayOfWeek = byte.Parse(((ComboBoxItem)DayOfWeekComboBox.SelectedItem).Content.ToString()[0].ToString());
+            // GeneralInfo.DayOfWeek = byte.Parse(((ComboBoxItem)DayOfWeekComboBox.SelectedItem).Content.ToString()[0].ToString());
 
             DialogResult = true;
         }
@@ -54,11 +54,17 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
 
         private void FillTimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (sender is TextBox)
-            {
-                TextBox textBox = (TextBox)sender;
-
+            if (sender is TextBox textBox)
                 textBox.SeparatorTemplate(':', 2, 5);
+        }
+
+        private void FillDateCalendar_OnSelectedDateChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            if (sender is DatePicker datePicker && datePicker.SelectedDate.HasValue)
+            {
+                var dayOfWeek = (int)datePicker.SelectedDate.Value.DayOfWeek;
+                
+                DayOfWeekComboBox.SelectedIndex = dayOfWeek - 1 < 0 ? 6 : dayOfWeek - 1;
             }
         }
     }

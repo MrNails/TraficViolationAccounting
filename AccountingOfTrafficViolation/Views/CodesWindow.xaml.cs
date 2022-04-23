@@ -283,7 +283,7 @@ namespace AccountingOfTrafficViolation.Views
 
                 _TVAContext = await Task.Run<TVAContext>(() =>
                 {
-                    TVAContext dbContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB]);
+                    TVAContext dbContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.GlobalContext.Credential);
                     return dbContext;
                 });
 

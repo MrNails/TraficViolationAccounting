@@ -7,9 +7,7 @@ namespace AccountingOfTrafficViolation
 {
     public interface ILogger
     {
-        string ErrorMessage { get; set; }
-
-        void Log();
+        void Log(string errorMessage);
     }
 
     enum UserRole : byte
@@ -25,32 +23,14 @@ namespace AccountingOfTrafficViolation
         private string fileName;
         private string filePath;
 
-        public FileLogger(string fileName) : this(fileName, null, null)
+        public FileLogger(string fileName) : this(fileName, string.Empty)
         { }
-        public FileLogger(string fileName, string errorMessage) : this(fileName, null, errorMessage)
-        { }
-        public FileLogger(string fileName, string filePath, string errorMessage)
+        public FileLogger(string fileName, string filePath)
         {
-            ErrorMessage = errorMessage;
             FilePath = filePath;
             FileName = fileName;
         }
-
-        public string ErrorMessage
-        {
-            get { return errorMessage; }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    errorMessage = string.Empty;
-                }
-                else
-                {
-                    errorMessage = value;
-                }
-            }
-        }
+        
         public string FileName
         {
             get { return fileName; }
@@ -82,11 +62,11 @@ namespace AccountingOfTrafficViolation
             }
         }
 
-        public void Log()
+        public void Log(string errorMessage)
         {
             using (var streamWriter = new StreamWriter(Path.Combine(FilePath, FileName), true))
             {
-                streamWriter.Write($"{Environment.NewLine}{DateTime.Now:G}: {ErrorMessage}");
+                streamWriter.Write($"{Environment.NewLine}{Environment.NewLine}{DateTime.Now:G}: {errorMessage}");
             }
         }
     }

@@ -33,7 +33,7 @@ namespace AccountingOfTrafficViolation.ViewModels
 
         public CasesVM()
         {
-            m_TVAContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB]);
+            m_TVAContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.GlobalContext.Credential);
 
             CurrentGeneralInfo = new ObservableCollection<GeneralInfo>();
             CurrentRoadCondition = new ObservableCollection<RoadCondition>();
@@ -97,17 +97,7 @@ namespace AccountingOfTrafficViolation.ViewModels
         public ObservableCollection<CaseVehicle> CurrentVehicles { get; set; }
         public ObservableCollection<Victim> CurrentVictims { get; set; }
 
-        public bool FindCase(Func<Case, bool> predicate)
-        {
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-
-            FoundCases = m_TVAContext.Cases.Where(predicate).ToList();
-
-            return FoundCases.Count != 0;
-        }
-
-        public async Task<bool> FindCaseAsync(Func<IQueryable<Case>, IQueryable<Case>> predicate,
+        public async Task<bool> FillCasesAsync(Func<IQueryable<Case>, IQueryable<Case>> predicate,
             CancellationToken cancellationToken)
         {
             if (predicate == null)
@@ -232,7 +222,7 @@ namespace AccountingOfTrafficViolation.ViewModels
                 return;
             }
 
-            if (m_currentCase != null && m_currentCase.Id != GlobalSettings.ActiveOfficer.OfficerId)
+            if (m_currentCase != null && m_currentCase.OfficerId != GlobalSettings.ActiveOfficer.Id)
             {
                 MessageBox.Show("Вы не можете изменять подробности в чужом деле.", "Ошибка", MessageBoxButton.OK,
                     MessageBoxImage.Error);

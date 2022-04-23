@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using AccountOfTrafficViolationDB.Context;
 using AccountOfTrafficViolationDB.Models;
-using AccountOfTrafficViolationDB.ProxyModels;
 
 namespace AccountingOfTrafficViolation.Services;
 
@@ -11,11 +10,11 @@ public static class GlobalSettings
     public static readonly Dictionary<string, string> ConnectionStrings = new Dictionary<string, string>();
     public static readonly int SaltSize = 16;
 
-    private static UserInfo m_activeOfficer;
+    private static Officer m_activeOfficer;
     private static ILogger m_logger;
     private static TVAContext? m_globalContext;
 
-    public static UserInfo ActiveOfficer
+    public static Officer ActiveOfficer
     {
         get => m_activeOfficer;
         set => m_activeOfficer = value ?? throw new ArgumentNullException(nameof(value));

@@ -109,24 +109,24 @@ namespace AccountOfTrafficViolationDB.Models
             }
         }
 
-        public byte DayOfWeek
-        {
-            get { return dayOfWeek; }
-            set
-            {
-                if (value > 0 && value < 8 )
-                {
-                    errors["DayOfWeek"] = null;
-                }
-                else
-                {
-                    errors["DayOfWeek"] = "�� ���������� ���� ��� ������. �������� ������ ���������� � �������� �� 1 �� 7 (1 - �����������, 7 - �����������).";
-                }
-
-                dayOfWeek = value;
-                OnPropertyChanged("DayOfWeek");
-            }
-        }
+        // public byte DayOfWeek
+        // {
+        //     get { return dayOfWeek; }
+        //     set
+        //     {
+        //         if (value > 0 && value < 8 )
+        //         {
+        //             errors["DayOfWeek"] = null;
+        //         }
+        //         else
+        //         {
+        //             errors["DayOfWeek"] = "�� ���������� ���� ��� ������. �������� ������ ���������� � �������� �� 1 �� 7 (1 - �����������, 7 - �����������).";
+        //         }
+        //
+        //         dayOfWeek = value;
+        //         OnPropertyChanged("DayOfWeek");
+        //     }
+        // }
 
         public TimeSpan FillTime
         {

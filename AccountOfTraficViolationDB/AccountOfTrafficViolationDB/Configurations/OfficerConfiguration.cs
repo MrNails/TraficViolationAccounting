@@ -8,7 +8,9 @@ public class OfficerConfiguration : IEntityTypeConfiguration<Officer>
 {
     public void Configure(EntityTypeBuilder<Officer> builder)
     {
-        builder.Property(e => e.Id).ValueGeneratedNever();
+        builder.Property(e => e.Id)
+            .IsRequired()
+            .HasMaxLength(30);
 
         builder.Property(e => e.Name)
             .IsRequired()

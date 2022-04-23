@@ -36,11 +36,12 @@
             <TextBlock Text="Дата заполнения" Style="{StaticResource TextBlockTemplateStyle}" 
                        TextAlignment="Center" Margin="0 0 0 10"/>
             <DatePicker x:Name="FillDateCalendar" Style="{StaticResource TextBoxTemplateStyle}" 
-                        SelectedDate="{Binding FillDate}" DisplayDateStart="01-01-1990"/>
+                        SelectedDate="{Binding FillDate}" DisplayDateStart="01-01-1990"
+                        SelectedDateChanged="FillDateCalendar_OnSelectedDateChanged"/>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="0" Style="{StaticResource StackPanelTemplateStyle}" Width="150">
             <TextBlock Text="День недели" Style="{StaticResource TextBlockTemplateStyle}" TextAlignment="Center" Margin="0 0 0 10"/>
-            <ComboBox x:Name="DayOfWeekComboBox" FontSize="15">
+            <ComboBox x:Name="DayOfWeekComboBox" FontSize="15" IsReadOnly="True" IsEnabled="False">
                 <ComboBoxItem Content="1. Понедельник" IsSelected="True"/>
                 <ComboBoxItem Content="2. Вторник" />
                 <ComboBoxItem Content="3. Среда"/>

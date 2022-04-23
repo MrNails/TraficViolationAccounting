@@ -21,15 +21,15 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <TextBlock Text="Логин" Style="{StaticResource TextBlockTemplateStyle}"/>
-            <TextBox x:Name="LoginTextBox" Width="150" FontSize="15"/>
+            <TextBox x:Name="LoginTextBox" Width="200" FontSize="15"/>
         </StackPanel>
         <StackPanel Grid.Row="1">
             <TextBlock Text="Пароль" Style="{StaticResource TextBlockTemplateStyle}"/>
-            <PasswordBox x:Name="PwdBox" Width="150" FontSize="15"/>
+            <PasswordBox x:Name="PwdBox" Width="200" FontSize="15"/>
         </StackPanel>
         <WrapPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="Подтвердить" Width="100" Style="{StaticResource ButtonTemplateStyle}" Click="AcceptClick"/>
-            <Button Content="Отменить" Width="100" Style="{StaticResource ButtonTemplateStyle}" Margin="30 0 0 0" Click="RefuseClick"/>
+            <Button Content="Подтвердить" Width="100" Style="{StaticResource ButtonTemplateStyle}" Click="AcceptClick" IsDefault="True"/>
+            <Button Content="Отменить" Width="100" Style="{StaticResource ButtonTemplateStyle}" Margin="30 0 0 0" Click="RefuseClick" IsCancel="True"/>
         </WrapPanel>
 
         <uc:LoadView x:Name="LoadScreen" Grid.RowSpan="3" Visibility="Collapsed"/>

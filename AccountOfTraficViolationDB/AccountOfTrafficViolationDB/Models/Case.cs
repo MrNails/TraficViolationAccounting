@@ -27,7 +27,7 @@ namespace AccountOfTrafficViolationDB.Models
         [Column("CaseId")]
         public int Id { get; init; }
         
-        public int OfficerId { get; set; }
+        public string OfficerId { get; set; }
         
         public string State { get; set; }
 
@@ -76,6 +76,6 @@ namespace AccountOfTrafficViolationDB.Models
         [NotAssign] public virtual ICollection<CaseVehicle> CaseVehicles { get; set; }
         [NotAssign] public virtual ICollection<ParticipantsInformation> ParticipantsInformations { get; set; }
         [NotAssign] public virtual ICollection<Victim> Victims { get; set; }
-        [NotAssign] public virtual CaseAccidentPlace CaseAccidentPlace { get; set; }
+        [NotAssign, NotMapped] public virtual CaseAccidentPlace CaseAccidentPlace { get; set; }
     }
 }

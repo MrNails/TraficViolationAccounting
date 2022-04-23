@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Reflection;
+using System.Windows;
 using System.Windows.Threading;
 using AccountingOfTrafficViolation.Models;
 using AccountingOfTrafficViolation.Services;
@@ -79,7 +80,7 @@ namespace AccountingOfTrafficViolation.ViewModels
             Case = _case;
             Officer = officer;
 
-            wordSaver = new WordSaver(filePath);
+            // wordSaver = new WordSaver(filePath;
 
             stopwatch = new Stopwatch();
 
@@ -114,6 +115,9 @@ namespace AccountingOfTrafficViolation.ViewModels
         #region WordSaver Region
         public Task SaveAsync(DocumentSaveType documentSaveType)
         {
+            MessageBox.Show("Временно не работает");
+            return Task.CompletedTask;
+            
             if (Case == null)
                 throw new Exception("Дело для сохранения не может отсутствовать.");
 
@@ -693,7 +697,7 @@ namespace AccountingOfTrafficViolation.ViewModels
 
         public void Dispose()
         {
-            wordSaver.Dispose();
+            wordSaver?.Dispose();
         }
     }
 }
