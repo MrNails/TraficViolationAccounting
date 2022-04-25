@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using AccountingOfTrafficViolation.Models;
 using AccountingOfTrafficViolation.Services;
 using AccountingOfTrafficViolation.Views.UserControls;
@@ -174,7 +176,7 @@ namespace AccountingOfTrafficViolation.Views
             SecondPasswordTextBox.Password = string.Empty;
         }
 
-        private void PersonalTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void PersonalTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             m_isChanged = true;
             SavePersonalDataButton.IsEnabled = true;

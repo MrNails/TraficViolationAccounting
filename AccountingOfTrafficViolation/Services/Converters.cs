@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -398,44 +399,41 @@ namespace AccountingOfTrafficViolation.Services
 
     public class PhoneNumberCoverter : IValueConverter
     {
-        private static Dictionary<char, int[]> pairs;
+        private static Dictionary<char, int[]> m_pairs;
 
         static PhoneNumberCoverter()
         {
-            pairs = new Dictionary<char, int[]>();
-            pairs.Add('(', new int[] { 0 });
-            pairs.Add(')', new int[] { 4 });
-            pairs.Add(' ', new int[] { 5 });
-            pairs.Add('-', new int[] { 9, 12 });
+            m_pairs = new Dictionary<char, int[]>();
+            // m_pairs.Add('+', new int[] { 0 });
+            m_pairs.Add('(', new int[] { 0 });
+            m_pairs.Add(')', new int[] { 4 });
+            m_pairs.Add(' ', new int[] { 5 });
+            m_pairs.Add('-', new int[] { 9, 12 });
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || targetType != typeof(string))
-            {
                 return value;
-            }
 
-            string _value = value.ToString();
-
-            if (_value.Length >= 3)
-            {
-                _value = _value.AddSeparator(pairs);
-            }
-
+            var _value = value.ToString();
+            
+            if (_value.StartsWith("+38"))
+                _value = _value.Substring(3);
+            
+            _value = _value.AddSeparator(m_pairs);
+            
             return _value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || targetType != typeof(string))
-            {
                 return value;
-            }
 
-            string _value = value.ToString();
+            var _value = value.ToString();
 
-            return _value.GetStrWithoutSeparator(pairs);
+            return "+38" + _value.GetStrWithoutSeparator(m_pairs);
         }
     }
 }
