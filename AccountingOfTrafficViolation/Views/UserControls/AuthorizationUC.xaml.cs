@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using AccountingOfTrafficViolation.Services;
+using AccountOfTrafficViolationDB.Context;
 using AccountOfTrafficViolationDB.Models;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -23,7 +24,7 @@ public partial class AuthorizationUC : UserControl
         m_connection = new SqlConnection(GlobalSettings.ConnectionStrings[Constants.DefaultDB]);
     }
 
-    public Action<Officer, SqlCredential>? AcceptAction { get; set; }
+    public Action<Officer, Credential>? AcceptAction { get; set; }
     public Action? CancelAction { get; set; }
 
     private async void AcceptClick(object sender, RoutedEventArgs e)
@@ -43,7 +44,7 @@ public partial class AuthorizationUC : UserControl
             var pwd = PwdBox.SecurePassword;
             pwd.MakeReadOnly();
 
-            AcceptAction?.Invoke(currentOfficer, new SqlCredential(LoginTextBox.Text, pwd));
+            AcceptAction?.Invoke(currentOfficer, new Credential(LoginTextBox.Text, PwdBox.Password));
         }
         catch (Exception ex)
         {

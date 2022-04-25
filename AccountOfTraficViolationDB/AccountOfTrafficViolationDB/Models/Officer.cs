@@ -18,7 +18,7 @@ namespace AccountOfTrafficViolationDB.Models
 
         static Officer()
         {
-            phoneNumberRegex = new Regex(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$");
+            phoneNumberRegex = new Regex(@"^\+?(\d{10}|\d{12})$");
         }
 
         public Officer()
