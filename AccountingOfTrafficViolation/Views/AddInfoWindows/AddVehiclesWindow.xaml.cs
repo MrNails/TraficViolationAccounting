@@ -83,16 +83,23 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
 
         private void TextBox_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is TextBox)
+            if (sender is TextBox textBox)
             {
-                TextBox textBox = (TextBox)sender;
-
-                CodesWindow codesWindow = new CodesWindow();
+                var codesWindow = new CodesWindow();
 
                 if (codesWindow.ShowDialog() == true)
-                {
                     textBox.Text = codesWindow.Code;
-                }
+            }
+        }
+
+        private void VehicleTBoxBtnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                var vInfo = new VehicleInformation();
+
+                if (vInfo.ShowDialog() == true)
+                    textBox.Text = "Ok";
             }
         }
     }

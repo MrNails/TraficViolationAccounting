@@ -49,8 +49,7 @@ namespace AccountingOfTrafficViolation.ViewModels
                 OnPropertyChanged("CurrentUser");
             }
         }
-
-        //TODO: Fix user finding
+        
         public async Task<bool> CheckIfCurrenUserLoginExistAsync()
         {
             var res = await m_TVAContext.Officers.FirstOrDefaultAsync(o => o.Id == CurrentOfficer.Id);
