@@ -8,42 +8,42 @@ namespace AccountOfTrafficViolationDB.Models
 {
     public partial class Vehicle : MainTable
     {
-        private short type;
-        private short insurerCode;
-        private string make;
-        private string model;
-        private string owner;
-        private string policySeries;
-        private string policyNumber;
-        private string registrationSertificate;
-        private string seriesOfRegistrationSertificate;
-        private string _EDRPOU_Code;
-        private DateTime policyEndDate;
+        private short m_type;
+        private short m_insurerCode;
+        private string m_make;
+        private string m_model;
+        private string m_owner;
+        private string m_policySeries;
+        private string m_policyNumber;
+        private string m_registrationSertificate;
+        private string m_seriesOfRegistrationSertificate;
+        private string m_EDRPOU_Code;
+        private DateTime m_policyEndDate;
         
         public Vehicle()
         {
-            Make = string.Empty;
-            Model = string.Empty;
-            Owner = string.Empty;
-            PolicySeries = string.Empty;
-            PolicyNumber = string.Empty;
-            EDRPOU_Code = string.Empty;
-            RegistrationSertificate = string.Empty;
-            SeriesOfRegistrationSertificate = string.Empty;
+            m_make = string.Empty;
+            m_model = string.Empty;
+            m_owner = string.Empty;
+            m_policySeries = string.Empty;
+            m_policyNumber = string.Empty;
+            m_EDRPOU_Code = string.Empty;
+            m_registrationSertificate = string.Empty;
+            m_seriesOfRegistrationSertificate = string.Empty;
 
-            policyEndDate = DateTime.Now;
+            m_policyEndDate = DateTime.Now;
             
             CaseVehicles = new HashSet<CaseVehicle>();
         }
 
         [NotAssign, Column("VehicleId")]
-        public int Id { get; init; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(10)]
         public string Make
         {
-            get { return make; }
+            get { return m_make; }
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -59,7 +59,7 @@ namespace AccountOfTrafficViolationDB.Models
                     errors["Make"] = "Количество символов в марке машины не может быть больше 10.";
                 }
 
-                make = value;
+                m_make = value;
                 OnPropertyChanged("Make");
             }
         }
@@ -68,7 +68,7 @@ namespace AccountOfTrafficViolationDB.Models
         [StringLength(10)]
         public string Model
         {
-            get { return model; }
+            get { return m_model; }
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -84,14 +84,14 @@ namespace AccountOfTrafficViolationDB.Models
                     errors["Model"] = "Количество символов в моделе машины не может быть больше 10.";
                 }
 
-                model = value;
+                m_model = value;
                 OnPropertyChanged("Model");
             }
         }
 
         public short Type
         {
-            get { return type; }
+            get { return m_type; }
             set
             {
                 if (value >= 0 && value < 1000)
@@ -103,7 +103,7 @@ namespace AccountOfTrafficViolationDB.Models
                     errors["Type"] = "Не правилный ввод типа.";
                 }
 
-                type = value;
+                m_type = value;
                 OnPropertyChanged("Type");
             }
         }
@@ -112,7 +112,7 @@ namespace AccountOfTrafficViolationDB.Models
         [StringLength(3)]
         public string SeriesOfRegistrationSertificate
         {
-            get { return seriesOfRegistrationSertificate; }
+            get { return m_seriesOfRegistrationSertificate; }
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -128,7 +128,7 @@ namespace AccountOfTrafficViolationDB.Models
                     errors["SeriesOfRegistrationSertificate"] = "Количество символов в серии свидетельства о регистрации не может быть больше 3.";
                 }
 
-                seriesOfRegistrationSertificate = value;
+                m_seriesOfRegistrationSertificate = value;
                 OnPropertyChanged("SeriesOfRegistrationSertificate");
             }
         }
@@ -137,7 +137,7 @@ namespace AccountOfTrafficViolationDB.Models
         [StringLength(6)]
         public string RegistrationSertificate
         {
-            get { return registrationSertificate; }
+            get { return m_registrationSertificate; }
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -153,14 +153,14 @@ namespace AccountOfTrafficViolationDB.Models
                     errors["RegistrationSertificate"] = "Количество символов в свидетельстве о регистрации не может быть больше 6.";
                 }
 
-                registrationSertificate = value;
+                m_registrationSertificate = value;
                 OnPropertyChanged("RegistrationSertificate");
             }
         }
 
         public short InsurerCode
         {
-            get { return insurerCode; }
+            get { return m_insurerCode; }
             set
             {
                 if (value >= 0 && value < 1000)
@@ -172,7 +172,7 @@ namespace AccountOfTrafficViolationDB.Models
                     errors["InsurerCode"] = "Не правилный ввод кода страховки.";
                 }
 
-                insurerCode = value;
+                m_insurerCode = value;
                 OnPropertyChanged("InsurerCode");
             }
         }
@@ -181,7 +181,7 @@ namespace AccountOfTrafficViolationDB.Models
         [StringLength(3)]
         public string PolicySeries
         {
-            get { return policySeries; }
+            get { return m_policySeries; }
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -197,7 +197,7 @@ namespace AccountOfTrafficViolationDB.Models
                     errors["PolicySeries"] = "Количество символов в серии полиса не может быть больше 3.";
                 }
 
-                policySeries = value;
+                m_policySeries = value;
                 OnPropertyChanged("PolicySeries");
             }
         }
@@ -206,7 +206,7 @@ namespace AccountOfTrafficViolationDB.Models
         [StringLength(10)]
         public string PolicyNumber
         {
-            get { return policyNumber; }
+            get { return m_policyNumber; }
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -222,7 +222,7 @@ namespace AccountOfTrafficViolationDB.Models
                     errors["PolicyNumber"] = "Количество символов в полисе не может быть больше 10.d";
                 }
 
-                policyNumber = value;
+                m_policyNumber = value;
                 OnPropertyChanged("PolicyNumber");
             }
         }
@@ -230,16 +230,16 @@ namespace AccountOfTrafficViolationDB.Models
         [Column(TypeName = "date")]
         public DateTime PolicyEndDate
         {
-            get { return policyEndDate; }
+            get { return m_policyEndDate; }
             set
             {
                 if (value < MinimumDate)
                 {
-                    policyEndDate = MinimumDate;
+                    m_policyEndDate = MinimumDate;
                 }
                 else
                 {
-                    policyEndDate = value;
+                    m_policyEndDate = value;
                 }
                 OnPropertyChanged("PolicyEndDate");
             }
@@ -249,7 +249,7 @@ namespace AccountOfTrafficViolationDB.Models
         [StringLength(20)]
         public string Owner
         {
-            get { return owner; }
+            get { return m_owner; }
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -265,7 +265,7 @@ namespace AccountOfTrafficViolationDB.Models
                     errors["Owner"] = "Количество символов в поле \"владелец\" не может быть больше 20.";
                 }
 
-                owner = value;
+                m_owner = value;
                 OnPropertyChanged("Owner");
             }
         }
@@ -274,7 +274,7 @@ namespace AccountOfTrafficViolationDB.Models
         [StringLength(10)]
         public string EDRPOU_Code
         {
-            get { return _EDRPOU_Code; }
+            get { return m_EDRPOU_Code; }
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -290,7 +290,7 @@ namespace AccountOfTrafficViolationDB.Models
                     errors["EDRPOU_Code"] = null;
                 }
 
-                _EDRPOU_Code = value;
+                m_EDRPOU_Code = value;
                 OnPropertyChanged("EDRPOU_Code");
             }
         }

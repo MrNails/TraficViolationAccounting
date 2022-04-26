@@ -12,7 +12,13 @@ public static class GlobalSettings
 
     private static Officer m_activeOfficer;
     private static ILogger m_logger;
-    private static TVAContext? m_globalContext;
+    private static Credential m_credential;
+
+    public static Credential Credential
+    {
+        get => m_credential;
+        set => m_credential = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
     public static Officer ActiveOfficer
     {
@@ -24,11 +30,5 @@ public static class GlobalSettings
     {
         get => m_logger;
         set => m_logger = value ?? throw new ArgumentNullException(nameof(value));
-    }
-
-    public static TVAContext? GlobalContext
-    {
-        get => m_globalContext;
-        set => m_globalContext = value ?? throw new ArgumentNullException(nameof(value));
     }
 }

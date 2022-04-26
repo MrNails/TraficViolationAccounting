@@ -25,5 +25,8 @@ namespace AccountingOfTrafficViolation.Views.UserControls
         {
             InitializeComponent();
         }
+
+        public void Pause() => MainStoryBoard.Pause();
+        public void Resume() => MainStoryBoard.Resume();
     }
 }

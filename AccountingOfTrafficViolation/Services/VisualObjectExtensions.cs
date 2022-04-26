@@ -17,43 +17,27 @@ namespace AccountingOfTrafficViolation.Services
             if (elem is ContentControl)
             {
                 if (((ContentControl)elem).Content is Panel)
-                {
                     panel = (Panel)((ContentControl)elem).Content;
-                }
                 else
-                {
                     return false;
-                }
             }
             else if (elem is Panel)
-            {
                 panel = (Panel)elem;
-            }
             else
-            {
-                throw new InvalidCastException("Elem.Content is not Panel or ContentControl.");
-            }
+                throw new InvalidCastException("Element.Content is not Panel or ContentControl.");
 
             foreach (var child in panel.Children)
             {
                 if (Validation.GetHasError((DependencyObject)child))
-                {
                     return true;
-                }
 
                 if (child is Panel || child is ContentControl)
-                {
                     if (((UIElement)child).CheckIfExistValidationError())
-                    {
                         return true;
-                    }
-                }
-
             }
 
             return false;
         }
-
     }
 
     public static class TextBoxExtension

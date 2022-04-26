@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AccountingOfTrafficViolation.Views.AddInfoWindows" 
         xmlns:services="clr-namespace:AccountingOfTrafficViolation.Services"
         mc:Ignorable="d"
-        Title="Транспорт и его пренадлежность" ResizeMode="NoResize" Height="400" Width="850">
+        Title="Транспорт и его пренадлежность" ResizeMode="NoResize" Height="400" Width="900">
     <Window.Resources>
         <DataTemplate x:Key="ListBoxDataTemplate">
             <StackPanel Width="195">
@@ -16,7 +16,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Марка: " Grid.Column="0"/>
-                    <TextBlock Text="{Binding Path=Make}" Grid.Column="1" HorizontalAlignment="Right"/>
+                    <TextBlock Text="{Binding Path=Vehicle.Make}" Grid.Column="1"/>
                 </Grid>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -24,7 +24,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Модель: " Grid.Column="0"/>
-                    <TextBlock Text="{Binding Path=Model}" Grid.Column="1" HorizontalAlignment="Right"/>
+                    <TextBlock Text="{Binding Path=Vehicle.Model}" Grid.Column="1" />
                 </Grid>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -32,7 +32,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Номерной знак: " Grid.Column="0"/>
-                    <TextBlock Text="{Binding Path=PlateNumber}" Grid.Column="1" HorizontalAlignment="Right"/>
+                    <TextBlock Text="{Binding Path=PlateNumber}" Grid.Column="1" />
                 </Grid>
             </StackPanel>
         </DataTemplate>
@@ -50,7 +50,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="0.31*"/>
+            <ColumnDefinition Width="0.4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -79,35 +79,26 @@
                 <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <StackPanel Width="170">
                         <TextBlock Text="Данные машины" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}"/>
-                        <TextBox Template="{StaticResource TextBoxWithBtn}" ButtonBase.Click="VehicleTBoxBtnClick"
+                        <TextBox x:Name="VehicleTB" Template="{StaticResource TextBoxWithBtn}" ButtonBase.Click="VehicleTBoxBtnClick" IsReadOnly="True"
                                  Style="{StaticResource TextBoxValidationTemplate}" Width="150" Margin="0 5 0 0"/>
                     </StackPanel>
                 </StackPanel>
 
                 <StackPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <WrapPanel>
-                        <TextBlock Text="№ Рамы: "  TextAlignment="Center" 
-                                   Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 13 10"/>
-                        <TextBox MaxLength="8" Text="{Binding Path=CurrentAccidentObject.FrameNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource TextBoxValidationTemplate}" Width="100" Margin="0 0 0 10"/>
-                        <TextBlock Text="№ Шасси:" TextAlignment="Center" 
-                                   Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 10 0"/>
-                        <TextBox MaxLength="9" Text="{Binding Path=CurrentAccidentObject.ChasisNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource TextBoxValidationTemplate}" Width="100"/>
-                    </WrapPanel>
+                    <TextBlock Text="№ Рамы"  TextAlignment="Center" VerticalAlignment="Center" 
+                               Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 13 5"/>
+                    <TextBox MaxLength="8" Text="{Binding Path=CurrentAccidentObject.FrameNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource TextBoxValidationTemplate}" Width="100"/>
                 </StackPanel>
-
+                
                 <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Text="Серия, № свидетельства про регистрацию" TextAlignment="Center" 
-                               Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-                    <WrapPanel HorizontalAlignment="Center">
-                        <TextBox MaxLength="3" Text="{Binding Path=CurrentAccidentObject.SeriesOfRegistrationSertificate, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource TextBoxValidationTemplate}" Width="40" Height="21"/>
-                        <TextBlock Text="," TextAlignment="Center" FontSize="20" Margin="2 0 2 0" FontFamily="Century"/>
-                        <TextBox MaxLength="6" Text="{Binding Path=CurrentAccidentObject.RegistrationSertificate, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource TextBoxValidationTemplate}" Width="70" Height="21"/>
-                    </WrapPanel>
+                    <TextBlock Text="№ Шасси" TextAlignment="Center" VerticalAlignment="Center"
+                               Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 10 5"/>
+                    <TextBox MaxLength="9" Text="{Binding Path=CurrentAccidentObject.ChasisNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource TextBoxValidationTemplate}" Width="100"/>
                 </StackPanel>
+                
+
 
                 <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Фамилия водителя" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>

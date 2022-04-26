@@ -67,6 +67,15 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
             for (int i = 0; i < AccidentObjectsVM.AccidentObjects.Count; i++)
             {
                 AccidentObjectsVM.CurrentIndex = i;
+
+                if (AccidentObjectsVM.CurrentAccidentObject.Vehicle == null)
+                {
+                    VehiclesListBox.SelectedIndex = i;
+                    VehicleTB.BorderBrush = new SolidColorBrush(Colors.Red);
+                    
+                    return;
+                }
+
                 if (VehicleGroupBox.CheckIfExistValidationError())
                 {
                     VehiclesListBox.SelectedIndex = i;
@@ -96,10 +105,25 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
         {
             if (sender is TextBox textBox)
             {
-                var vInfo = new VehicleInformation();
+                using var vInfo = new VehicleInformation();
 
-                if (vInfo.ShowDialog() == true)
-                    textBox.Text = "Ok";
+                try
+                {
+                    if (vInfo.ShowDialog() == true)
+                    {
+                        AccidentObjectsVM.CurrentAccidentObject.Vehicle = vInfo.SelectedVehicle;
+                        AccidentObjectsVM.CurrentAccidentObject.VehicleId = vInfo.SelectedVehicle.Id;
+
+                        textBox.Text = $"{vInfo.SelectedVehicle.Make} ({vInfo.SelectedVehicle.Model})";
+
+                        textBox.BorderBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0xAB, 0xAD, 0xB3));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+
             }
         }
     }

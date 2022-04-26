@@ -9,7 +9,7 @@
     <UserControl.Triggers>
         <EventTrigger RoutedEvent="Loaded">
             <BeginStoryboard>
-                <Storyboard>
+                <Storyboard x:Name="MainStoryBoard">
                     <ColorAnimation Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)" 
                                     Storyboard.TargetName="LoadTextBox"
                                     To="#FF144489" 

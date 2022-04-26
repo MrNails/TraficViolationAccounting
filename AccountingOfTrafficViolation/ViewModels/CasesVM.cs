@@ -33,7 +33,7 @@ namespace AccountingOfTrafficViolation.ViewModels
 
         public CasesVM()
         {
-            m_TVAContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.GlobalContext.Credential);
+            m_TVAContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.Credential);
 
             CurrentGeneralInfo = new ObservableCollection<GeneralInfo>();
             CurrentRoadCondition = new ObservableCollection<RoadCondition>();

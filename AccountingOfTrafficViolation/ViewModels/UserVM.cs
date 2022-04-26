@@ -21,7 +21,7 @@ namespace AccountingOfTrafficViolation.ViewModels
 
         public UserVM()
         {
-            m_TVAContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.GlobalContext.Credential);
+            m_TVAContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.Credential);
         }
 
         public bool IsCurrentUserChanged

@@ -250,7 +250,7 @@ namespace AccountingOfTrafficViolation.Views
 
         private async void AddCaseToDB()
         {
-            using (TVAContext context = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.GlobalContext.Credential))
+            using (TVAContext context = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.Credential))
             {
                 context.GeneralInfos.Add(generalInfo);
                 context.RoadConditions.Add(roadCondition);

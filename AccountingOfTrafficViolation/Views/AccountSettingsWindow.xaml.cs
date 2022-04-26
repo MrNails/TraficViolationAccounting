@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +25,8 @@ namespace AccountingOfTrafficViolation.Views
         private bool m_isChanged;
         private Officer m_officer;
         private LoadView m_loadView;
+
+        private TVAContext m_context;
 
         public AccountSettingsWindow()
         {
@@ -107,7 +110,7 @@ namespace AccountingOfTrafficViolation.Views
 
                         try
                         {
-                            await GlobalSettings.GlobalContext.Database.ExecuteSqlRawAsync("EXEC AccountOfTrafficViolation.dbo.UpdateOfficerPwd @officerId, @password, @salt", 
+                            await m_context.Database.ExecuteSqlRawAsync("EXEC AccountOfTrafficViolation.dbo.UpdateOfficerPwd @officerId, @password, @salt", 
                                 new object[] {m_officer.Id, Encoding.UTF8.GetString(pwd), Encoding.UTF8.GetString(saltBytes)});
                         }
                         catch (Exception ex)
@@ -120,14 +123,14 @@ namespace AccountingOfTrafficViolation.Views
                         break;
                 }
 
-                var officer = await GlobalSettings.GlobalContext.Officers.FirstAsync(o => o.Id == m_officer.Id);
+                var officer = await m_context.Officers.FirstAsync(o => o.Id == m_officer.Id);
                 officer.Name = m_officer.Name;
                 officer.Surname = m_officer.Surname;
                 officer.Phone = m_officer.Phone;
 
                 try
                 {
-                    await GlobalSettings.GlobalContext.SaveChangesAsync();
+                    await m_context.SaveChangesAsync();
                     MessageBox.Show("Данные успешно изменены.", "Внимание", MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
@@ -196,6 +199,8 @@ namespace AccountingOfTrafficViolation.Views
             m_isChanged = false;
             SavePersonalDataButton.IsEnabled = false;
             DiscardPersonalDataButton.IsEnabled = false;
+
+            m_context = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.Credential);
         }
     }
 }

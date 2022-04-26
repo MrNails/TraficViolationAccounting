@@ -16,6 +16,7 @@ public class CaseVehicle : MainTable
     private string corruptionCode;
     private string technicalFaults;
     private string activityLicensingInfo;
+    private Vehicle m_vehicle;
 
     public CaseVehicle()
     {
@@ -263,5 +264,15 @@ public class CaseVehicle : MainTable
     }
     
     [NotAssign] public virtual Case Case { get; set; }
-    [NotAssign] public virtual Vehicle Vehicle { get; set; }
+
+    [NotAssign]
+    public virtual Vehicle Vehicle
+    {
+        get => m_vehicle;
+        set
+        {
+            m_vehicle = value;
+            OnPropertyChanged();
+        }
+    }
 }

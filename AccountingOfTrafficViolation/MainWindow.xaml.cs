@@ -28,11 +28,8 @@ namespace AccountingOfTrafficViolation
             m_authorizationPage.AcceptAction += async (u, credential) =>
             {
                 GlobalSettings.ActiveOfficer = u;
-                
-                if (GlobalSettings.GlobalContext != null)
-                    await GlobalSettings.GlobalContext.DisposeAsync();
-        
-                GlobalSettings.GlobalContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], credential);
+
+                GlobalSettings.Credential = credential;
                 
                 SetMainPage();
             };
