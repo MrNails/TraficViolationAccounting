@@ -123,7 +123,7 @@
                 <TextBlock Grid.Column="0" Grid.Row="3" Text="Привязка" Style="{StaticResource TextBlockTemplateStyle}" VerticalAlignment="Center"/>
                 <Border Grid.Column="1" Grid.Row="3" x:Name="RoadBindingBorder" BorderThickness="1"  VerticalAlignment="Center">
                     <TextBox  x:Name="RoadBindingTextBox" Padding="2" Height="50" MaxLength="47" 
-                              Text="{Binding Path=Binding, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                              Text="{Binding Path=HighwayBinding, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                               Style="{StaticResource TextBoxValidationTemplate}"/>
                 </Border>
             </Grid>
