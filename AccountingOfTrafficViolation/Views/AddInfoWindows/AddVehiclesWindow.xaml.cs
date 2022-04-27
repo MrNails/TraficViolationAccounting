@@ -24,6 +24,9 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
     /// </summary>
     public partial class AddVehiclesWindow : Window
     {
+        private SolidColorBrush m_redColor;
+        private SolidColorBrush m_defaultTBColor;
+        
         public AccidentObjectsVM<CaseVehicle> AccidentObjectsVM { get; private set; }
 
         public ObservableCollection<CaseVehicle> Vehicles => AccidentObjectsVM.AccidentObjects;
@@ -50,6 +53,11 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
                 AddVehicle.IsEnabled = false;
                 RemoveVehicle.IsEnabled = false;
             }
+            
+            m_redColor = new SolidColorBrush(Colors.Red);
+            m_defaultTBColor = new SolidColorBrush(Color.FromArgb(0xFF, 0xAB, 0xAD, 0xB3));
+            
+            VehicleTB.BorderBrush = m_redColor;
         }
 
         private void VehiclesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -58,7 +66,20 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
             {
                 AccidentObjectsVM.CurrentIndex = VehiclesListBox.SelectedIndex;
 
-                VehicleGroupBox.Header = "Транспортное средство № " + (AccidentObjectsVM.CurrentIndex + 1).ToString();
+                VehicleGroupBox.Header = $"Транспортное средство № {AccidentObjectsVM.CurrentIndex + 1}";
+
+                if (AccidentObjectsVM.CurrentAccidentObject.Vehicle != null)
+                {
+                    VehicleTB.Text =
+                        $"{AccidentObjectsVM.CurrentAccidentObject.Vehicle.Make} ({AccidentObjectsVM.CurrentAccidentObject.Vehicle.Model})";
+
+                    VehicleTB.BorderBrush = m_defaultTBColor;
+                }
+                else
+                {
+                    VehicleTB.Text = string.Empty;
+                    VehicleTB.BorderBrush = m_redColor;
+                }
             }
         }
 
@@ -71,7 +92,7 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
                 if (AccidentObjectsVM.CurrentAccidentObject.Vehicle == null)
                 {
                     VehiclesListBox.SelectedIndex = i;
-                    VehicleTB.BorderBrush = new SolidColorBrush(Colors.Red);
+                    VehicleTB.BorderBrush = m_redColor;
                     
                     return;
                 }
@@ -116,7 +137,7 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
 
                         textBox.Text = $"{vInfo.SelectedVehicle.Make} ({vInfo.SelectedVehicle.Model})";
 
-                        textBox.BorderBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0xAB, 0xAD, 0xB3));
+                        textBox.BorderBrush = m_defaultTBColor;
                     }
                 }
                 catch (Exception ex)
