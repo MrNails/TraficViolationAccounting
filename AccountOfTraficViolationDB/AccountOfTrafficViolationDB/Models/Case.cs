@@ -25,7 +25,7 @@ namespace AccountOfTrafficViolationDB.Models
 
         [NotAssign]
         [Column("CaseId")]
-        public int Id { get; init; }
+        public int Id { get; set; }
         
         public string OfficerId { get; set; }
         

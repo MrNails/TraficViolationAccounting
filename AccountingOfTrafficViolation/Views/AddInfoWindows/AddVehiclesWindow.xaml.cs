@@ -24,15 +24,19 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
     /// </summary>
     public partial class AddVehiclesWindow : Window
     {
-        private SolidColorBrush m_redColor;
-        private SolidColorBrush m_defaultTBColor;
+        private readonly SolidColorBrush m_redColor;
+        private readonly SolidColorBrush m_defaultTBColor;
+
+        private readonly List<Vehicle> m_bannedVehicles;
         
         public AccidentObjectsVM<CaseVehicle> AccidentObjectsVM { get; private set; }
 
         public ObservableCollection<CaseVehicle> Vehicles => AccidentObjectsVM.AccidentObjects;
 
         public AddVehiclesWindow() : this(null)
-        { }
+        {
+        }
+
         public AddVehiclesWindow(ObservableCollection<CaseVehicle> vehicles, bool isEditable = true)
         {
             InitializeComponent();
@@ -53,10 +57,10 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
                 AddVehicle.IsEnabled = false;
                 RemoveVehicle.IsEnabled = false;
             }
-            
+
             m_redColor = new SolidColorBrush(Colors.Red);
             m_defaultTBColor = new SolidColorBrush(Color.FromArgb(0xFF, 0xAB, 0xAD, 0xB3));
-            
+
             VehicleTB.BorderBrush = m_redColor;
         }
 
@@ -93,7 +97,7 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
                 {
                     VehiclesListBox.SelectedIndex = i;
                     VehicleTB.BorderBrush = m_redColor;
-                    
+
                     return;
                 }
 
@@ -106,6 +110,7 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
 
             DialogResult = true;
         }
+
         private void RejectClick(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
@@ -126,10 +131,16 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
         {
             if (sender is TextBox textBox)
             {
-                using var vInfo = new VehicleInformation();
+                VehicleInformation? vInfo = null;
 
                 try
                 {
+                    vInfo = new VehicleInformation();
+                    
+                    foreach (var accidentObject in AccidentObjectsVM.AccidentObjects)
+                        if (accidentObject.Vehicle != null)
+                            vInfo.BannedVehicles.Add(accidentObject.Vehicle.Id);
+
                     if (vInfo.ShowDialog() == true)
                     {
                         AccidentObjectsVM.CurrentAccidentObject.Vehicle = vInfo.SelectedVehicle;
@@ -144,7 +155,10 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
                 {
                     MessageBox.Show(ex.Message);
                 }
-
+                finally
+                {
+                    vInfo?.Dispose();
+                }
             }
         }
     }

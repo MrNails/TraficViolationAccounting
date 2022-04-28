@@ -26,9 +26,6 @@ namespace AccountOfTrafficViolationDB.Models
             RoadDisadvantages = string.Empty;
         }
 
-        [NotAssign, Column("RoadConditionId")]
-        public int Id { get; init; }
-
         public byte SurfaceType
         {
             get { return surfaceType; }

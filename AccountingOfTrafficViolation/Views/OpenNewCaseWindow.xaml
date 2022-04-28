@@ -100,17 +100,19 @@
                     Width="80" Height="30" Click="VictimClick"/>
             </Border>
         </DockPanel>
-        <Button Grid.Row="6" Grid.Column="0" Content="Подтвердить" Style="{StaticResource ButtonTemplateStyle}"
+        <Button Grid.Row="6" Grid.Column="0" x:Name="AcceptBtn" Content="Подтвердить" 
+                Style="{StaticResource ButtonTemplateStyle}"
                 VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 30 0" Width="100"
                 Click="AcceptClick"/>
-        <Button Grid.Row="6" Grid.Column="1" Content="Отменить" Style="{StaticResource ButtonTemplateStyle}"
+        <Button Grid.Row="6" Grid.Column="1" x:Name="CancelBtn" Content="Отменить" 
+                Style="{StaticResource ButtonTemplateStyle}"
                 VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30 0 0 0" Width="100"
                 Click="RejectClick"/>
 
         <StatusBar Grid.Row="7" Grid.ColumnSpan="2">
             <StatusBarItem x:Name="ActionTextStatusBarItem" MaxWidth="250"/>
             <StatusBarItem>
-                <ProgressBar x:Name="ActionProgress" Width="200" Height="15" Visibility="Hidden"/>
+                <ProgressBar x:Name="ActionProgress" Width="150" Height="15" Minimum="0" Maximum="100" Visibility="Hidden"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

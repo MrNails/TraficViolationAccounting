@@ -102,7 +102,7 @@
 
                 <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Фамилия водителя" TextAlignment="Center" Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-                    <TextBox MaxLength="10" Text="{Binding Path=CurrentAccidentObject.Surname, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox MaxLength="10" Text="{Binding Path=CurrentAccidentObject.DriverSurname, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource TextBoxValidationTemplate}" Width="100"/>
                 </StackPanel>
 

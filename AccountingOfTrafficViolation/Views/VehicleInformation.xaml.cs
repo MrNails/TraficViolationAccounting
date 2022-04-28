@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using AccountingOfTrafficViolation.Services;
 using AccountingOfTrafficViolation.Views.UserControls;
 using AccountOfTrafficViolationDB.Context;
@@ -22,7 +27,11 @@ public partial class VehicleInformation : Window, IDisposable
         Edit,
     }
 
+    private readonly SolidColorBrush m_inactiveRowColor;
+    
     private TVAContext m_context;
+    
+    private List<int> m_bannedVehicles;
 
     private ObservableCollection<Vehicle> m_vehicles;
 
@@ -41,9 +50,13 @@ public partial class VehicleInformation : Window, IDisposable
         Grid.SetRowSpan(m_loadView,10);
         Grid.SetColumnSpan(m_loadView,10);
 
+        m_bannedVehicles = new List<int>();
+        
+        m_inactiveRowColor = new SolidColorBrush(Colors.LightGray);
+
         UpdateModeDependencyControls();
     }
-
+    
     public Vehicle? SelectedVehicle
     {
         get => m_selectedVehicle;
@@ -55,6 +68,8 @@ public partial class VehicleInformation : Window, IDisposable
         }
     }
 
+    public List<int>? BannedVehicles => m_bannedVehicles;
+    
     public void Dispose()
     {
         m_context?.Dispose();
@@ -68,7 +83,7 @@ public partial class VehicleInformation : Window, IDisposable
         CurrentVehicleGroupBox.IsEnabled = m_imMode != ItemManagementMode.None;
         VehiclesGrid.IsEnabled = m_imMode == ItemManagementMode.None;
     }
-
+    
     private void TextBox_Click(object sender, RoutedEventArgs e)
     {
         if (sender is TextBox textBox)
@@ -189,7 +204,12 @@ public partial class VehicleInformation : Window, IDisposable
             e.Cancel = true;
         }
         
-        
+        if (SelectedVehicle != null && DialogResult == true && 
+            BannedVehicles.Contains(SelectedVehicle.Id))
+        {
+            MessageBox.Show("Данное транспортное средство было выбранно ранее. Выберите другое транспортное средство.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            e.Cancel = true;
+        }
     }
 
     private async void VehicleInformation_OnLoaded(object sender, RoutedEventArgs e)
@@ -209,9 +229,27 @@ public partial class VehicleInformation : Window, IDisposable
         SynchronizationContext.Current?.Post(obj =>
         {
             VehiclesGrid.ItemsSource = m_vehicles;
-            
+
             m_loadView.Pause();
             MainGrid.Children.Remove(m_loadView);
         }, null);
+    }
+
+    private void VehiclesGrid_OnLayoutUpdated(object? sender, EventArgs e)
+    {
+        if (m_vehicles == null)
+            return;
+
+        foreach (var bannedVehicleId in m_bannedVehicles)
+        {
+            int idx = m_vehicles.IndexOf(v => v.Id == bannedVehicleId);
+                
+            if (idx != -1)
+            {
+                var itemContainer = VehiclesGrid.ItemContainerGenerator.ContainerFromIndex(idx) as DataGridRow;
+                    
+                itemContainer.Background = m_inactiveRowColor;
+            }
+        }
     }
 }

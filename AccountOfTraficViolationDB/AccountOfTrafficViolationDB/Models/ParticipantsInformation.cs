@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using AccountOfTrafficViolationDB.Helpers;
 
 namespace AccountOfTrafficViolationDB.Models
@@ -29,7 +30,7 @@ namespace AccountOfTrafficViolationDB.Models
             Age = 0;
         }
 
-        [NotAssign]
+        [NotAssign, Column("ParticipantInformationId")]
         public int Id { get; set; }
 
         [Required]

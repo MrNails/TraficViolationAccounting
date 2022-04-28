@@ -10,6 +10,7 @@ using System.Windows;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountingOfTrafficViolation.Services
 {
@@ -72,6 +73,26 @@ namespace AccountingOfTrafficViolation.Services
                    obj is double ||
                    obj is float ||
                    obj is decimal;
+        }
+    }
+
+    public static class IEnumerableExtensions
+    {
+        public static int IndexOf<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
+        {
+            ArgumentNullException.ThrowIfNull(enumerable, nameof(enumerable));
+            ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
+
+            int idx = 0;
+            foreach (var element in enumerable)
+            {
+                if (predicate(element))
+                    return idx;
+
+                ++idx;
+            }
+
+            return -1;
         }
     }
 

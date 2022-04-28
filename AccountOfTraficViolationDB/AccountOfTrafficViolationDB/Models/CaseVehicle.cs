@@ -26,9 +26,7 @@ public class CaseVehicle : MainTable
         ChasisNumber = string.Empty;
         LicenceNumber = string.Empty;
         LicenceSeries = string.Empty;
-        CorruptionCode = string.Empty;
         TechnicalFaults = string.Empty;
-        ActivityLicensingInfo = string.Empty;
     }
     
     public int VehicleId { get; set; }
@@ -224,13 +222,10 @@ public class CaseVehicle : MainTable
             if (!string.IsNullOrEmpty(value))
             {
                 if (value.Length > 8)
-                {
                     errors["CorruptionCode"] = "Количество символов в поле \"код повреждения\" не может превышать 8.";
-                }
                 else
-                {
                     errors["CorruptionCode"] = null;
-                }
+                
             }
 
             corruptionCode = value;

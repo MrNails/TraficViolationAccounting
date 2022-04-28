@@ -72,7 +72,7 @@ public partial class AuthorizationUC : UserControl
             if (m_connection.State == ConnectionState.Closed)
                 await m_connection.OpenAsync();
 
-            return (await m_connection.QueryAsync<Officer?>("SELECT * FROM Officers (nolock) WHERE OfficerId = @Login",
+            return (await m_connection.QueryAsync<Officer?>("SELECT OfficerId as Id, Name, Surname, Phone FROM Officers (nolock) WHERE OfficerId = @Login",
                     new { Login = login }))
                 .FirstOrDefault();
         }

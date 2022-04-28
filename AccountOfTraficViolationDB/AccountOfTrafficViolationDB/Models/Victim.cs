@@ -28,7 +28,7 @@ namespace AccountOfTrafficViolationDB.Models
         }
 
         [NotAssign, Column("VictimId")]
-        public int Id { get; init; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(2)]

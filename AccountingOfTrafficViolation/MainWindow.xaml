@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Главное меню" ResizeMode="NoResize"
+        Title="АРМ работника патрульной полиции" ResizeMode="NoResize"
         Initialized="Window_Initialized" SizeChanged="MainWindow_OnSizeChanged">
     <Grid x:Name="MainContainer"/>
 </Window>

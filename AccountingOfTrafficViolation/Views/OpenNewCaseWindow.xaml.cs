@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +16,7 @@ using AccountingOfTrafficViolation.ViewModels;
 using AccountingOfTrafficViolation.Views.AddInfoWindows;
 using AccountOfTrafficViolationDB.Context;
 using AccountOfTrafficViolationDB.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 
 namespace AccountingOfTrafficViolation.Views
@@ -26,12 +28,12 @@ namespace AccountingOfTrafficViolation.Views
     {
         private bool isStarted;
         private bool isSaving;
-        
+
         private GeneralInfo generalInfo;
         private CaseAccidentPlace caseAccidentPlace;
         private RoadCondition roadCondition;
         private ObservableCollection<ParticipantsInformation> participantsInformations;
-        private ObservableCollection<CaseVehicle> vehicles;
+        private ObservableCollection<CaseVehicle> caseVehicles;
         private ObservableCollection<Victim> victims;
         private Case _case;
 
@@ -40,7 +42,7 @@ namespace AccountingOfTrafficViolation.Views
         public OpenNewCaseWindow()
         {
             InitializeComponent();
-            
+
             _case = new Case();
 
             DataContext = _case;
@@ -57,7 +59,7 @@ namespace AccountingOfTrafficViolation.Views
             _case.CaseAccidentPlace = caseAccidentPlace;
             _case.RoadCondition = roadCondition;
             _case.ParticipantsInformations = participantsInformations;
-            _case.CaseVehicles = vehicles;
+            _case.CaseVehicles = caseVehicles;
             _case.Victims = victims;
             _case.State = "PROCESSING";
             _case.OfficerId = GlobalSettings.ActiveOfficer.Id;
@@ -75,6 +77,7 @@ namespace AccountingOfTrafficViolation.Views
                 isStarted = true;
             }
         }
+
         private void AccidentPlaceClick(object sender, RoutedEventArgs e)
         {
             AddAccidentPlaceWindow accidentPlaceWinow = new AddAccidentPlaceWindow(caseAccidentPlace);
@@ -86,6 +89,7 @@ namespace AccountingOfTrafficViolation.Views
                 isStarted = true;
             }
         }
+
         private void RoadConditionClick(object sender, RoutedEventArgs e)
         {
             AddRoadConditionWindow roadConditionWindow = new AddRoadConditionWindow(roadCondition);
@@ -97,28 +101,32 @@ namespace AccountingOfTrafficViolation.Views
                 isStarted = true;
             }
         }
+
         private void ParticipanInfoClick(object sender, RoutedEventArgs e)
         {
             AddParticipantInfoWindow participantInfoWindow = new AddParticipantInfoWindow(participantsInformations);
             if (participantInfoWindow.ShowDialog() == true)
             {
                 participantsInformations = participantInfoWindow.ParticipantsInformations;
-                ParticipanInfoProgresImage.Source = new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));
+                ParticipanInfoProgresImage.Source =
+                    new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));
                 StopBorderAnimation(ParticipanInfoBorder);
                 isStarted = true;
             }
         }
+
         private void VehicleClick(object sender, RoutedEventArgs e)
         {
-            AddVehiclesWindow vehiclesWindow = new AddVehiclesWindow(vehicles);
+            AddVehiclesWindow vehiclesWindow = new AddVehiclesWindow(caseVehicles);
             if (vehiclesWindow.ShowDialog() == true)
             {
-                vehicles = vehiclesWindow.Vehicles;
+                caseVehicles = vehiclesWindow.Vehicles;
                 VehicleProgresImage.Source = new BitmapImage(new Uri("/Images/AcceptIcon.jpg", UriKind.Relative));
                 StopBorderAnimation(VehicleBorder);
                 isStarted = true;
             }
         }
+
         private void VictimClick(object sender, RoutedEventArgs e)
         {
             AddVictimsWindow victimsWindow = new AddVictimsWindow(victims);
@@ -131,7 +139,7 @@ namespace AccountingOfTrafficViolation.Views
             }
         }
 
-        private void AcceptClick(object sender, RoutedEventArgs e)
+        private async void AcceptClick(object sender, RoutedEventArgs e)
         {
             bool isValid = CheckValidationAndSetAnimation();
 
@@ -139,49 +147,63 @@ namespace AccountingOfTrafficViolation.Views
             {
                 try
                 {
-                    AddCaseToDB();
+                    ActionTextStatusBarItem.Content = "Сохранение дела. Прогресс сохранения:";
+                    ActionProgress.Visibility = Visibility.Visible;
+                    ActionProgress.Value = 0;
+
+                    isSaving = true;
+                    
+                    AcceptBtn.IsEnabled = false;
+                    CancelBtn.IsEnabled = false;
+
+                    await AddCaseToDB();
+                    
                     isStarted = false;
-                    MessageBox.Show("Дело успешно добавлено.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                    
+                    MessageBox.Show("Дело успешно добавлено.", "Внимание", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+
+                    isSaving = false;
+                    DialogResult = true;
                 }
                 catch (Exception ex)
                 {
-                    string entitiesInfo = string.Empty;
-                    entitiesInfo += generalInfo?.ToDebugString();
-                    entitiesInfo += caseAccidentPlace?.AccidentOnHighway.ToDebugString();
-                    entitiesInfo += caseAccidentPlace?.AccidentOnVillage.ToDebugString();
-                    entitiesInfo += roadCondition?.ToDebugString();
+                    ActionTextStatusBarItem.Content = "Ошибка сохранения дела.";
+
+                    var entitiesInfo = new StringBuilder();
+                    entitiesInfo.Append(generalInfo?.ToDebugString());
+                    entitiesInfo.Append(caseAccidentPlace?.AccidentOnHighway?.ToDebugString());
+                    entitiesInfo.Append(caseAccidentPlace?.AccidentOnVillage?.ToDebugString());
+                    entitiesInfo.Append(roadCondition?.ToDebugString());
 
                     if (participantsInformations != null)
-                    {
                         foreach (var participantsInformation in participantsInformations)
-                        {
-                            entitiesInfo += participantsInformation.ToDebugString();
-                        }
-                    }
-                    if (vehicles != null)
-                    {
-                        foreach (var vehicle in vehicles)
-                        {
-                            entitiesInfo += vehicle.ToDebugString();
-                        }
-                    }
+                            entitiesInfo.Append(participantsInformation.ToDebugString());
+
+                    if (caseVehicles != null)
+                        foreach (var vehicle in caseVehicles)
+                            entitiesInfo.Append(vehicle.ToDebugString());
+
                     if (victims != null)
-                    {
                         foreach (var victim in victims)
-                        {
-                            entitiesInfo += victim.ToDebugString();
-                        }
-                    }
+                            entitiesInfo.Append(victim.ToDebugString());
 
                     throw new Exception($"{ex.Message}{Environment.NewLine}Информация о добавленных объектах:" +
-                                       $"{Environment.NewLine}{entitiesInfo}");
+                                        $"{Environment.NewLine}{entitiesInfo}", ex);
                 }
                 finally
                 {
-                    DialogResult = true;
+                    ActionProgress.Value = 0;
+                    ActionProgress.Visibility = Visibility.Hidden;
+
+                    isSaving = false;
+                    
+                    AcceptBtn.IsEnabled = true;
+                    CancelBtn.IsEnabled = true;
                 }
             }
         }
+
         private void RejectClick(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
@@ -234,6 +256,7 @@ namespace AccountingOfTrafficViolation.Views
             border.BeginAnimation(Border.HeightProperty, heightAnimation);
             border.BeginAnimation(Border.BorderThicknessProperty, borderThicknessAnimation);
         }
+
         private void StopBorderAnimation(Border border)
         {
             border.BorderBrush = new SolidColorBrush(Colors.Transparent);
@@ -248,48 +271,95 @@ namespace AccountingOfTrafficViolation.Views
             border.BorderThickness = (Thickness)border.GetAnimationBaseValue(Border.BorderThicknessProperty);
         }
 
-        private async void AddCaseToDB()
+        private void SetProgressBarValue(double value)
         {
-            using (TVAContext context = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.Credential))
+            SynchronizationContext.Current.Post(state => ActionProgress.Value = (double)state, value);
+        }
+        
+        private async Task AddCaseToDB()
+        {
+            await using var context = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB],
+                GlobalSettings.Credential);
+
+            var progress = 0.0;
+            var anyCaseExists = false;
+            var anyAccidentPlaceExists = false;
+
+            var maxCaseId = 0;
+            var maxAccidentPlaceId = 0;
+
+            anyCaseExists = await context.Cases.AnyAsync(); SetProgressBarValue(progress += 20);
+
+            if (caseAccidentPlace.AccidentOnHighway != null)
+                anyAccidentPlaceExists = await context.AccidentOnHighways.AnyAsync();
+            else
+                anyAccidentPlaceExists = await context.AccidentOnVillages.AnyAsync();
+            
+            SetProgressBarValue(progress += 20);
+
+            if (anyCaseExists) maxCaseId = await context.Cases.MaxAsync(c => c.Id);
+            SetProgressBarValue(progress += 20);
+
+            if (anyAccidentPlaceExists) maxAccidentPlaceId = caseAccidentPlace.AccidentOnHighway != null ? 
+                await context.AccidentOnHighways.MaxAsync(v => v.Id) :
+                await context.AccidentOnVillages.MaxAsync(v => v.Id);
+            SetProgressBarValue(progress += 20);
+
+            FillCase();
+            _case.Id = maxCaseId + 1;
+
+            var pInfoMaxId = 0;
+            var vMaxId = 0;
+
+            generalInfo.Case = _case;
+            roadCondition.Case = _case;
+            caseAccidentPlace.Case = _case;
+
+            foreach (var participantsInformation in participantsInformations)
             {
-                context.GeneralInfos.Add(generalInfo);
-                context.RoadConditions.Add(roadCondition);
-
-                FillCase();
-                caseAccidentPlace.Case = _case;
-
-                foreach (var participantsInformation in participantsInformations)
-                {
-                    participantsInformation.Case = _case;
-                }
-                foreach (var vehicle in vehicles)
-                {
-                    vehicle.Case = _case;
-                }
-                foreach (var victim in victims)
-                {
-                    victim.Case = _case;
-                }
-
-                context.ParticipantsInformations.AddRange(participantsInformations);
-                context.CaseVehicles.AddRange(vehicles);
-                context.Victims.AddRange(victims);
-
-                if (caseAccidentPlace.AccidentOnHighway != null)
-                    context.AccidentOnHighways.Add(caseAccidentPlace.AccidentOnHighway);
-                if (caseAccidentPlace.AccidentOnVillage != null)
-                    context.AccidentOnVillages.Add(caseAccidentPlace.AccidentOnVillage);
-
-                    try
-                {
-                    await context.SaveChangesAsync();
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show($"Error: {e.Message}\nStack Trace: {e.StackTrace}\nInner exception: {(e.InnerException != null ? e.InnerException.Message : string.Empty)}");
-                }
+                participantsInformation.Id = pInfoMaxId++;
+                participantsInformation.Case = _case;
             }
 
+            foreach (var caseVehicle in caseVehicles)
+            {
+                caseVehicle.Case = _case;
+
+                context.Entry(caseVehicle.Vehicle).State = EntityState.Unchanged;
+            }
+
+            foreach (var victim in victims)
+            {
+                victim.Id = vMaxId++;
+                victim.Case = _case;
+            }
+
+            if (caseAccidentPlace.AccidentOnHighway != null)
+            {
+                caseAccidentPlace.AccidentOnHighway.Id = maxAccidentPlaceId + 1;
+                caseAccidentPlace.AccidentOnHighway = caseAccidentPlace.AccidentOnHighway;
+                context.AccidentOnHighways.Add(caseAccidentPlace.AccidentOnHighway);
+            }
+            else
+            {
+                caseAccidentPlace.AccidentOnVillage.Id = maxAccidentPlaceId + 1;
+                caseAccidentPlace.AccidentOnVillage = caseAccidentPlace.AccidentOnVillage;
+                context.AccidentOnVillages.Add(caseAccidentPlace.AccidentOnVillage);
+            }
+
+            context.CaseAccidentPlaces.Add(caseAccidentPlace);
+
+            context.Cases.Add(_case);
+
+            // context.GeneralInfos.Add(generalInfo);
+            // context.RoadConditions.Add(roadCondition);
+            // context.ParticipantsInformations.AddRange(participantsInformations);
+            // context.CaseVehicles.AddRange(caseVehicles);
+            // context.Victims.AddRange(victims);
+
+            await context.SaveChangesAsync();
+            
+            SetProgressBarValue(progress += 20);
         }
 
         private bool CheckValidationAndSetAnimation()
@@ -336,7 +406,7 @@ namespace AccountingOfTrafficViolation.Views
                 StopBorderAnimation(ParticipanInfoBorder);
             }
 
-            if (vehicles == null)
+            if (caseVehicles == null)
             {
                 SetBorderAnimation(VehicleBorder);
                 isValid = false;
@@ -362,9 +432,7 @@ namespace AccountingOfTrafficViolation.Views
         private async void WordSaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (!CheckValidationAndSetAnimation())
-            {
                 return;
-            }
 
             if (saveCaseToWordVM == null)
             {
@@ -380,17 +448,16 @@ namespace AccountingOfTrafficViolation.Views
                 {
                     MessageBox.Show("Не найден файл-шаблон для сохранения дела в на устройство." +
                                     "\nПоследующее сохранение не возможно без файла.",
-                             "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-
             }
 
             if (isSaving)
             {
                 MessageBox.Show("Операция не возможна, так как на " +
-                                "данный момент сохраняется другой файл.",
-                                "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                                "данный момент происходит сохранение.",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -469,13 +536,13 @@ namespace AccountingOfTrafficViolation.Views
                 ActionProgress.Value = 0;
                 ActionProgress.Visibility = Visibility.Hidden;
             }
-
         }
 
         private void SavedDocumentMessage(WordSaveActionArgs args)
         {
             MessageBox.Show("Файл успешно сохранён.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
         private void ErrorDocumentMessage(Exception ex, WordSaveActionArgs args)
         {
             MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -485,8 +552,8 @@ namespace AccountingOfTrafficViolation.Views
         {
             if (isStarted &&
                 MessageBox.Show("У вас есть не сохранённые данные." +
-                                "Вы уверены, что хотите выйти?", 
-                                "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                                "Вы уверены, что хотите выйти?",
+                    "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
                 e.Cancel = true;
                 DialogResult = null;
@@ -497,7 +564,7 @@ namespace AccountingOfTrafficViolation.Views
             if (isSaving)
             {
                 MessageBox.Show("Идёт сохранение файла. Не возможно закрыть окно.",
-                                "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
+                    "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
                 e.Cancel = true;
                 DialogResult = null;
 

@@ -159,7 +159,8 @@
             </StackPanel>
             <DataGrid x:Name="VehiclesGrid" Margin="5" IsReadOnly="True" HorizontalScrollBarVisibility="Visible"
                       AutoGenerateColumns="False"
-                      SelectionChanged="VehiclesGrid_OnSelectionChanged">
+                      SelectionChanged="VehiclesGrid_OnSelectionChanged"
+                      LayoutUpdated="VehiclesGrid_OnLayoutUpdated">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
                         <DataGridTextColumn Header="Марка" Binding="{Binding Path=Make}"/>

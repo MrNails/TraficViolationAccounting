@@ -12,8 +12,12 @@ public class CaseAccidentPlaceConfiguration : IEntityTypeConfiguration<CaseAccid
 
         builder.ToTable("CaseAccidentPlace");
 
-        builder.HasIndex(e => new { e.CaseId, e.AccidentOnHighwayId, e.AccidentOnVillageId }, "IX_CaseAccidentPlace_AllId")
+        builder.HasKey(e => e.CaseId)
+            .HasName("PK_CaseAccidentPlace_CaseId")
             .IsClustered();
+
+        builder.HasIndex(e => new { e.CaseId, e.AccidentOnHighwayId, e.AccidentOnVillageId },
+            "IX_CaseAccidentPlace_AllId");
 
         builder.HasOne(d => d.AccidentOnHighway)
             .WithMany()

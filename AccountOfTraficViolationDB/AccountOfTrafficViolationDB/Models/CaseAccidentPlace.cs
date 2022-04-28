@@ -5,7 +5,6 @@ using AccountOfTrafficViolationDB.Helpers;
 
 namespace AccountOfTrafficViolationDB.Models
 {
-    [Table("CaseAccidentPlace")]
     public partial class CaseAccidentPlace : MainTable
     {
         private int caseId;

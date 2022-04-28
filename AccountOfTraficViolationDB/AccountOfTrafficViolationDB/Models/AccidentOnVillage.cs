@@ -25,7 +25,7 @@ namespace AccountOfTrafficViolationDB.Models
         }
 
         [NotAssign, Column("AccidentOnVillageId")]
-        public int Id { get; init; }
+        public int Id { get; set; }
 
         public byte Status
         {
@@ -184,7 +184,6 @@ namespace AccountOfTrafficViolationDB.Models
 
         [Required]
         [StringLength(47)]
-        [Column(name:"Binding")]
         public string VillageBinding
         {
             get { return m_binding; }

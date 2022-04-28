@@ -7,7 +7,6 @@ using AccountOfTrafficViolationDB.Helpers;
 
 namespace AccountOfTrafficViolationDB.Models
 {
-    [Table("GeneralInfos")]
     public partial class GeneralInfo : MainTable
     {
         private byte cardType;
@@ -25,9 +24,6 @@ namespace AccountOfTrafficViolationDB.Models
             fillDate = DateTime.Now;
             incidentDate = DateTime.Now;
         }
-
-        [NotAssign, Column("GeneralInfoId")]
-        public int Id { get; init; }
 
         [Required]
         [StringLength(10)]
@@ -108,25 +104,6 @@ namespace AccountOfTrafficViolationDB.Models
                 OnPropertyChanged("IncidentDate");
             }
         }
-
-        // public byte DayOfWeek
-        // {
-        //     get { return dayOfWeek; }
-        //     set
-        //     {
-        //         if (value > 0 && value < 8 )
-        //         {
-        //             errors["DayOfWeek"] = null;
-        //         }
-        //         else
-        //         {
-        //             errors["DayOfWeek"] = "�� ���������� ���� ��� ������. �������� ������ ���������� � �������� �� 1 �� 7 (1 - �����������, 7 - �����������).";
-        //         }
-        //
-        //         dayOfWeek = value;
-        //         OnPropertyChanged("DayOfWeek");
-        //     }
-        // }
 
         public TimeSpan FillTime
         {

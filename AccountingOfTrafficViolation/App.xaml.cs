@@ -55,7 +55,7 @@ namespace AccountingOfTrafficViolation
         {
             MessageBox.Show("Возникла ошибка, смотри подробности в файле Errors.txt в папке приложения.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             var errorMsg = $"Сообщение: {e.Exception.Message}\nВнутренняя ошибка: " +
-                                  $"{(e.Exception.InnerException != null ? e.Exception.InnerException.Message : string.Empty)}" +
+                                  $"{e.Exception.InnerException?.Message}" +
                                   $"\nStackTrace: {e.Exception.StackTrace}";
             logger.Log(errorMsg);
 
