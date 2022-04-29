@@ -193,9 +193,7 @@ namespace AccountingOfTrafficViolation.Views
                 DatePicker datePicker = (DatePicker)sender;
 
                 if (datePicker.SelectedDate < MainTable.MinimumDate)
-                {
                     datePicker.SelectedDate = MainTable.MinimumDate;
-                }
             }
         }
 
