@@ -184,7 +184,7 @@
                           RowStyle="{StaticResource RowMenu}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
-                        <DataGridTextColumn Header="Логин создателя дела" Binding="{Binding Path=CreaterLogin}"/>
+                        <DataGridTextColumn Header="Логин создателя дела" Binding="{Binding Path=OfficerId}"/>
                         <DataGridTextColumn Header="Статус" Binding="{Binding Path=State, Converter={StaticResource ResourceKey=statusConverter}}"/>
                         <DataGridTextColumn Header="Дата открытия дела" Binding="{Binding Path=OpenAt, StringFormat=dd MMMM yyyy, ConverterCulture=ru-RU}"/>
                         <DataGridTextColumn Header="Дата закрытия дела" Binding="{Binding Path=CloseAt, StringFormat=dd MMMM yyyy, ConverterCulture=ru-RU, TargetNullValue=Нет даты}"/>
@@ -237,7 +237,7 @@
                             <DataGridTextColumn Header="Исскуственные сооружения" Binding="{Binding Path=ArtificialConstructions}"/>
                             <DataGridTextColumn Header="Элементы участка" 
                                             Binding="{Binding Path=PlaceElement, Converter={StaticResource separatorConverter}, ConverterParameter=2 2 5}"/>
-                            <DataGridTextColumn Header="Инженерно-транспортное оборудование" Binding="{Binding Path=EngineeringTranpsortEquipment}"/>
+                            <DataGridTextColumn Header="Инженерно-транспортное оборудование" Binding="{Binding Path=EngineeringTransportEquipment}"/>
                             <DataGridTextColumn Header="Технические приспособления организации дорожнего движения" 
                                             Binding="{Binding Path=TechnicalTool, 
                                                       Converter={StaticResource separatorConverter}, 
@@ -296,7 +296,7 @@
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0} , {1}">
                                                     <Binding Path="Name" />
-                                                    <Binding Path="ReginalCodeOfName" />
+                                                    <Binding Path="RegionalCodeOfName" />
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
@@ -310,7 +310,7 @@
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0} , {1}">
                                                     <Binding Path="District" />
-                                                    <Binding Path="ReginalCodeOfDistrict" />
+                                                    <Binding Path="RegionalCodeOfDistrict" />
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
@@ -324,7 +324,7 @@
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0} , {1}">
                                                     <Binding Path="Street" />
-                                                    <Binding Path="ReginalCodeOfStreet" />
+                                                    <Binding Path="RegionalCodeOfStreet" />
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
@@ -338,7 +338,7 @@
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0} , {1}">
                                                     <Binding Path="VillageBinding" />
-                                                    <Binding Path="ReginalCodeOfBinding" />
+                                                    <Binding Path="RegionalCodeOfBinding" />
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
@@ -375,7 +375,7 @@
                         <DataGridTextColumn Header="Возраст" Binding="{Binding Path=Age}"/>
                         <DataGridTextColumn Header="Пол" Binding="{Binding Path=Gender, Converter={StaticResource genderConverter}}"/>
                         <DataGridTextColumn Header="Гражданство" Binding="{Binding Path=Citizenship}"/>
-                        <DataGridTextColumn Header="Водительский стаж" Binding="{Binding Path=DriveExpirience}"/>
+                        <DataGridTextColumn Header="Водительский стаж" Binding="{Binding Path=DriveExperience}"/>
                         <DataGridTextColumn Header="Время за рулём до ДТП" Binding="{Binding Path=DrivingTimeBeforeAccident}"/>
                         <DataGridTextColumn Header="Нарушение ПДР" Binding="{Binding Path=PDDViolation, 
                                                                          Converter={StaticResource separatorConverter},
@@ -404,17 +404,17 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Марка" Binding="{Binding Path=Make}"/>
-                        <DataGridTextColumn Header="Модель" Binding="{Binding Path=Model}"/>
-                        <DataGridTextColumn Header="Тип" Binding="{Binding Path=Type}"/>
+                        <DataGridTextColumn Header="Марка" Binding="{Binding Path=Vehicle.Make}"/>
+                        <DataGridTextColumn Header="Модель" Binding="{Binding Path=Vehicle.Model}"/>
+                        <DataGridTextColumn Header="Тип" Binding="{Binding Path=Vehicle.Type}"/>
                         <DataGridTemplateColumn Header="Серия, № свидетельства о регистрации">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock>
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0} , {1}">
-                                                <Binding Path="SeriesOfRegistrationSertificate" />
-                                                <Binding Path="RegistrationSertificate" />
+                                                <Binding Path="Vehicle.SeriesOfRegistrationSertificate" />
+                                                <Binding Path="Vehicle.RegistrationSertificate" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
@@ -422,23 +422,23 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Наличие прицепа" Binding="{Binding Path=TrailerAvailability}"/>
-                        <DataGridTextColumn Header="Код страховщика" Binding="{Binding Path=InsurerCode}"/>
+                        <DataGridTextColumn Header="Код страховщика" Binding="{Binding Path=Vehicle.InsurerCode}"/>
                         <DataGridTemplateColumn Header="Серия, № полиса, термин действия">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock>
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0} , {1} До {2:dd MMMM yyyy}" ConverterCulture="ru-RU">
-                                                <Binding Path="PolicySeries" />
-                                                <Binding Path="PolicyNumber" />
-                                                <Binding Path="PolicyEndDate"/>
+                                                <Binding Path="Vehicle.PolicySeries" />
+                                                <Binding Path="Vehicle.PolicyNumber" />
+                                                <Binding Path="Vehicle.PolicyEndDate"/>
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Фамилия водителя" Binding="{Binding Path=Surname}"/>
+                        <DataGridTextColumn Header="Фамилия водителя" Binding="{Binding Path=DriverSurname}"/>
                         <DataGridTemplateColumn Header="Серия, № удостоверения водителя">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -456,14 +456,14 @@
                         <DataGridTemplateColumn Header="Собственник ТС">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Owner}" MaxWidth="100" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="{Binding Path=Vehicle.Owner}" MaxWidth="100" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Технические неисправности" 
                                         Binding="{Binding Path=TechnicalFaults, Converter={StaticResource separatorConverter}, ConverterParameter=2 1}"/>
                         <DataGridTextColumn Header="Код ЕГРПОУ" 
-                                        Binding="{Binding Path=EDRPOU_Code, Converter={StaticResource separatorConverter}, ConverterParameter=1 7}"/>
+                                        Binding="{Binding Path=Vehicle.EDRPOU_Code, Converter={StaticResource separatorConverter}, ConverterParameter=1 7}"/>
                         <DataGridTextColumn Header="Код повреждение ТС" 
                                         Binding="{Binding Path=CorruptionCode, Converter={StaticResource separatorConverter}, ConverterParameter=2 2 5 8}"/>
                         <DataGridTextColumn Header="Ведомости о лицензировании водителя" Binding="{Binding Path=ActivityLicensingInfo}"/>

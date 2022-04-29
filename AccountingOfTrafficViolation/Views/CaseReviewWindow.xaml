@@ -27,7 +27,10 @@
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Дата открытия дела" TextAlignment="Center" 
                        Style="{StaticResource TextBlockTemplateStyle}" Margin="0 0 0 10"/>
-            <Calendar DisplayDate="{Binding Path=OpenAt, Mode=OneWay}" SelectedDate="{Binding Path=OpenAt, Mode=OneWay}" SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
+            <Calendar x:Name="CaseOpenCalendar"
+                      DisplayDate="{Binding Path=OpenAt, Mode=OneWay}" 
+                      SelectedDate="{Binding Path=OpenAt, Mode=OneWay}" 
+                      SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
         </StackPanel>
         <WrapPanel Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Дело открыл: " Style="{StaticResource TextBlockTemplateStyle}"/>

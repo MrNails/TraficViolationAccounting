@@ -13,7 +13,7 @@ public class CaseVehicle : MainTable
     private string chasisNumber;
     private string licenceNumber;
     private string licenceSeries;
-    private string corruptionCode;
+    private string? corruptionCode;
     private string technicalFaults;
     private string activityLicensingInfo;
     private Vehicle m_vehicle;
@@ -214,7 +214,7 @@ public class CaseVehicle : MainTable
     }
 
     [StringLength(8)]
-    public string CorruptionCode
+    public string? CorruptionCode
     {
         get { return corruptionCode; }
         set
@@ -234,7 +234,7 @@ public class CaseVehicle : MainTable
     }
 
     [StringLength(2)]
-    public string ActivityLicensingInfo
+    public string? ActivityLicensingInfo
     {
         get { return activityLicensingInfo; }
         set

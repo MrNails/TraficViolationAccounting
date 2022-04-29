@@ -115,7 +115,7 @@ namespace AccountOfTrafficViolationDB.Models
             }
         }
 
-        public virtual AccidentOnHighway AccidentOnHighway
+        public virtual AccidentOnHighway? AccidentOnHighway
         {
             get { return accidentOnHighway; }
             set
@@ -144,7 +144,7 @@ namespace AccountOfTrafficViolationDB.Models
                 errors["AccidentOnHighway"] = null;
             }
         }
-        public virtual AccidentOnVillage AccidentOnVillage
+        public virtual AccidentOnVillage? AccidentOnVillage
         {
             get { return accidentOnVillage; }
             set

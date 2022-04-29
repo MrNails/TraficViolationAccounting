@@ -23,7 +23,12 @@ namespace AccountingOfTrafficViolation.Services
                 throw new ArgumentNullException("obj");
             }
 
-            return JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(obj));
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            };
+
+            return JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(obj, options), options);
         }
     }
 

@@ -102,10 +102,20 @@ namespace AccountingOfTrafficViolation.ViewModels
         {
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
+            
+            var casesAndPlaces = await predicate(m_TVAContext.Cases)
+                .Join(m_TVAContext.CaseAccidentPlaces, 
+                      c => c.Id,
+                      cpa => cpa.CaseId,
+                      (c, cpa) => new { Case = c, CaseAccidentPlace = cpa })
+                .ToListAsync(cancellationToken);
 
-
-            FoundCases = await predicate(m_TVAContext.Cases).ToListAsync(cancellationToken);
-
+            FoundCases = casesAndPlaces.Select(h =>
+            {
+                h.Case.CaseAccidentPlace = h.CaseAccidentPlace;
+                return h.Case;
+            }).ToList();
+            
             return FoundCases.Count != 0;
         }
 
@@ -205,7 +215,7 @@ namespace AccountingOfTrafficViolation.ViewModels
                     m_currentCase = (Case)obj;
 
 
-                var caseReviewWindow = new CaseReviewWindow((Case)obj, null);
+                var caseReviewWindow = new CaseReviewWindow((Case)obj, GlobalSettings.ActiveOfficer);
                 if (caseReviewWindow.ShowDialog() == true)
                 {
                     m_currentCase.Assign(caseReviewWindow.Case);
@@ -247,7 +257,7 @@ namespace AccountingOfTrafficViolation.ViewModels
                 AddRoadConditionWindow roadConditionWindow = new AddRoadConditionWindow((RoadCondition)obj);
                 if (roadConditionWindow.ShowDialog() == true)
                 {
-                    RoadCondition roadCondition = CurrentRoadCondition.FirstOrDefault();
+                    var roadCondition = CurrentRoadCondition.FirstOrDefault();
                     roadCondition.Assign(roadConditionWindow.RoadCondition);
                     CaseChanged = true;
                 }
@@ -259,8 +269,8 @@ namespace AccountingOfTrafficViolation.ViewModels
                     new AddAccidentPlaceWindow(m_currentCase.CaseAccidentPlace, false);
                 if (accidentPlaceWindow.ShowDialog() == true)
                 {
-                    AccidentOnHighway accidentOnHighway = CurrentAccidentOnHighway.FirstOrDefault();
-                    AccidentOnVillage accidentOnVillage = CurrentAccidentOnVillage.FirstOrDefault();
+                    var accidentOnHighway = CurrentAccidentOnHighway.FirstOrDefault();
+                    var accidentOnVillage = CurrentAccidentOnVillage.FirstOrDefault();
 
                     if (accidentOnVillage != null)
                     {
@@ -277,7 +287,7 @@ namespace AccountingOfTrafficViolation.ViewModels
 
             if (obj is ParticipantsInformation)
             {
-                AddParticipantInfoWindow participantInfoWindow =
+                var participantInfoWindow =
                     new AddParticipantInfoWindow(
                         new ObservableCollection<ParticipantsInformation> { (ParticipantsInformation)obj }, false);
                 if (participantInfoWindow.ShowDialog() == true)

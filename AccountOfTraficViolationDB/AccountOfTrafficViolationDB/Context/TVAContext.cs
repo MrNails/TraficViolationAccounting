@@ -83,8 +83,9 @@ namespace AccountOfTrafficViolationDB.Context
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(m_connectionString);
-            optionsBuilder.LogTo(str => Debug.WriteLine(str));
+            optionsBuilder.UseSqlServer(m_connectionString)
+                .LogTo(str => Debug.WriteLine(str))
+                .UseLazyLoadingProxies();
             
             base.OnConfiguring(optionsBuilder);
         }

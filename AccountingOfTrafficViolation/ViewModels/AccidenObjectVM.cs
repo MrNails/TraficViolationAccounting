@@ -21,11 +21,11 @@ namespace AccountingOfTrafficViolation.ViewModels
 
         public AccidentObjectsVM() : this(null)
         { }
-        public AccidentObjectsVM(ObservableCollection<T> participantsInfo)
+        public AccidentObjectsVM(ObservableCollection<T>? accidentObjects)
         {
-            if (participantsInfo != null)
+            if (accidentObjects != null)
             {
-                AccidentObjects = participantsInfo.Clone();
+                AccidentObjects = accidentObjects.Clone();
                 CurrentAccidentObject = AccidentObjects.FirstOrDefault();
             }
             else

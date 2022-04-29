@@ -36,6 +36,8 @@ namespace AccountingOfTrafficViolation.Views
             if (Case.State == "CLOSE" || Case.OfficerId != officer.Id)
                 CloseCaseButton.IsEnabled = false;
 
+            CaseOpenCalendar.IsEnabled = Case.State != "CLOSE";
+
             DataContext = Case;
         }
 
@@ -59,13 +61,15 @@ namespace AccountingOfTrafficViolation.Views
         private void CloseCaseClick(object sender, RoutedEventArgs e)
         {
             Case.State = "CLOSE";
+            CaseOpenCalendar.IsEnabled = false;
+
             CloseCaseButton.IsEnabled = false;
         }
 
         private void Calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
         {
-            Calendar calendar = (Calendar)sender;
-
+            var calendar = (Calendar)sender;
+            
             calendar.SelectedDate = Case.OpenAt;
         }
     }

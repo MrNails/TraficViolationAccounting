@@ -13,7 +13,8 @@ namespace AccountOfTrafficViolationDB.Models
         private DateTime m_openAt;
         private DateTime? m_closeAt;
         private DateTime m_modified;
-        
+        private string m_state;
+
         public Case()
         {
             ParticipantsInformations = new HashSet<ParticipantsInformation>();
@@ -28,8 +29,21 @@ namespace AccountOfTrafficViolationDB.Models
         public int Id { get; set; }
         
         public string OfficerId { get; set; }
-        
-        public string State { get; set; }
+
+        public string State
+        {
+            get => m_state;
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    errors["State"] = "Состояние не может быть пустым";
+                else
+                    errors["State"] = null;
+                
+                m_state = value;
+                OnPropertyChanged();
+            }
+        }
 
         public DateTime OpenAt
         {
