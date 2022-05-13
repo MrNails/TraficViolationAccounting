@@ -120,7 +120,7 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
         {
             if (sender is TextBox textBox)
             {
-                var codesWindow = new CodesWindow();
+                var codesWindow = new CodesWindow(GlobalSettings.ActiveOfficer, "VehicleInformation");
 
                 if (codesWindow.ShowDialog() == true)
                     textBox.Text = codesWindow.Code;

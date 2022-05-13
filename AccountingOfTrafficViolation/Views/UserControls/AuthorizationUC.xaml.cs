@@ -76,7 +76,7 @@ public partial class AuthorizationUC : UserControl
                     new { Login = login }))
                 .FirstOrDefault();
         }
-        catch (SqlException e) when (e.ErrorCode == -2146232060)
+        catch (SqlException e) 
         {
             MessageBox.Show("Не правильный логин или пароль. Попробуйте снова.", "Ошибка",
                 MessageBoxButton.OK, MessageBoxImage.Error);

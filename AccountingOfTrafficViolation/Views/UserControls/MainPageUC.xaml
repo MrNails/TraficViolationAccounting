@@ -22,7 +22,7 @@
                 <MenuItem Header="Настройки аккаунта" Click="AccountSettings_Click"/>
                 <MenuItem Header="Выйти из аккаунта" Click="ExitAccountClick"/>
             </MenuItem>
-            <MenuItem x:Name="AdminWindowMenuItem" Header="Для администратора" Click="AdminWindowMenuItem_Click"/>
+            <!-- <MenuItem x:Name="AdminWindowMenuItem" Header="Для администратора" Click="AdminWindowMenuItem_Click"/> -->
         </Menu>
         <WrapPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock FontSize="30" TextAlignment="Center" TextWrapping="Wrap">

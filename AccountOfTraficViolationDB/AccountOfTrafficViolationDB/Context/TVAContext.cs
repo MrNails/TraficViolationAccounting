@@ -3,7 +3,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AccountingOfTrafficViolation.Models;
 using AccountOfTrafficViolationDB.Models;
+using AccountOfTraficViolationDB.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,7 +43,9 @@ namespace AccountOfTrafficViolationDB.Context
         public virtual DbSet<CaseVehicle> CaseVehicles { get; set; }
         public virtual DbSet<Victim> Victims { get; set; }
         public virtual DbSet<CaseAccidentPlace> CaseAccidentPlaces { get; set; }
-        // public virtual DbSet<CodeInfo> CodeInfos { get; set; }
+        
+        public virtual DbSet<Code> Codes { get; set; }
+        public virtual DbSet<CodeBinding> CodeBindings { get; set; }
 
         public override int SaveChanges()
         {

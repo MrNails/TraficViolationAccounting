@@ -6,11 +6,14 @@ using System.Windows.Controls;
 using System.Linq;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
+using System.Data;
 using AccountingOfTrafficViolation.Models;
 using AccountingOfTrafficViolation.Services;
 using AccountingOfTrafficViolation.Views.UserControls;
 using AccountOfTrafficViolationDB.Context;
 using AccountOfTrafficViolationDB.Models;
+using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountingOfTrafficViolation.Views
@@ -20,11 +23,13 @@ namespace AccountingOfTrafficViolation.Views
     /// </summary>
     public partial class CodesWindow : Window
     {
-        private TVAContext _TVAContext;
-        private Officer officer;
-        private CodeInfo unchengedCodeInfo;
-        private ObservableCollection<CodeInfo> codeInfos;
-        private CodeInfo CodeInfo;
+        private readonly string m_fromWindow;
+        
+        private TVAContext m_TVAContext;
+        private Officer m_officer;
+        private Code m_unchangedCode;
+        private ObservableCollection<Code> m_codeInfos;
+        private Code m_code;
 
         private bool isAddingMode;
         private bool isEditingMode;
@@ -37,66 +42,22 @@ namespace AccountingOfTrafficViolation.Views
         private Button SaveButton;
         private Button DiscardButton;
 
-        public string Code { get { return CodeInfo.Code; } }
+        public string Code { get { return m_code.Value; } }
 
-        public CodesWindow() : this(null)
+        public CodesWindow() : this(null, string.Empty)
         { }
-        public CodesWindow(Officer officer)
+        public CodesWindow(Officer? officer, string? fromWindow = "")
         {
             InitializeComponent();
 
-            this.officer = officer;
+            this.m_officer = officer;
 
-            SelectButton = new Button();
-            DiscardButton = new Button();
+            m_fromWindow = fromWindow;
 
-            SelectButton.Content = "Выбрать";
-            DiscardButton.Content = "Отменить";
-
-            // if (officer != null && (officer.Role == (byte)UserRole.Debug || officer.Role == (byte)UserRole.Admin)) 
-            // {
-            //     AddButton = new Button();
-            //     EditButton = new Button();
-            //     DeleteButton = new Button();
-            //     SaveButton = new Button();
-            //
-            //     AddButton.Content = "Добавить";
-            //     EditButton.Content = "Изменить";
-            //     DeleteButton.Content = "Удалить";
-            //     SaveButton.Content = "Сохранить в БД";
-            //
-            //     SaveButton.IsEnabled = false;
-            //     DiscardButton.IsEnabled = false;
-            //
-            //     AddButton.Click += AddButton_Click;
-            //     EditButton.Click += EditButton_Click;
-            //     DeleteButton.Click += DeleteButton_Click;
-            //     SaveButton.Click += SaveButton_Click;
-            //     DiscardButton.Click += DiscardButton_Click;
-            //
-            //     ButtonFieldStackPanel.Children.Add(AddButton);
-            //     ButtonFieldStackPanel.Children.Add(EditButton);
-            //     ButtonFieldStackPanel.Children.Add(DeleteButton);
-            //     ButtonFieldStackPanel.Children.Add(SaveButton);
-            // }
-            // else
-            // {
-                DiscardButton.Click += CancelButton_Click;
-            // }
-
-            SelectButton.Click += SelectButton_Click;
-
-            ButtonFieldStackPanel.Children.Add(SelectButton);
-            ButtonFieldStackPanel.Children.Add(DiscardButton);
-
-            CodeInfo = null;
+            m_code = null;
             isAddingMode = false;
             isEditingMode = false;
             isChanged = false;
-
-            LoadContext(ex => MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error));
-
-            GC.Collect();
         }
 
         private bool AddCode()
@@ -107,7 +68,7 @@ namespace AccountingOfTrafficViolation.Views
                 return false;
             }
 
-            codeInfos.Add((CodeInfo)DataContext);
+            m_codeInfos.Add((Code)DataContext);
             // _TVAContext.CodeInfos.Add((CodeInfo)DataContext);
 
             isChanged = true;
@@ -132,7 +93,7 @@ namespace AccountingOfTrafficViolation.Views
                 return false;
             }
 
-            unchengedCodeInfo.Assign((CodeInfo)DataContext);
+            m_unchangedCode.Assign((Code)DataContext);
             isChanged = true;
 
             SaveButton.IsEnabled = true;
@@ -142,7 +103,7 @@ namespace AccountingOfTrafficViolation.Views
         }
         private bool RemoveCode()
         {
-            if (CodeInfo == null)
+            if (m_code == null)
             {
                 return false;
             }
@@ -155,7 +116,7 @@ namespace AccountingOfTrafficViolation.Views
             }
 
             // _TVAContext.CodeInfos.Remove(CodeInfo);
-            codeInfos.Remove(CodeInfo);
+            m_codeInfos.Remove(m_code);
             isChanged = true;
 
             SaveButton.IsEnabled = true;
@@ -171,6 +132,8 @@ namespace AccountingOfTrafficViolation.Views
             CodeNameTB.IsEnabled = true;
             CodeValueTB.IsEnabled = true;
             DescriptionTB.IsEnabled = true;
+            CodeBindingComboBox.IsEnabled = string.IsNullOrEmpty(m_fromWindow);
+
 
             EditButton.IsEnabled = false;
         }
@@ -182,19 +145,20 @@ namespace AccountingOfTrafficViolation.Views
             CodeNameTB.IsEnabled = false;
             CodeValueTB.IsEnabled = false;
             DescriptionTB.IsEnabled = false;
+            CodeBindingComboBox.IsEnabled = false;
 
             EditButton.IsEnabled = true;
         }
 
         private void OnAddingMode()
         {
-            CodeInfo codeInfo = new CodeInfo();
-            if (codeInfos.Count > 0)
+            Code m_code = new Code();
+            if (m_codeInfos.Count > 0)
             {
-                codeInfo.Id = codeInfos[codeInfos.Count - 1].Id;
+                m_code.Id = m_codeInfos[m_codeInfos.Count - 1].Id;
             }
 
-            DataContext = codeInfo;
+            DataContext = m_code;
 
 
             isAddingMode = true;
@@ -210,21 +174,21 @@ namespace AccountingOfTrafficViolation.Views
 
         private void OnEditingMode()
         {
-            if (!(DataContext is CodeInfo))
+            if (!(DataContext is Code))
             {
                 return;
             }
 
-            unchengedCodeInfo = (CodeInfo)DataContext;
+            m_unchangedCode = (Code)DataContext;
 
-            if (CodeInfo == null)
+            if (m_code == null)
             {
-                CodeInfo = new CodeInfo();
+                m_code = new Code();
             }
 
-            CodeInfo.Assign(unchengedCodeInfo);
+            m_code.Assign(m_unchangedCode);
 
-            DataContext = CodeInfo;
+            DataContext = m_code;
 
             isEditingMode = true;
 
@@ -241,14 +205,14 @@ namespace AccountingOfTrafficViolation.Views
         {
             if (string.IsNullOrEmpty(CodeNameFiltrTB.Text) && string.IsNullOrEmpty(CodeValueFiltrTB.Text))
             {
-                CodeGrid.ItemsSource = codeInfos;
+                CodeGrid.ItemsSource = m_codeInfos;
                 return;
             }
 
             try
             {
-                CodeGrid.ItemsSource = codeInfos.Where(c =>
-                                                  (string.IsNullOrEmpty(CodeValueFiltrTB.Text) || c.Code == CodeValueFiltrTB.Text || c.Code.Contains(CodeValueFiltrTB.Text)) &&
+                CodeGrid.ItemsSource = m_codeInfos.Where(c =>
+                                                  (string.IsNullOrEmpty(CodeValueFiltrTB.Text) || c.Value == CodeValueFiltrTB.Text || c.Value.Contains(CodeValueFiltrTB.Text)) &&
                                                   (string.IsNullOrEmpty(CodeNameFiltrTB.Text) || c.Name == CodeNameFiltrTB.Text || c.Name.Contains(CodeNameFiltrTB.Text)));
             }
             catch (Exception ex)
@@ -258,43 +222,37 @@ namespace AccountingOfTrafficViolation.Views
             }
         }
 
-        private async void LoadContext(Action<Exception> action = null)
+        private async Task LoadContext(Action<Exception> action = null)
         {
-            LoadView loadView = new LoadView();
+            var loadView = new LoadView();
 
             try
             {
                 Grid.SetRowSpan(loadView, 3);
 
-                Binding widthBinding = new Binding()
+                var widthBinding = new Binding
                 {
                     Source = this,
                     Path = new PropertyPath("ActualWidth")
                 };
-                Binding heightBinding = new Binding()
+                var heightBinding = new Binding
                 {
                     Source = this,
                     Path = new PropertyPath("ActualHeight")
                 };
+                
                 loadView.SetBinding(WidthProperty, widthBinding);
                 loadView.SetBinding(HeightProperty, heightBinding);
 
                 MainField.Children.Add(loadView);
 
-                _TVAContext = await Task.Run<TVAContext>(() =>
-                {
-                    TVAContext dbContext = new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.Credential);
-                    return dbContext;
-                });
+                m_TVAContext = await Task.Run(() => new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.Credential));
 
-                // List<CodeInfo> listRes = await _TVAContext.CodeInfos.ToListAsync();
+                await m_TVAContext.Codes.LoadAsync();
 
-                // codeInfos = await Task.Run(() =>
-                // {
-                //     return new ObservableCollection<CodeInfo>(listRes);
-                // });
-
-                CodeGrid.ItemsSource = codeInfos;
+                m_codeInfos = m_TVAContext.Codes.Local.ToObservableCollection();
+                    
+                CodeGrid.ItemsSource = m_codeInfos;
             }
             catch (Exception ex) when (action != null)
             {
@@ -347,7 +305,7 @@ namespace AccountingOfTrafficViolation.Views
         }
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            _TVAContext.SaveChanges();
+            m_TVAContext.SaveChanges();
             isChanged = false;
 
             SaveButton.IsEnabled = false;
@@ -357,16 +315,16 @@ namespace AccountingOfTrafficViolation.Views
         }
         private void DiscardButton_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < codeInfos.Count; i++)
+            for (int i = 0; i < m_codeInfos.Count; i++)
             {
-                if (_TVAContext.Entry(codeInfos[i]).State == EntityState.Added)
+                if (m_TVAContext.Entry(m_codeInfos[i]).State == EntityState.Added)
                 {
-                    codeInfos.RemoveAt(i);
+                    m_codeInfos.RemoveAt(i);
                     i--;
                 }
             }
 
-            _TVAContext.CancelAllChanges();
+            m_TVAContext.CancelAllChanges();
             isChanged = false;
 
             SaveButton.IsEnabled = false;
@@ -378,13 +336,13 @@ namespace AccountingOfTrafficViolation.Views
         }
         private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CodeInfo == null && DataContext != null)
+            if (m_code == null && DataContext != null)
             {
-                CodeInfo = (CodeInfo)DataContext;
+                m_code = (Code)DataContext;
             }
             else if (DataContext == null)
             {
-                CodeInfo = new CodeInfo() { Code = null };
+                m_code = new Code() { Value = null };
             }
 
             this.DialogResult = true;
@@ -402,9 +360,9 @@ namespace AccountingOfTrafficViolation.Views
                 return;
             }
 
-            if (_TVAContext != null)
+            if (m_TVAContext != null)
             {
-                _TVAContext.Dispose();
+                m_TVAContext.Dispose();
             }
         }
 
@@ -419,6 +377,81 @@ namespace AccountingOfTrafficViolation.Views
         private void FilterCodes_Click(object sender, RoutedEventArgs e)
         {
             FilterCollection();
+        }
+
+        private void ClearFindButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            CodeNameFiltrTB.Text = string.Empty;
+            CodeValueFiltrTB.Text = string.Empty;
+            
+            FilterCollection();
+        }
+        
+        private async void CodesWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            await LoadContext(ex => MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error));
+            
+            SelectButton = new Button();
+            DiscardButton = new Button();
+
+            SelectButton.Content = "Выбрать";
+            DiscardButton.Content = "Отменить";
+
+            var isAdm = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.Output, DbType = DbType.Boolean};
+
+            await m_TVAContext.Database.ExecuteSqlRawAsync("AccountOfTrafficViolation.dbo.proc_IAmAdmin @result out", isAdm);
+
+            if ((bool)isAdm.Value) 
+            {
+                AddButton = new Button();
+                EditButton = new Button();
+                DeleteButton = new Button();
+                SaveButton = new Button();
+            
+                AddButton.Content = "Добавить";
+                EditButton.Content = "Изменить";
+                DeleteButton.Content = "Удалить";
+                SaveButton.Content = "Сохранить в БД";
+            
+                SaveButton.IsEnabled = false;
+                DiscardButton.IsEnabled = false;
+            
+                AddButton.Click += AddButton_Click;
+                EditButton.Click += EditButton_Click;
+                DeleteButton.Click += DeleteButton_Click;
+                SaveButton.Click += SaveButton_Click;
+                DiscardButton.Click += DiscardButton_Click;
+            
+                ButtonFieldStackPanel.Children.Add(AddButton);
+                ButtonFieldStackPanel.Children.Add(EditButton);
+                ButtonFieldStackPanel.Children.Add(DeleteButton);
+                ButtonFieldStackPanel.Children.Add(SaveButton);
+
+                CodeBindingCol.Visibility = Visibility.Visible;
+                CodeBindingTB.Visibility = Visibility.Visible;
+                CodeBindingComboBox.Visibility = Visibility.Visible;
+
+                var codeBindings = await (string.IsNullOrEmpty(m_fromWindow) ? 
+                        m_TVAContext.CodeBindings :
+                        m_TVAContext.CodeBindings.Where(cb => cb.Name == m_fromWindow))
+                    .ToListAsync();
+                
+                CodeBindingComboBox.ItemsSource = codeBindings;
+                CodeBindingComboBox.SelectedIndex = codeBindings.Count == 0 ? -1 : 0;
+            }
+            else
+            {
+                DiscardButton.Click += CancelButton_Click;
+                
+                CodeBindingCol.Visibility = Visibility.Collapsed;
+                CodeBindingTB.Visibility = Visibility.Collapsed;
+                CodeBindingComboBox.Visibility = Visibility.Collapsed;
+            }
+
+            SelectButton.Click += SelectButton_Click;
+
+            ButtonFieldStackPanel.Children.Add(SelectButton);
+            ButtonFieldStackPanel.Children.Add(DiscardButton);
         }
     }
 }

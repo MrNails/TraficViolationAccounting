@@ -64,16 +64,12 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
 
         private void TextBox_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is TextBox)
+            if (sender is TextBox textBox)
             {
-                TextBox textBox = (TextBox)sender;
-
-                CodesWindow codesWindow = new CodesWindow();
+                var codesWindow = new CodesWindow(GlobalSettings.ActiveOfficer, "RoadCondition");
 
                 if (codesWindow.ShowDialog() == true)
-                {
                     textBox.Text = codesWindow.Code;
-                }
             }
         }
     }

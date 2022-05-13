@@ -107,11 +107,10 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
 
         private void PDDViolationTextBox_Click(object sender, RoutedEventArgs e)
         {
-            CodesWindow codesWindow = new CodesWindow();
+            var codesWindow = new CodesWindow(GlobalSettings.ActiveOfficer, "ParticipantsInformation");
+            
             if (codesWindow.ShowDialog() == true)
-            {
                 PDDViolationTextBox.Text = codesWindow.Code;
-            }
         }
     }
 }
