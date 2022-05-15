@@ -159,7 +159,7 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
 
         private void OpenCodesWindowClick(object sender, RoutedEventArgs e)
         {
-            var codesWindow = new CodesWindow(GlobalSettings.ActiveOfficer, "CaseAccidentPlace");
+            var codesWindow = new CodesWindow("CaseAccidentPlace");
             
             if (codesWindow.ShowDialog() == true)
                 RoadIndexAndNumberTextBox.Text = codesWindow.Code;

@@ -18,10 +18,10 @@ public class CodeConfiguration : IEntityTypeConfiguration<Code>
 
         builder.Property(cb => cb.Description)
             .HasMaxLength(500);
-
+        
         builder.HasOne(c => c.CodeBinding)
-            .WithOne(c => c.Code)
-            .HasForeignKey<Code>(d => d.CodeBindingId)
+            .WithMany(c => c.Codes)
+            .HasForeignKey(d => d.CodeBindingId)
             .OnDelete(DeleteBehavior.ClientSetNull)
             .HasConstraintName("FK_Codes_CodeBindingId");
     }

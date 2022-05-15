@@ -9,18 +9,17 @@ namespace AccountingOfTrafficViolation.Models
     [Table("Codes")]
     public class Code : MainTable
     {
-        private string name;
+        private string m_name;
         private string m_value;
-        private string description;
-
-        [NotAssign]
+        private string? m_description;
+        
         public int Id { get; set; }
 
         [Required]
         [StringLength(50)]
         public string Name
         {
-            get { return name; }
+            get { return m_name; }
             set 
             {
                 if (value == null)
@@ -37,7 +36,7 @@ namespace AccountingOfTrafficViolation.Models
                 }
 
                 OnPropertyChanged("Name");
-                name = value; 
+                m_name = value; 
             }
         }
 
@@ -67,12 +66,12 @@ namespace AccountingOfTrafficViolation.Models
         }
         
         [StringLength(500)]
-        public string Description
+        public string? Description
         {
-            get { return description; }
+            get { return m_description; }
             set
             {
-                if (value.Length > 500)
+                if (value != null && value.Length > 500)
                 {
                     errors["Description"] = "Количество символов в поле \"Описание\" не может быть больше 500";
                 }
@@ -82,11 +81,11 @@ namespace AccountingOfTrafficViolation.Models
                 }
 
                 OnPropertyChanged("Description");
-                description = value;
+                m_description = value;
             }
         }
         
         public int CodeBindingId { get; set; }
-        public virtual CodeBinding CodeBinding { get; set; }
+        [NotAssign] public virtual CodeBinding CodeBinding { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using AccountingOfTrafficViolation.Models;
 using AccountOfTrafficViolationDB.Models;
@@ -12,6 +13,11 @@ public class CodeBinding : MainTable
     private string m_value;
     private string description;
 
+    public CodeBinding()
+    {
+        Codes = new HashSet<Code>();
+    }
+    
     public int Id { get; set; }
 
     [Required]
@@ -59,5 +65,5 @@ public class CodeBinding : MainTable
         }
     }
     
-    public virtual Code Code { get; set; }
+    public virtual ICollection<Code> Codes { get; set; }
 }

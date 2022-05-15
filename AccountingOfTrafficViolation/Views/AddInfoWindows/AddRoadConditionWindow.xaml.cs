@@ -66,7 +66,7 @@ namespace AccountingOfTrafficViolation.Views.AddInfoWindows
         {
             if (sender is TextBox textBox)
             {
-                var codesWindow = new CodesWindow(GlobalSettings.ActiveOfficer, "RoadCondition");
+                var codesWindow = new CodesWindow("RoadCondition");
 
                 if (codesWindow.ShowDialog() == true)
                     textBox.Text = codesWindow.Code;

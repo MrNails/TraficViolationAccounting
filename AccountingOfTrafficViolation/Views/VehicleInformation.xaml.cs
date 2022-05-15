@@ -88,7 +88,7 @@ public partial class VehicleInformation : Window, IDisposable
     {
         if (sender is TextBox textBox)
         {
-            var codesWindow = new CodesWindow(GlobalSettings.ActiveOfficer, nameof(VehicleInformation));
+            var codesWindow = new CodesWindow(nameof(VehicleInformation));
 
             if (codesWindow.ShowDialog() == true)
                 textBox.Text = codesWindow.Code;

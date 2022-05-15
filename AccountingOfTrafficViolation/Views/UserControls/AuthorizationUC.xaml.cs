@@ -64,7 +64,6 @@ public partial class AuthorizationUC : UserControl
             throw new Exception("Cannot connect to database");
         
         password.MakeReadOnly();
-
         m_connection.Credential = new SqlCredential(login, password);
 
         try
@@ -76,7 +75,7 @@ public partial class AuthorizationUC : UserControl
                     new { Login = login }))
                 .FirstOrDefault();
         }
-        catch (SqlException e) 
+        catch (SqlException e) when (e.Number == 18456)
         {
             MessageBox.Show("Не правильный логин или пароль. Попробуйте снова.", "Ошибка",
                 MessageBoxButton.OK, MessageBoxImage.Error);
@@ -91,7 +90,7 @@ public partial class AuthorizationUC : UserControl
         {
             await m_connection.CloseAsync();
         }
-
+        
         return null;
     }
 }

@@ -12,6 +12,7 @@ using AccountingOfTrafficViolation.Services;
 using AccountingOfTrafficViolation.Views.UserControls;
 using AccountOfTrafficViolationDB.Context;
 using AccountOfTrafficViolationDB.Models;
+using AccountOfTraficViolationDB.Models;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,6 @@ namespace AccountingOfTrafficViolation.Views
         private readonly string m_fromWindow;
         
         private TVAContext m_TVAContext;
-        private Officer m_officer;
         private Code m_unchangedCode;
         private ObservableCollection<Code> m_codeInfos;
         private Code m_code;
@@ -44,16 +44,13 @@ namespace AccountingOfTrafficViolation.Views
 
         public string Code { get { return m_code.Value; } }
 
-        public CodesWindow() : this(null, string.Empty)
-        { }
-        public CodesWindow(Officer? officer, string? fromWindow = "")
+        public CodesWindow() : this(string.Empty) { }
+        public CodesWindow(string? fromWindow = "")
         {
             InitializeComponent();
 
-            this.m_officer = officer;
-
             m_fromWindow = fromWindow;
-
+            
             m_code = null;
             isAddingMode = false;
             isEditingMode = false;
@@ -68,8 +65,19 @@ namespace AccountingOfTrafficViolation.Views
                 return false;
             }
 
-            m_codeInfos.Add((Code)DataContext);
-            // _TVAContext.CodeInfos.Add((CodeInfo)DataContext);
+            if (CodeBindingComboBox.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите привязку к окну.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            var code = (Code)DataContext;
+            var cb = (CodeBinding)CodeBindingComboBox.SelectedItem;
+
+            code.CodeBindingId = cb.Id;
+            code.CodeBinding = cb;
+            
+            m_codeInfos.Add(code);
 
             isChanged = true;
 
@@ -82,10 +90,10 @@ namespace AccountingOfTrafficViolation.Views
         }
         private bool EditCode()
         {
-            // if (!(DataContext is this.CodeInfo))
-            // {
-            //     return false;
-            // }
+            if (DataContext is not Models.Code)
+            {
+                return false;
+            }
 
             if (CodeGroupBox.CheckIfExistValidationError())
             {
@@ -152,14 +160,15 @@ namespace AccountingOfTrafficViolation.Views
 
         private void OnAddingMode()
         {
-            Code m_code = new Code();
+            var code = new Code { Id = 1 };
+            
             if (m_codeInfos.Count > 0)
-            {
-                m_code.Id = m_codeInfos[m_codeInfos.Count - 1].Id;
-            }
+                code.Id = m_codeInfos[m_codeInfos.Count - 1].Id + 1;
 
-            DataContext = m_code;
-
+            DataContext = code;
+            
+            CodeValueTB.Text = string.Empty;
+            CodeNameTB.Text = string.Empty;
 
             isAddingMode = true;
 
@@ -268,44 +277,38 @@ namespace AccountingOfTrafficViolation.Views
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             if (isAddingMode && AddCode())
-            {
                 OffAddingMode();
-            }
             else if (isEditingMode && EditCode())
-            {
                 OffEditingMode();
-            }
             else if (!isAddingMode && !isEditingMode)
-            {
                 OnAddingMode();
-            }
-
         }
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             if (!isEditingMode)
-            {
                 OnEditingMode();
-            }
         }
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             if (isAddingMode)
-            {
                 OffAddingMode();
-            }
             else if (isEditingMode)
-            {
                 OffEditingMode();
-            }
             else
-            {
                 RemoveCode();
-            }
         }
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            m_TVAContext.SaveChanges();
+            var maxCodeId = 1;
+            
+            if (await m_TVAContext.Codes.AnyAsync())
+                maxCodeId = await m_TVAContext.Codes.MaxAsync(c => c.Id) + 1;
+
+            foreach (var code in m_codeInfos)
+                if (m_TVAContext.Entry(code).State == EntityState.Added)
+                    code.Id = maxCodeId++;
+
+            await m_TVAContext.SaveChangesAsync();
             isChanged = false;
 
             SaveButton.IsEnabled = false;
@@ -337,13 +340,9 @@ namespace AccountingOfTrafficViolation.Views
         private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
             if (m_code == null && DataContext != null)
-            {
                 m_code = (Code)DataContext;
-            }
             else if (DataContext == null)
-            {
-                m_code = new Code() { Value = null };
-            }
+                m_code = new Code { Value = string.Empty };
 
             this.DialogResult = true;
         }
@@ -432,7 +431,7 @@ namespace AccountingOfTrafficViolation.Views
                 CodeBindingComboBox.Visibility = Visibility.Visible;
 
                 var codeBindings = await (string.IsNullOrEmpty(m_fromWindow) ? 
-                        m_TVAContext.CodeBindings :
+                        m_TVAContext.CodeBindings : 
                         m_TVAContext.CodeBindings.Where(cb => cb.Name == m_fromWindow))
                     .ToListAsync();
                 
