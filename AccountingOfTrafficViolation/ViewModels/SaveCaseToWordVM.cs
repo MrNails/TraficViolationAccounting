@@ -54,7 +54,7 @@ namespace AccountingOfTrafficViolation.ViewModels
     public delegate void WordExceptionHandler(Exception ex, WordSaveActionArgs args);
 
     public sealed class SaveCaseToWordVM : INotifyPropertyChanged, IDisposable
-    {   
+    {
         private double savingProgress;
         private string saveFilePath;
 
@@ -67,11 +67,15 @@ namespace AccountingOfTrafficViolation.ViewModels
         public event WordSaveHandler Canceled;
         public event WordExceptionHandler ExceptionCaptured;
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         public SaveCaseToWordVM(string filePath) : this(filePath, null)
-        {}
-        public SaveCaseToWordVM(string filePath, string saveFilePath) : this (filePath, saveFilePath, null, null)
-        { }
+        {
+        }
+
+        public SaveCaseToWordVM(string filePath, string saveFilePath) : this(filePath, saveFilePath, null, null)
+        {
+        }
+
         public SaveCaseToWordVM(string filePath, string saveFilePath, Case _case, Officer officer)
         {
             FilePath = filePath;
@@ -80,7 +84,7 @@ namespace AccountingOfTrafficViolation.ViewModels
             Case = _case;
             Officer = officer;
 
-            // wordSaver = new WordSaver(filePath;
+            wordSaver = new WordSaver(filePath);
 
             stopwatch = new Stopwatch();
 
@@ -90,12 +94,13 @@ namespace AccountingOfTrafficViolation.ViewModels
         public double SavingProgress
         {
             get { return savingProgress; }
-            private set 
-            { 
+            private set
+            {
                 savingProgress = value;
                 OnPropertyChanged("SavingProgress");
             }
         }
+
         public string SaveFilePath
         {
             get { return saveFilePath; }
@@ -113,11 +118,9 @@ namespace AccountingOfTrafficViolation.ViewModels
 
 
         #region WordSaver Region
+
         public Task SaveAsync(DocumentSaveType documentSaveType)
         {
-            MessageBox.Show("Временно не работает");
-            return Task.CompletedTask;
-            
             if (Case == null)
                 throw new Exception("Дело для сохранения не может отсутствовать.");
 
@@ -140,178 +143,159 @@ namespace AccountingOfTrafficViolation.ViewModels
                 {
                     if (generalInfo == null || caseAccidentPlace == null || roadCondition == null ||
                         participantsInformations == null || vehicles == null || victims == null)
-                    {
                         throw new Exception("Дело для сохранения не может отсутствовать.");
-                    }
 
                     wordSaver.OpenDocument();
 
-                    wordSaver.Replace<GeneralInfo>(generalInfo, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
-                                                   propName => $"%{propName}%",
-                                                   (propName, propValue) =>
-                                                   {
-                                                       if (propValue == null)
-                                                       {
-                                                           return string.Empty;
-                                                       }
+                    wordSaver.Replace(generalInfo, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                        propName => $"%{propName}%",
+                        (propName, propValue) =>
+                        {
+                            if (propValue == null)
+                                return string.Empty;
+                            
+                            var value = ConverToString(propValue);
 
-                                                       string value = ConverToString(propValue);
+                            if (propName == "CardNumber")
+                                value.AddSeparator('-', 2, 10);
 
-                                                       if (propName == "CardNumber")
-                                                       {
-                                                           value.AddSeparator('-', 2, 10);
-                                                       }
+                            return WrapEachSbmlInVerticalLine(value);
+                        });
 
-                                                       return WrapEachSbmlInVerticalLine(value);
-                                                   });
-
-                    dispatcher.Invoke(() => SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
+                    dispatcher.Invoke(() =>
+                        SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
 
                     if (caseAccidentPlace.AccidentOnVillage != null)
                     {
-                        wordSaver.Replace<AccidentOnVillage>(caseAccidentPlace.AccidentOnVillage,
-                                                             Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
-                                                             propName => $"%{propName}%",
-                                                             (propName, propValue) =>
-                                                             {
-                                                                 if (propValue == null)
-                                                                 {
-                                                                     return string.Empty;
-                                                                 }
+                        wordSaver.Replace(caseAccidentPlace.AccidentOnVillage,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                            propName => $"%{propName}%",
+                            (propName, propValue) =>
+                            {
+                                if (propValue == null)
+                                    return string.Empty;
+                                
+                                var value = propValue.ToString();
 
-                                                                 string value = propValue.ToString();
+                                if (propName.Contains("Code"))
+                                {
+                                    value = value.AddZeroBeforeText(4 - value.Length);
+                                }
+                                else
+                                {
+                                    int maxLength =
+                                        GetAttributeMaxLength(caseAccidentPlace.AccidentOnVillage, propName);
 
-                                                                 if (propName.Contains("Code"))
-                                                                 {
-                                                                     value = value.AddZeroBeforeText(4 - value.Length);
-                                                                 }
-                                                                 else
-                                                                 {
-                                                                     int maxLength = GetAttributeMaxLength(caseAccidentPlace.AccidentOnVillage, propName);
+                                    if (maxLength != -1)
+                                    {
+                                        value = value.AddSymbols('_', maxLength - value.Length);
+                                    }
+                                }
 
-                                                                     if (maxLength != -1)
-                                                                     {
-                                                                         value = value.AddSymbols('_', maxLength - value.Length);
-                                                                     }
-                                                                 }
+                                return WrapEachSbmlInVerticalLine(value);
+                            });
 
-                                                                 return WrapEachSbmlInVerticalLine(value);
-                                                             });
-
-                        wordSaver.Replace("%HighwayIndexAndNumber%", "|__|-|__|__|-|__|__|-|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace("%AdditionalInfo%", "_______________________________________________________", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace("%Kilometer%", "|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace("%Meter%", "|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%HighwayIndexAndNumber%", "|__|-|__|__|-|__|__|-|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%AdditionalInfo%", "_______________________________________________________",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%Kilometer%", "|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%Meter%", "|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                         wordSaver.Replace("%Binding%", "_______________________________________________________" +
-                                                        " _______________________________________________________", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                                                       " _______________________________________________________",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                     }
                     else if (caseAccidentPlace.AccidentOnHighway != null)
                     {
-                        wordSaver.Replace<AccidentOnVillage>(new AccidentOnVillage(),
-                                                             Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
-                                                             propName => $"%{propName}%",
-                                                             (propName, propValue) =>
-                                                             {
-                                                                 if (propName == "Status")
-                                                                 {
-                                                                     return "|__|";
-                                                                 }
-                                                                 else if (propName.Contains("Code"))
-                                                                 {
-                                                                     return "|__|__|__|__|";
-                                                                 }
-                                                                 else if (propName == "VillageBinding")
-                                                                 {
-                                                                     return "|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|" +
-                                                                            " |__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|";
-                                                                 }
-                                                                 else
-                                                                 {
-                                                                     return "|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|";
-                                                                 }
-                                                             });
+                        wordSaver.Replace(new AccidentOnVillage(),
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                            propName => $"%{propName}%",
+                            (propName, propValue) =>
+                            {
+                                if (propName == "Status")
+                                    return "|__|";
+                                
+                                if (propName.Contains("Code"))
+                                    return "|__|__|__|__|";
 
-                        wordSaver.Replace<AccidentOnHighway>(caseAccidentPlace.AccidentOnHighway,
-                                                             Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
-                                                             propName => $"%{propName}%",
-                                                             (propName, propValue) =>
-                                                             {
-                                                                 if (propValue == null)
-                                                                 {
-                                                                     return string.Empty;
-                                                                 }
+                                if (propName == "VillageBinding")
+                                    return
+                                        "|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|" +
+                                        " |__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|";
+                                
+                                return "|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|__|";
+                            });
 
-                                                                 string value = propValue.ToString();
+                        wordSaver.Replace(caseAccidentPlace.AccidentOnHighway,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                            propName => $"%{propName}%",
+                            (propName, propValue) =>
+                            {
+                                if (propValue == null)
+                                    return string.Empty;
+                                
+                                string value = propValue.ToString();
 
-                                                                 if (propName == "AdditionalInfo" || propName == "Binding")
-                                                                 {
-                                                                     return value;
-                                                                 }
+                                switch (propName)
+                                {
+                                    case "AdditionalInfo":
+                                    case "Binding":
+                                        return value;
+                                    case "HighwayIndexAndNumber":
+                                        value = value.AddSeparator('-', 1, 4, 7);
+                                        break;
+                                }
 
-                                                                 if (propName == "HighwayIndexAndNumber")
-                                                                 {
-                                                                     value = value.AddSeparator('-', 1, 4, 7);
-                                                                 }
-
-                                                                 return WrapEachSbmlInVerticalLine(value);
-                                                             });
+                                return WrapEachSbmlInVerticalLine(value);
+                            });
 
                     }
 
-                    dispatcher.Invoke(() => SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
+                    dispatcher.Invoke(() =>
+                        SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
 
-                    wordSaver.Replace<RoadCondition>(roadCondition,
-                                                     Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
-                                                     propName =>
-                                                     {
-                                                         StringBuilder propNameBuilder = new StringBuilder();
+                    wordSaver.Replace(roadCondition,
+                        Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                        propName => $"%{propName.GetStringFromUpperSymbols()}%",
+                        (propName, propValue) =>
+                        {
+                            if (propValue == null)
+                                return string.Empty;
 
-                                                         propNameBuilder.Append('%');
-                                                         propNameBuilder.Append(propName.GetStringWithUpperSymbols());
-                                                         propNameBuilder.Append('%');
+                            var value = propValue.ToString();
 
-                                                         return propNameBuilder.ToString();
-                                                     },
-                                                     (propName, propValue) =>
-                                                     {
-                                                         if (propValue == null)
-                                                         {
-                                                             return string.Empty;
-                                                         }
+                            switch (propName)
+                            {
+                                case "SurfaceState":
+                                    value = value.AddSeparator(',', 1);
+                                    break;
+                                case "PlaceElement":
+                                    value = value.AddSeparator(',', 2, 5);
+                                    break;
+                                case "TechnicalTool":
+                                case "RoadDisadvantages":
+                                    value = value.AddSeparator(',', 2, 5, 8, 11);
+                                    break;
+                            }
 
-                                                         string value = propValue.ToString();
+                            return WrapEachSbmlInVerticalLine(value);
+                        });
 
-                                                         if (propName == "SurfaceState")
-                                                         {
-                                                             value = value.AddSeparator(',', 1);
-                                                         }
-                                                         else if (propName == "PlaceElement")
-                                                         {
-                                                             value = value.AddSeparator(',', 2, 5);
-                                                         }
-                                                         else if (propName == "TechnicalTool" || propName == "RoadDisadvantages")
-                                                         {
-                                                             value = value.AddSeparator(',', 2, 5, 8, 11);
-                                                         }
-
-                                                         return WrapEachSbmlInVerticalLine(value);
-                                                     });
-
-                    dispatcher.Invoke(() => SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
+                    dispatcher.Invoke(() =>
+                        SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
 
                     List<ParticipantsInformation> tempList = null;
 
                     if (participantsInformations.Count < 5)
                     {
-                        tempList = new List<ParticipantsInformation>();
-
-                        tempList.AddRange(participantsInformations);
-                        ParticipantsInformation participantsInformation = new ParticipantsInformation() { Id = -1 };
+                        tempList = participantsInformations.ToList();
+                        
+                        var participantsInformation = new ParticipantsInformation { Id = -1 };
 
                         for (int i = tempList.Count; i < 5; i++)
-                        {
                             tempList.Add(participantsInformation);
-                        }
                     }
 
                     string qualification = null;
@@ -324,7 +308,8 @@ namespace AccountingOfTrafficViolation.ViewModels
 
                     for (int i = 0; i < tempList.Count; i++)
                     {
-                        dispatcher.Invoke(() => SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
+                        dispatcher.Invoke(() =>
+                            SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
 
                         if (tempList[i].Id != -1)
                         {
@@ -336,21 +321,23 @@ namespace AccountingOfTrafficViolation.ViewModels
                             drivingTimeBeforeAccident = tempList[i].DrivingTimeBeforeAccident.ToString();
                             pddViolation = tempList[i].PDDViolation.AddSeparator(',', 2);
 
-                            qualification = WrapEachSbmlInVerticalLine(qualification.AddZeroBeforeText(2 - qualification.Length));
+                            qualification =
+                                WrapEachSbmlInVerticalLine(qualification.AddZeroBeforeText(2 - qualification.Length));
                             age = WrapEachSbmlInVerticalLine(age.AddZeroBeforeText(3 - age.Length));
-                            citizenship = WrapEachSbmlInVerticalLine(citizenship.AddZeroBeforeText(GetAttributeMaxLength(tempList[i], "Citizenship") - citizenship.Length));
-                            driveExpirience = WrapEachSbmlInVerticalLine(driveExpirience.AddZeroBeforeText(2 - driveExpirience.Length));
-                            drivingTimeBeforeAccident = WrapEachSbmlInVerticalLine(drivingTimeBeforeAccident.AddZeroBeforeText(2 - drivingTimeBeforeAccident.Length));
+                            citizenship = WrapEachSbmlInVerticalLine(
+                                citizenship.AddZeroBeforeText(GetAttributeMaxLength(tempList[i], "Citizenship") -
+                                                              citizenship.Length));
+                            driveExpirience =
+                                WrapEachSbmlInVerticalLine(
+                                    driveExpirience.AddZeroBeforeText(2 - driveExpirience.Length));
+                            drivingTimeBeforeAccident = WrapEachSbmlInVerticalLine(
+                                drivingTimeBeforeAccident.AddZeroBeforeText(2 - drivingTimeBeforeAccident.Length));
                             pddViolation = WrapEachSbmlInVerticalLine(pddViolation);
 
                             if (gender != "True")
-                            {
                                 gender = "| М |";
-                            }
                             else
-                            {
                                 gender = "| Ж |";
-                            }
                         }
                         else
                         {
@@ -363,123 +350,153 @@ namespace AccountingOfTrafficViolation.ViewModels
                             pddViolation = "|__|__|,|__|__|";
                         }
 
-                        wordSaver.Replace($"%Surname{i + 1}%", tempList[i].Surname, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Name{i + 1}%", tempList[i].Name, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Patronymic{i + 1}%", tempList[i].Patronymic, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Address{i + 1}%", tempList[i].Address, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Qualification{i + 1}%", qualification, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Surname{i + 1}%", tempList[i].Surname,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Name{i + 1}%", tempList[i].Name,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Patronymic{i + 1}%", tempList[i].Patronymic,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Address{i + 1}%", tempList[i].Address,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Qualification{i + 1}%", qualification,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                         wordSaver.Replace($"%Age{i + 1}%", age, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Gender{i + 1}%", gender, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Citizenship{i + 1}%", citizenship, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%DriveExpirience{i + 1}%", driveExpirience, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%DTBA{i + 1}%", drivingTimeBeforeAccident, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%PDDViolation{i + 1}%", pddViolation, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Gender{i + 1}%", gender,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Citizenship{i + 1}%", citizenship,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%DriveExpirience{i + 1}%", driveExpirience,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%DTBA{i + 1}%", drivingTimeBeforeAccident,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%PDDViolation{i + 1}%", pddViolation,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                     }
 
 
                     for (int i = 0; i < vehicles.Count; i++)
                     {
-                        dispatcher.Invoke(() => SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
+                        dispatcher.Invoke(() =>
+                            SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
 
-                        // wordSaver.Replace<Vehicle>(vehicles.ElementAt(i),
-                        //                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
-                        //                                  propName =>
-                        //                                  {
-                        //                                      StringBuilder propNameBuilder = new StringBuilder();
-                        //
-                        //                                      propNameBuilder.Append('%');
-                        //
-                        //                                      if (propName == "SeriesOfRegistrationSertificate" ||
-                        //                                          propName == "RegistrationSertificate" ||
-                        //                                          propName == "TrailerAvailability" ||
-                        //                                          propName == "LicenceSeries" ||
-                        //                                          propName == "LicenceNumber")
-                        //                                      {
-                        //                                          propNameBuilder.Append(propName.GetStringWithUpperSymbols() + (i + 1));
-                        //                                      }
-                        //                                      else if (propName == "Surname")
-                        //                                      {
-                        //                                          propNameBuilder.Append("v" + propName + (i + 1));
-                        //                                      }
-                        //                                      else
-                        //                                      {
-                        //                                          propNameBuilder.Append(propName + (i + 1));
-                        //                                      }
-                        //
-                        //                                      propNameBuilder.Append('%');
-                        //
-                        //                                      return propNameBuilder.ToString();
-                        //                                  },
-                        //                                  (propName, propValue) =>
-                        //                                  {
-                        //                                      if (propValue == null)
-                        //                                      {
-                        //                                          return string.Empty;
-                        //                                      }
-                        //
-                        //                                      string value = ConverToString(propValue);
-                        //
-                        //                                      if (propName == "TechnicalFaults")
-                        //                                      {
-                        //                                          value = value.AddSeparator(',', 1);
-                        //                                      }
-                        //                                      else if (propName == "EDRPOU_Code1")
-                        //                                      {
-                        //                                          value = value.AddSeparator('-', 7);
-                        //                                      }
-                        //                                      else if (propName == "CorruptionCode")
-                        //                                      {
-                        //                                          value = value.AddSeparator(',', 2, 5, 8);
-                        //                                      }
-                        //
-                        //                                      int maxLength = GetAttributeMaxLength<Vehicle>(vehicles.ElementAt(i), propName);
-                        //
-                        //                                      if (maxLength != -1)
-                        //                                      {
-                        //                                          value = value.AddSymbols('_', maxLength - value.Length);
-                        //                                      }
-                        //
-                        //                                      value = WrapEachSbmlInVerticalLine(value);
-                        //
-                        //                                      if (propName == "CorruptionCode")
-                        //                                      {
-                        //                                          for (int j = 0; j < 3; j++)
-                        //                                          {
-                        //                                              value = value.Replace(" , ", ",");
-                        //                                          }
-                        //                                      }
-                        //
-                        //                                      return value;
-                        //                                  });
+                        var localIndex = i;
+                        var isVehicle = false;
+
+                        Func<string, string> propNameFunc = propName =>
+                        {
+                            var propNameBuilder = new StringBuilder();
+
+                            propNameBuilder.Append('%');
+
+                            switch (propName)
+                            {
+                                case "SeriesOfRegistrationSertificate" or "RegistrationSertificate"
+                                    or "TrailerAvailability" or "LicenceSeries" or "LicenceNumber":
+                                    propNameBuilder.Append(propName.GetStringFromUpperSymbols()).Append(localIndex + 1);
+                                    break;
+                                default:
+                                    propNameBuilder.Append(propName).Append(localIndex + 1);
+                                    break;
+                            }
+
+                            propNameBuilder.Append('%');
+
+                            return propNameBuilder.ToString();
+                        };
+                        
+                        Func<string, object, string> propValueFunc = (propName, propValue) =>
+                        {
+                            if (propValue == null)
+                                return string.Empty;
+
+                            var value = ConverToString(propValue);
+
+                            switch (propName)
+                            {
+                                case "TechnicalFaults":
+                                    value = value.AddSeparator(',', 1);
+                                    break;
+                                case "EDRPOU_Code":
+                                    value = value.AddSeparator('-', 7);
+                                    break;
+                                case "CorruptionCode":
+                                    value = value.AddSeparator(',', 2, 5, 8);
+                                    break;
+                            }
+
+                            var maxLength = isVehicle ? GetAttributeMaxLength(vehicles.ElementAt(i).Vehicle, propName) :
+                            GetAttributeMaxLength(vehicles.ElementAt(i), propName);
+
+                            if (maxLength != -1)
+                                value = value.AddSymbols('_', maxLength - value.Length);
+
+                            value = WrapEachSbmlInVerticalLine(value);
+
+                            if (propName == "CorruptionCode")
+                                for (int j = 0; j < 3; j++)
+                                    value = value.Replace(" , ", ",");
+
+                            return value;
+                        };
+
+                        wordSaver.Replace(vehicles.ElementAt(i),
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                            propNameFunc, propValueFunc);
+
+                        isVehicle = true;
+                        
+                        wordSaver.Replace(vehicles.ElementAt(i).Vehicle,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne,
+                            propNameFunc, propValueFunc);
                     }
-
-                    Vehicle vehicle = new Vehicle();
 
                     for (int i = vehicles.Count; i <= 5; i++)
                     {
-                        dispatcher.Invoke(() => SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
+                        dispatcher.Invoke(() =>
+                            SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
 
-                        wordSaver.Replace($"%PlateNumber{i}%", "|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%FrameNumber{i}%", "|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%ChasisNumber{i}%", "|__|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Make{i}%", "|__|__|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Model{i}%", "|__|__|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Type{i}%", "|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%SORS{i}%", "|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%RS{i}%", "|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%PlateNumber{i}%", "|__|__|__|__|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%FrameNumber{i}%", "|__|__|__|__|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%ChasisNumber{i}%", "|__|__|__|__|__|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Make{i}%", "|__|__|__|__|__|__|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Model{i}%", "|__|__|__|__|__|__|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Type{i}%", "|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%SORS{i}%", "|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%RS{i}%", "|__|__|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                         wordSaver.Replace($"%TA{i}%", "|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%InsurerCode{i}%", "|__||__||__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%PolicySeries{i}%", "|__|__|__|__|__|__|__|__|__||__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%PolicyNumber{i}%", "|__|__|__|__|__|__|__|__|__||__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%PolicyEndDate{i}%", "|__|__|-|__|__|-|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%vSurname{i}%", "|__|__|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%LS{i}%", "|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%LN{i}%", "|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Owner{i}%", "|__|__|__|__|__|__|__|__|__|__| |__|__|__|__|__|__|__|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%TechnicalFaults{i}%", "|__|,|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%EDRPOU_Code{i}%", "|__|__|__|__|__|__|__| -|__|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%CorruptionCode{i}%", "|__|__|,|__|__|,|__|__|,|__|__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%ActivityLicensingInfo{i}%", "|__||__|", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%InsurerCode{i}%", "|__||__||__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%PolicySeries{i}%", "|__|__|__|__|__|__|__|__|__||__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%PolicyNumber{i}%", "|__|__|__|__|__|__|__|__|__||__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%PolicyEndDate{i}%", "|__|__|-|__|__|-|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%DriverSurname{i}%", "|__|__|__|__|__|__|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%LS{i}%", "|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%LN{i}%", "|__|__|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Owner{i}%",
+                            "|__|__|__|__|__|__|__|__|__|__| |__|__|__|__|__|__|__|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%TechnicalFaults{i}%", "|__|,|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%EDRPOU_Code{i}%", "|__|__|__|__|__|__|__| -|__|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%CorruptionCode{i}%", "|__|__|,|__|__|,|__|__|,|__|__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%ActivityLicensingInfo{i}%", "|__||__|",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                     }
 
                     List<Victim> victimTempList = null;
@@ -508,11 +525,14 @@ namespace AccountingOfTrafficViolation.ViewModels
 
                     for (int i = 0; i < victimTempList.Count; i++)
                     {
-                        dispatcher.Invoke(() => SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
+                        dispatcher.Invoke(() =>
+                            SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
 
                         if (victimTempList[i].Id != -1)
                         {
-                            victimIsDied = victimTempList[i].IsDied.AddSymbols('_', GetAttributeMaxLength(victims.ElementAt(i), "IsDied") - victims.ElementAt(i).IsDied.Length);
+                            victimIsDied = victimTempList[i].IsDied.AddSymbols('_',
+                                GetAttributeMaxLength(victims.ElementAt(i), "IsDied") -
+                                victims.ElementAt(i).IsDied.Length);
                             victimCategory = victimTempList[i].Category.ToString();
                             victimGender = victimTempList[i].Gender.ToString();
                             victimAge = victimTempList[i].Age.ToString();
@@ -522,21 +542,20 @@ namespace AccountingOfTrafficViolation.ViewModels
                             victimCitizenship = victimTempList[i].Citizenship;
 
                             victimIsDied = WrapEachSbmlInVerticalLine(victimIsDied);
-                            victimCategory = WrapEachSbmlInVerticalLine(victimCategory.AddZeroBeforeText(2 - victimCategory.Length));
+                            victimCategory =
+                                WrapEachSbmlInVerticalLine(victimCategory.AddZeroBeforeText(2 - victimCategory.Length));
                             victimAge = WrapEachSbmlInVerticalLine(victimAge.AddZeroBeforeText(3 - victimAge.Length));
-                            victimTORSerialNumber = WrapEachSbmlInVerticalLine(victimTORSerialNumber.AddZeroBeforeText(2 - victimTORSerialNumber.Length));
+                            victimTORSerialNumber =
+                                WrapEachSbmlInVerticalLine(
+                                    victimTORSerialNumber.AddZeroBeforeText(2 - victimTORSerialNumber.Length));
                             victimSeatBelt = WrapEachSbmlInVerticalLine(victimSeatBelt);
                             victimMedicalResult = WrapEachSbmlInVerticalLine(victimMedicalResult);
-                            victimCitizenship = WrapEachSbmlInVerticalLine(victimCitizenship.AddZeroBeforeText(GetAttributeMaxLength(victims.ElementAt(i), "Citizenship") - victimCitizenship.Length));
+                            victimCitizenship = WrapEachSbmlInVerticalLine(
+                                victimCitizenship.AddZeroBeforeText(
+                                    GetAttributeMaxLength(victims.ElementAt(i), "Citizenship") -
+                                    victimCitizenship.Length));
 
-                            if (victimGender != "True")
-                            {
-                                victimGender = "| М |";
-                            }
-                            else
-                            {
-                                victimGender = "| Ж |";
-                            }
+                            victimGender = !victimTempList[i].Gender ? "| М |" : "| Ж |";
                         }
                         else
                         {
@@ -550,17 +569,28 @@ namespace AccountingOfTrafficViolation.ViewModels
                             victimCitizenship = "|__|__|__|";
                         }
 
-                        wordSaver.Replace($"%IsDied{i + 1}%", victimIsDied, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Cy{i + 1}%", victimCategory, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%Age{i + 1}%", victimAge, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%TOR{i + 1}%", victimTORSerialNumber, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%G{i + 1}%", victimGender, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%SB{i + 1}%", victimSeatBelt, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%MR{i + 1}%", victimMedicalResult, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%S{i + 1}%", victimTempList[i].Surname, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%N{i + 1}%", victimTempList[i].Name, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%P{i + 1}%", victimTempList[i].Patronymic, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace($"%C{i + 1}%", victimCitizenship, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%IsDied{i + 1}%", victimIsDied,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Cy{i + 1}%", victimCategory,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%Age{i + 1}%", victimAge,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%TOR{i + 1}%", victimTORSerialNumber,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%G{i + 1}%", victimGender,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%SB{i + 1}%", victimSeatBelt,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%MR{i + 1}%", victimMedicalResult,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%S{i + 1}%", victimTempList[i].Surname,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%N{i + 1}%", victimTempList[i].Name,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%P{i + 1}%", victimTempList[i].Patronymic,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace($"%C{i + 1}%", victimCitizenship,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                     }
 
                     string allVictims = victims.Count.ToString();
@@ -570,22 +600,22 @@ namespace AccountingOfTrafficViolation.ViewModels
 
                     if (Officer != null)
                     {
-                        wordSaver.Replace("%UserFullName%", $"{Officer.Name} {Officer.Surname}", Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace("%UserPhone%", Officer.Phone, Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%UserFullName%", $"{Officer.Name} {Officer.Surname}",
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+                        wordSaver.Replace("%UserPhone%", Officer.Phone,
+                            Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                     }
 
-                    dispatcher.Invoke(() => SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
+                    dispatcher.Invoke(() =>
+                        SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
 
                     if (SaveFilePath != null && SaveFilePath != FilePath)
-                    {
                         wordSaver.SaveDocumentAs(SaveFilePath, documentSaveType);
-                    }
                     else
-                    {
                         wordSaver.SaveDocument();
-                    }
 
-                    dispatcher.Invoke(() => SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
+                    dispatcher.Invoke(() =>
+                        SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
 
                     dispatcher.Invoke(() =>
                     {
@@ -597,7 +627,7 @@ namespace AccountingOfTrafficViolation.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    dispatcher.Invoke(() => 
+                    dispatcher.Invoke(() =>
                     {
                         stopwatch.Stop();
                         OnExceptionCaptured(ex, stopwatch.Elapsed, savingResult);
@@ -665,9 +695,9 @@ namespace AccountingOfTrafficViolation.ViewModels
                 return length;
             }
 
-            Type objectType = _object.GetType();
+            var objectType = _object.GetType();
 
-            Attribute attr = objectType.GetProperty(propertyName).GetCustomAttribute(typeof(System.ComponentModel.DataAnnotations.StringLengthAttribute), false);
+            var attr = objectType.GetProperty(propertyName).GetCustomAttribute(typeof(System.ComponentModel.DataAnnotations.StringLengthAttribute), false);
 
             if (attr != null)
             {

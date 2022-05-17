@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using AccountingOfTrafficViolation.Models;
 using Microsoft.Office.Interop.Word;
 
 namespace AccountingOfTrafficViolation.Services
@@ -137,7 +133,7 @@ namespace AccountingOfTrafficViolation.Services
         {
             if (propertyValueWithNameAction == null)
             {
-                throw new ArgumentNullException("propertyValueAction");
+                throw new ArgumentNullException(nameof(propertyValueWithNameAction));
             }
 
             Type specifiedType = typeof(T);
@@ -165,12 +161,12 @@ namespace AccountingOfTrafficViolation.Services
         {
             if (propertyNameAction == null)
             {
-                throw new ArgumentNullException("propertyNameAction");
+                throw new ArgumentNullException(nameof(propertyNameAction));
             }
 
             if (propertyValueAction == null)
             {
-                throw new ArgumentNullException("propertyValueAction");
+                throw new ArgumentNullException(nameof(propertyValueAction));
             }
 
             Type specifiedType = typeof(T);
@@ -184,9 +180,7 @@ namespace AccountingOfTrafficViolation.Services
                     string value = propertyValueAction(propertyInfo.GetValue(_object));
 
                     if (name.Length > 255 || value.Length > 255)
-                    {
                         continue;
-                    }
 
                     Replace(name, value, replaceMethod);
                 }
@@ -197,34 +191,26 @@ namespace AccountingOfTrafficViolation.Services
                        Func<string, object, string> propertyValueWithNameAction)
         {
             if (propertyNameAction == null)
-            {
-                throw new ArgumentNullException("propertyNameAction");
-            }
+                throw new ArgumentNullException(nameof(propertyNameAction));
 
             if (propertyValueWithNameAction == null)
-            {
-                throw new ArgumentNullException("propertyValueWithNameAction");
-            }
-
+                throw new ArgumentNullException(nameof(propertyValueWithNameAction));
+            
             if (_object == null)
-            {
-                throw new ArgumentNullException("_object");
-            }
+                throw new ArgumentNullException(nameof(_object));
 
-            Type specifiedType = typeof(T);
+            var specifiedType = typeof(T);
 
             foreach (var propertyInfo in specifiedType.GetProperties())
             {
                 if (!propertyInfo.GetMethod.IsVirtual && !propertyInfo.GetMethod.IsAbstract &&
                     propertyInfo.GetMethod.IsPublic && propertyInfo.CanRead)
                 {
-                    string name = propertyNameAction(propertyInfo.Name);
-                    string value = propertyValueWithNameAction(propertyInfo.Name, propertyInfo.GetValue(_object));
+                    var name = propertyNameAction(propertyInfo.Name);
+                    var value = propertyValueWithNameAction(propertyInfo.Name, propertyInfo.GetValue(_object));
 
                     if (name.Length > 255 || value.Length > 255)
-                    {
                         continue;
-                    }
 
                     Replace(name, value, replaceMethod);
                 }
@@ -296,7 +282,7 @@ namespace AccountingOfTrafficViolation.Services
             if (!documentIsClose && Document != null)
             {
                 documentIsClose = true;
-
+                
                 Document.Close(SaveChanges: WdSaveOptions.wdDoNotSaveChanges, Missing.Value, Missing.Value);
             }
         }

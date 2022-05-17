@@ -518,7 +518,7 @@ namespace AccountingOfTrafficViolation.Views
 
             saveCaseToWordVM.SaveFilePath = path;
             saveCaseToWordVM.Case = _case;
-            // saveCaseToWordVM.Officer = officer;
+            saveCaseToWordVM.Officer = GlobalSettings.ActiveOfficer;
 
             try
             {

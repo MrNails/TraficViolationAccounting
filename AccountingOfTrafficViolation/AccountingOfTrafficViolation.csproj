@@ -20,11 +20,16 @@
     <ProjectReference Include="..\AccountOfTraficViolationDB\AccountOfTrafficViolationDB\AccountOfTrafficViolationDB.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1003" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Services\PageableCollection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Word">
+      <HintPath>..\MSOfficeLib\Microsoft.Office.Interop.Word.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

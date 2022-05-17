@@ -279,18 +279,14 @@ namespace AccountingOfTrafficViolation.Services
             return stringBuilder.ToString();
         }
 
-        public static string GetStringWithUpperSymbols(this string str)
+        public static string GetStringFromUpperSymbols(this string str)
         {
-            StringBuilder newString = new StringBuilder();
+            var newString = new StringBuilder();
 
             for (int i = 0; i < str.Length; i++)
-            {
                 if (char.IsUpper(str[i]))
-                {
                     newString.Append(str[i]);
-                }
-            }
-
+            
             return newString.ToString();
         }
     }

@@ -254,7 +254,7 @@ namespace AccountingOfTrafficViolation.Views
             string tag = frameworkElement.Tag.ToString();
             string path = null;
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            var saveFileDialog = new SaveFileDialog();
             DocumentSaveType documentSaveType;
 
             switch (tag)

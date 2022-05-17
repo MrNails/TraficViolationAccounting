@@ -153,8 +153,7 @@ namespace AccountingOfTrafficViolation.ViewModels
 
             m_saveCaseToWordVM.SaveFilePath = path;
             m_saveCaseToWordVM.Case = CurrentCase;
-            m_saveCaseToWordVM.Officer =
-                await m_TVAContext.Officers.FirstAsync(o => o.Id == CurrentCase.OfficerId);
+            m_saveCaseToWordVM.Officer = GlobalSettings.ActiveOfficer;
 
             await m_saveCaseToWordVM.SaveAsync(documentSaveType);
         }
