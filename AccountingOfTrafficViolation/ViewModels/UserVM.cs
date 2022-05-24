@@ -79,7 +79,7 @@ namespace AccountingOfTrafficViolation.ViewModels
         }
         public void DiscardChange()
         {
-            m_TVAContext.CancelAllChanges();
+            m_TVAContext.CancelModifiedChanges();
         }
         public async Task DeleteCurrentUserAsync()
         {

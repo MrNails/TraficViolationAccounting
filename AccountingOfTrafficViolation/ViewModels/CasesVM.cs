@@ -160,7 +160,7 @@ namespace AccountingOfTrafficViolation.ViewModels
 
         public void DiscardChanges()
         {
-            m_TVAContext.CancelAllChanges();
+            m_TVAContext.CancelModifiedChanges();
             CaseChanged = false;
         }
 

@@ -156,7 +156,7 @@ namespace AccountingOfTrafficViolation.Views
         {
             if (sender is Button)
             {
-                Button button = (Button)sender;
+                var button = (Button)sender;
                 button.Content = "Отменить";
                 
                 FindConditionExpander.IsExpanded = false;

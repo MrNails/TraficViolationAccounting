@@ -25,15 +25,16 @@ namespace AccountingOfTrafficViolation.Views
     public partial class CodesWindow : Window
     {
         private readonly string m_fromWindow;
-        
+
         private TVAContext m_TVAContext;
         private Code m_unchangedCode;
         private ObservableCollection<Code> m_codeInfos;
-        private Code m_code;
+        private Code? m_code;
 
-        private bool isAddingMode;
-        private bool isEditingMode;
-        private bool isChanged;
+        private bool m_isAddingMode;
+        private bool m_isEditingMode;
+        private bool m_isChanged;
+        private bool m_isAnyObjDeleted;
 
         private Button AddButton;
         private Button EditButton;
@@ -52,9 +53,9 @@ namespace AccountingOfTrafficViolation.Views
             m_fromWindow = fromWindow;
             
             m_code = null;
-            isAddingMode = false;
-            isEditingMode = false;
-            isChanged = false;
+            m_isAddingMode = false;
+            m_isEditingMode = false;
+            m_isChanged = false;
         }
 
         private bool AddCode()
@@ -79,7 +80,7 @@ namespace AccountingOfTrafficViolation.Views
             
             m_codeInfos.Add(code);
 
-            isChanged = true;
+            m_isChanged = true;
 
             SaveButton.IsEnabled = true;
             DiscardButton.IsEnabled = true;
@@ -102,7 +103,7 @@ namespace AccountingOfTrafficViolation.Views
             }
 
             m_unchangedCode.Assign((Code)DataContext);
-            isChanged = true;
+            m_isChanged = true;
 
             SaveButton.IsEnabled = true;
             DiscardButton.IsEnabled = true;
@@ -112,20 +113,21 @@ namespace AccountingOfTrafficViolation.Views
         private bool RemoveCode()
         {
             if (m_code == null)
-            {
                 return false;
-            }
 
             MessageBoxResult result = MessageBox.Show("Вы уверены, что хотите удалить выбранный код?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Information);
 
             if (result != MessageBoxResult.Yes)
-            {
                 return false;
-            }
 
-            // _TVAContext.CodeInfos.Remove(CodeInfo);
             m_codeInfos.Remove(m_code);
-            isChanged = true;
+            
+            m_code = null;
+            DataContext = null;
+            
+            m_isChanged = true;
+
+            m_isAnyObjDeleted = true;
 
             SaveButton.IsEnabled = true;
             DiscardButton.IsEnabled = true;
@@ -170,13 +172,13 @@ namespace AccountingOfTrafficViolation.Views
             CodeValueTB.Text = string.Empty;
             CodeNameTB.Text = string.Empty;
 
-            isAddingMode = true;
+            m_isAddingMode = true;
 
             OnMode();
         }
         private void OffAddingMode()
         {
-            isAddingMode = false;
+            m_isAddingMode = false;
 
             OffMode();
         }
@@ -199,13 +201,13 @@ namespace AccountingOfTrafficViolation.Views
 
             DataContext = m_code;
 
-            isEditingMode = true;
+            m_isEditingMode = true;
 
             OnMode();
         }
         private void OffEditingMode()
         {
-            isEditingMode = false;
+            m_isEditingMode = false;
 
             OffMode();
         }
@@ -257,7 +259,11 @@ namespace AccountingOfTrafficViolation.Views
 
                 m_TVAContext = await Task.Run(() => new TVAContext(GlobalSettings.ConnectionStrings[Constants.DefaultDB], GlobalSettings.Credential));
 
-                await m_TVAContext.Codes.LoadAsync();
+                await (from c in m_TVAContext.Codes.DefaultIfEmpty()
+                    join cb in m_TVAContext.CodeBindings.DefaultIfEmpty() on c.CodeBindingId equals cb.Id
+                    where cb.Name == m_fromWindow
+                    select c)
+                    .LoadAsync();
 
                 m_codeInfos = m_TVAContext.Codes.Local.ToObservableCollection();
                     
@@ -276,23 +282,23 @@ namespace AccountingOfTrafficViolation.Views
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            if (isAddingMode && AddCode())
+            if (m_isAddingMode && AddCode())
                 OffAddingMode();
-            else if (isEditingMode && EditCode())
+            else if (m_isEditingMode && EditCode())
                 OffEditingMode();
-            else if (!isAddingMode && !isEditingMode)
+            else if (!m_isAddingMode && !m_isEditingMode)
                 OnAddingMode();
         }
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!isEditingMode)
+            if (!m_isEditingMode)
                 OnEditingMode();
         }
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (isAddingMode)
+            if (m_isAddingMode)
                 OffAddingMode();
-            else if (isEditingMode)
+            else if (m_isEditingMode)
                 OffEditingMode();
             else
                 RemoveCode();
@@ -309,7 +315,7 @@ namespace AccountingOfTrafficViolation.Views
                     code.Id = maxCodeId++;
 
             await m_TVAContext.SaveChangesAsync();
-            isChanged = false;
+            m_isChanged = false;
 
             SaveButton.IsEnabled = false;
             DiscardButton.IsEnabled = false;
@@ -318,21 +324,21 @@ namespace AccountingOfTrafficViolation.Views
         }
         private void DiscardButton_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < m_codeInfos.Count; i++)
-            {
-                if (m_TVAContext.Entry(m_codeInfos[i]).State == EntityState.Added)
-                {
-                    m_codeInfos.RemoveAt(i);
-                    i--;
-                }
-            }
+            foreach (var entry in m_TVAContext.ChangeTracker.Entries())
+                entry.Reload();
 
-            m_TVAContext.CancelAllChanges();
-            isChanged = false;
+            if (m_isAnyObjDeleted)
+                m_codeInfos = m_TVAContext.Codes.Local.ToObservableCollection();
+
+            CodeGrid.ItemsSource = m_codeInfos;
+
+            m_isChanged = false;
 
             SaveButton.IsEnabled = false;
             DiscardButton.IsEnabled = false;
 
+            m_isAnyObjDeleted = false;
+            
             FilterCollection();
 
             MessageBox.Show("Все изменения отменены.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -353,7 +359,7 @@ namespace AccountingOfTrafficViolation.Views
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (isChanged &&
+            if (m_isChanged &&
                 MessageBox.Show("Есть изменённые данные, вы уверены, что хотите выйти?.", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Information) != MessageBoxResult.Yes)
             {
                 return;
@@ -370,6 +376,9 @@ namespace AccountingOfTrafficViolation.Views
             if (sender is DataGrid dataGrid)
             {
                 DataContext = dataGrid.CurrentItem;
+
+                if (dataGrid.CurrentItem is Code code)
+                    m_code = code;
             }
         }
 

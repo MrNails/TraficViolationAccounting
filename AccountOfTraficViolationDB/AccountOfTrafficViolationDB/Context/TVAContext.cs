@@ -8,6 +8,7 @@ using AccountOfTrafficViolationDB.Models;
 using AccountOfTraficViolationDB.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace AccountOfTrafficViolationDB.Context
 {
@@ -59,7 +60,7 @@ namespace AccountOfTrafficViolationDB.Context
             return base.SaveChangesAsync(cancellationToken);
         }
 
-        public void CancelAllChanges()
+        public void CancelModifiedChanges()
         {
             var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Modified);
 
@@ -90,7 +91,10 @@ namespace AccountOfTrafficViolationDB.Context
             optionsBuilder.UseSqlServer(m_connectionString)
                 .LogTo(str => Debug.WriteLine(str))
                 .UseLazyLoadingProxies();
-            
+
+            optionsBuilder.ConfigureWarnings(wcb => wcb.Ignore(new [] 
+                { Microsoft.EntityFrameworkCore.Diagnostics.CoreEventId.LazyLoadOnDisposedContextWarning }));
+
             base.OnConfiguring(optionsBuilder);
         }
 

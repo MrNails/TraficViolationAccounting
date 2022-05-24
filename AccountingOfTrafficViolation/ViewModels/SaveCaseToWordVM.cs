@@ -162,6 +162,11 @@ namespace AccountingOfTrafficViolation.ViewModels
                             return WrapEachSbmlInVerticalLine(value);
                         });
 
+                    var tmpFillDayOfWeek = (int)generalInfo.FillDate.DayOfWeek;
+
+                    wordSaver.Replace("%DayOfWeek%", (tmpFillDayOfWeek < 1 ? 7 : tmpFillDayOfWeek).ToString(), 
+                        Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
+
                     dispatcher.Invoke(() =>
                         SavingProgress = ((double)(++numberOfSavedThing) / numberOfSavingThing) * 100);
 
@@ -602,7 +607,8 @@ namespace AccountingOfTrafficViolation.ViewModels
                     {
                         wordSaver.Replace("%UserFullName%", $"{Officer.Name} {Officer.Surname}",
                             Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
-                        wordSaver.Replace("%UserPhone%", Officer.Phone,
+
+                        wordSaver.Replace("%UserPhone%", Officer.Phone.Contains("+38") ? Officer.Phone[3..] : Officer.Phone,
                             Microsoft.Office.Interop.Word.WdReplace.wdReplaceOne);
                     }
 
